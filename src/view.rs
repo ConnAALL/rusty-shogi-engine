@@ -1,4 +1,4 @@
-fn display_sfen(sfen: &str) {
+pub fn display_sfen(sfen: &str) {
     let parts: Vec<&str> = sfen.split(' ').collect();
     let board_layout = parts[0];
 
@@ -20,7 +20,7 @@ fn display_sfen(sfen: &str) {
                 match chars.next() {
                     Some(piece) => {
                         squares_count += 1;
-                        row_string.push_str(&format!("   +{}    |", piece.to_uppercase()));
+                        row_string.push_str(&format!("   +{}    |", piece));
                     },
                     None => panic!("Invalid SFEN string: '+' not followed by piece character"),
                 }
@@ -38,8 +38,8 @@ fn display_sfen(sfen: &str) {
     }
 }
 
-fn test() {
-    let sfen = "lnsgkgsnl/1r5b1/ppp+pppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
-    display_sfen(sfen);
-}
+//fn test() {
+//    let sfen = "lnsgkgsnl/1r5b1/ppp+pppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
+//    display_sfen(sfen);
+//}
 
