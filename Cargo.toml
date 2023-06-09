@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 shogi = "0.12.2"
+shogi_core = "0.1.5"
+shogi_legality_lite = "0.1.2"

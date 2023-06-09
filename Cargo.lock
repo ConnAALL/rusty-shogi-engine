@@ -46,6 +46,8 @@ name = "rusty_engine"
 version = "0.1.0"
 dependencies = [
  "shogi",
+ "shogi_core",
+ "shogi_legality_lite",
 ]
 
 [[package]]
@@ -57,6 +59,21 @@ dependencies = [
  "bitintr",
  "itertools",
  "thiserror",
+]
+
+[[package]]
+name = "shogi_core"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d0a7de4ff7c66bf0b6346bda1d530c94a496f8aa3317938923886c58191aa14"
+
+[[package]]
+name = "shogi_legality_lite"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "706de12806577bb7732e6387a2df49cb93a2cea1ccb3e0e1cbbe258a633a007e"
+dependencies = [
+ "shogi_core",
 ]
 
 [[package]]
