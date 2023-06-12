@@ -3,6 +3,9 @@ mod view;
 use shogi::{Move, Position};
 use shogi::bitboard::Factory as BBFactory;
 use shogi::square::consts::*;
+
+use shogi_core::PartialPosition;
+use shogi_legality_lite::all_legal_moves_partial;
     
 fn main() {
     BBFactory::init();
@@ -34,4 +37,12 @@ fn main() {
     let new_sfen = pos.to_sfen();
     view::display_sfen(&new_sfen);
 
+    let mut startpos = PartialPosition::startpos();
+    //prelegality::all_valid_moves(&startpos) -> impl Iterator<Item = MOVE>;
+    let moves = all_legal_moves_partial(&startpos);
+
+    //println!("{:?}",moves);
+    for move_item in moves {
+        println!("move: {:?}", move_item);
+    }
 }
