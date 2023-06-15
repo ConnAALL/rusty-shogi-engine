@@ -286,6 +286,14 @@ fn generate_pos(board: Vec<(String, String)>) -> PartialPosition {
             "W_B" => Piece::new(PieceKind::Bishop, Color::White),
             "W_R" => Piece::new(PieceKind::Rook, Color::White),
             "W_K" => Piece::new(PieceKind::King, Color::White),
+            
+            "W_PB" => Piece::new(PieceKind::ProBishop, Color::White),
+            "W_PL" => Piece::new(PieceKind::ProLance, Color::White),
+            "W_PN" => Piece::new(PieceKind::ProKnight, Color::White),
+            "W_PP" => Piece::new(PieceKind::ProPawn, Color::White),
+            "W_PR" => Piece::new(PieceKind::ProRook, Color::White),
+            "W_PS" => Piece::new(PieceKind::ProSilver, Color::White),
+            
             "B_P" => Piece::new(PieceKind::Pawn, Color::Black),
             "B_L" => Piece::new(PieceKind::Lance, Color::Black),
             "B_N" => Piece::new(PieceKind::Knight, Color::Black),
@@ -294,6 +302,13 @@ fn generate_pos(board: Vec<(String, String)>) -> PartialPosition {
             "B_B" => Piece::new(PieceKind::Bishop, Color::Black),
             "B_R" => Piece::new(PieceKind::Rook, Color::Black),
             "B_K" => Piece::new(PieceKind::King, Color::Black),
+            
+            "B_PB" => Piece::new(PieceKind::ProBishop, Color::Black),
+            "B_PL" => Piece::new(PieceKind::ProLance, Color::Black),
+            "B_PN" => Piece::new(PieceKind::ProKnight, Color::Black),
+            "B_PP" => Piece::new(PieceKind::ProPawn, Color::Black),
+            "B_PR" => Piece::new(PieceKind::ProRook, Color::Black),
+            "B_PS" => Piece::new(PieceKind::ProSilver, Color::Black),
             _ => panic!("Invalid piece format: {}", piece),
         };
 
@@ -317,6 +332,35 @@ fn main() {
     println!("{}", sfen);
     view::display_sfen(&sfen);
 
+    let new_moves = all_legal_moves_partial(&pos);
+    println!("All Possible Moves:");
+    
+    let mut sfen_list = Vec::new();
+    for move_item in new_moves {
+        // display move object
+        println!("{:?}", move_item);
+        
+        // display from sqr
+        let fromindex = move_item.from().unwrap().index();
+        let fromsqr = SQUARES[fromindex as usize];
+        println!("FROM: {:?}", fromsqr);
+        
+        // display to sqr
+        let toindex = move_item.to().index();
+        let tosqr = SQUARES[toindex as usize];
+        println!("TO: {:?}", tosqr);
+        
+        // clone position and "make" the move so we can obtain the sfen
+        let mut temp_pos = pos.clone();
+        temp_pos.make_move(move_item);
+        let sfen = temp_pos.to_sfen_owned();
+        sfen_list.push(sfen.clone());
+        println!("{}", sfen);
+        //view::display_sfen(&sfen);
+        
+        println!("\n");
+    }
+    println!("{:?}", sfen_list);
 }
 
 fn test() {
