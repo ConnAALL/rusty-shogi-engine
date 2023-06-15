@@ -94,6 +94,7 @@ const SQUARES: [&str; 82] = ["init",
 
 
 fn sfen_parse(sfen: &str) -> Vec<(String, String)> {
+
     let _pieces: Vec<char> = vec![
         'P', 'L', 'N', 'S', 'G', 'B', 'R', 'K',
         'p', 'l', 'n', 's', 'g', 'b', 'r', 'k',
@@ -166,6 +167,7 @@ fn sfen_to_piece(c: char) -> &'static str {
 }
 
 
+
 fn sfen_to_color(c: char) -> &'static str {
     match c {
         'P' | 'L' | 'N' | 'S' | 'G' | 'B' | 'R' | 'K' => "B_",
@@ -177,6 +179,7 @@ fn sfen_to_color(c: char) -> &'static str {
 
 
 fn generate_pos(board: Vec<(String, String)>) -> PartialPosition {
+
     let mut pos = PartialPosition::empty();
 
     for (square, piece) in board {
@@ -319,6 +322,7 @@ fn generate_pos(board: Vec<(String, String)>) -> PartialPosition {
 }
 
 
+
 fn main() {
 
 
@@ -362,6 +366,7 @@ fn main() {
     }
     println!("{:?}", sfen_list);
 }
+
 
 fn test() {
 
