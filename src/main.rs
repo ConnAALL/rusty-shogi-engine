@@ -240,6 +240,7 @@ fn main() {
     
     let new_moves = all_legal_moves_partial(&pos);
     println!("All Possible Moves:");
+    let mut sfen_list = Vec::new();
     for move_item in new_moves {
         // display move object
         println!("{:?}", move_item);
@@ -258,10 +259,12 @@ fn main() {
         let mut temp_pos = pos.clone();
         temp_pos.make_move(move_item);
         let sfen = temp_pos.to_sfen_owned();
+        sfen_list.push(sfen.clone());
         println!("{}", sfen);
         view::display_sfen(&sfen);
         
         println!("\n");
-    }    
+    }
+    println!("{:?}", sfen_list);
 
 }
