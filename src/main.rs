@@ -137,13 +137,12 @@ fn main() {
 
     // Depth of two 
     // TO DO :  figure out why it produces 879 instead of 900
-    // (probably has to do with drops)
     let mut total = Vec::<String>::new();
     
     let test = search::search(&start);
     for item in &test {
         total.push(item.to_string());
-        
+
         let test2 = search::search(&item);
         for ITEM in test2 {
             total.push(ITEM.to_string());
