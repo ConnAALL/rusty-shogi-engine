@@ -125,33 +125,42 @@ fn search_test(sfen: &str) -> Vec<String> {
     sfen_list
 }
 
+
 fn main() {
 
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let sfens = search_test(&start);
-    for sfen in sfens {
-        println!("{:?}", sfen);
-    }
+    //let sfens = search_test(&start);
+    //for sfen in sfens {
+    //    println!("{:?}", sfen);
+    //}
 
-    println!("---------------------------------------------");
+    //println!("---------------------------------------------");
 
     // Depth of two 
     // TO DO :  figure out why it produces 879 instead of 900
-    let mut total = Vec::<String>::new();
+    //let mut total = Vec::<String>::new();
     
     let test = search::search(&start);
-    for item in &test {
-        total.push(item.to_string());
+    //for item in &test {
+    //    total.push(item.to_string());
 
-        let test2 = search::search(&item);
-        for ITEM in test2 {
-            total.push(ITEM.to_string());
-        }
-    }
-    println!("{:?}", test.len());
-    println!("{:?}", total.len());
+    //    let test2 = search::search(&item);
+    //    for ITEM in test2 {
+    //        total.push(ITEM.to_string());
+    //    }
+    //}
+    //println!("{:?}", test.len());
+    //println!("{:?}", total.len());
 
+    //for item in total {
+        //println!("{:?}", item);
+        //view::display_sfen(&item);
+    //}
 
+    println!("-------------------------------------------");
+    let dep2 = search::search_dep(2, test);
+    println!("{:?}", dep2.len());
+    
 
 }
 
