@@ -129,38 +129,40 @@ fn search_test(sfen: &str) -> Vec<String> {
 fn main() {
 
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    //let sfens = search_test(&start);
-    //for sfen in sfens {
-    //    println!("{:?}", sfen);
+    let depth = 2;
+
+    let nodes = search::search(&start, depth);
+    
+    for node in &nodes {
+        println!("{:?}", node);
+    }
+    println!("{:?}", nodes.len());
+
+//    let mut total = Vec::<String>::new();
+    
+//    let test = search::search(&start);
+  //  for item in &test {
+    //    total.push(item.to_string());
+        
+//    }
+  //  for thingy in &total {
+    //    println!("{:?}", thingy);
     //}
 
-    //println!("---------------------------------------------");
-
-    // Depth of two 
-    // TO DO :  figure out why it produces 879 instead of 900
-    //let mut total = Vec::<String>::new();
-    
-    let test = search::search(&start);
-    //for item in &test {
-    //    total.push(item.to_string());
-
-    //    let test2 = search::search(&item);
-    //    for ITEM in test2 {
-    //        total.push(ITEM.to_string());
+    //let mut depth2 = Vec::<String>::new();
+    //for thing in &total {
+    //    let test2 = search::search(&thing); 
+    //    for item2 in &test2 {
+    //        depth2.push(item2.to_string());
     //    }
     //}
-    //println!("{:?}", test.len());
-    //println!("{:?}", total.len());
 
-    //for item in total {
-        //println!("{:?}", item);
-        //view::display_sfen(&item);
+
+ //   let dep2 = search::search_dep_2(2, start);
+  //  println!("{:?}", dep2.len());
+    //for thing in dep2 {
+    //    println!("{:?}", thing);
     //}
-
-    println!("-------------------------------------------");
-    let dep2 = search::search_dep(2, test);
-    println!("{:?}", dep2.len());
-    
 
 }
 
