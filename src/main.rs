@@ -90,16 +90,20 @@ const SQUARES: [&str; 82] = ["init",
 fn main() {
 
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let depth = 1;
+    let depth = 2;
 
     let nodes = search::search(&start, depth);
     
     for node in &nodes {
         println!("{:?}", node);
     }
-    println!("{:?}", nodes.len());
+    if search::has_duplicates(&nodes) {
+        println!("Duplicates found in the vector");
+    } else {
+        println!("No duplicates found in the vector");
+    }
 
+    println!("Number of nodes: {:?}", nodes.len());
 }
-
 
 

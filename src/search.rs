@@ -1,16 +1,20 @@
 
 use crate::sfen;
 use shogi_legality_lite::all_legal_moves_partial;
+use std::collections::HashSet;
 
 
 pub fn search(sfen: &str, depth: u32) -> Vec<String> {
+    // creates list of board squares and the pieces on them (if there are any)
     let positions = sfen::sfen_parse(sfen);
+    // creates a "partial position" out of it
     let pos = sfen::generate_pos(positions);
     
     if depth == 0 {
         return Vec::new();
     }
     
+    // creates list of all possible moves
     let next_moves = all_legal_moves_partial(&pos);
     let mut sfen_list = Vec::new();
     
@@ -18,6 +22,7 @@ pub fn search(sfen: &str, depth: u32) -> Vec<String> {
         let mut temp_pos = pos.clone();
         temp_pos.make_move(move_item);
         let sfen = temp_pos.to_sfen_owned();
+        // flips sfen so that it becomes the next players turn
         let flipped_sfen = sfen::flip(&sfen);
         sfen_list.push(flipped_sfen.clone());
         
@@ -26,6 +31,11 @@ pub fn search(sfen: &str, depth: u32) -> Vec<String> {
     }
 
     sfen_list
+}
+
+pub fn has_duplicates<T: std::cmp::Eq + std::hash::Hash>(vec: &[T]) -> bool {
+    let set: HashSet<_> = vec.iter().collect();
+    set.len() != vec.len()
 }
 
 
