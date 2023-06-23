@@ -60,9 +60,9 @@ pub fn perft(sfen: &str, depth: u32) -> u64 {
 }
 
 
-/*
 
-pub fn old_search(sfen: &str) -> Vec<String> {
+
+pub fn single_search(sfen: &str) -> Vec<String> {
     
     let positions = sfen::sfen_parse(sfen);
     let pos = sfen::generate_pos(positions);
@@ -73,13 +73,14 @@ pub fn old_search(sfen: &str) -> Vec<String> {
         let mut temp_pos = pos.clone();
         temp_pos.make_move(move_item);
         let sfen = temp_pos.to_sfen_owned();
-        sfen_list.push(sfen);
+        let flipped_sfen = sfen::flip(&sfen);
+        sfen_list.push(flipped_sfen);
     }
 
     sfen_list
 }
 
-
+/*
 pub fn search_dep(depth: i32, sfen: &str) -> Vec<String> {
     
     let mut parent = Vec::new();
