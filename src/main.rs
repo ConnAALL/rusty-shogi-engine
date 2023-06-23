@@ -5,7 +5,7 @@ mod view;
 mod sfen;
 
 
-fn test() {
+fn manual_test() {
     
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
 
@@ -45,8 +45,6 @@ fn partial_pos_test() {
 
     let to_sfen = pos.to_sfen_owned();
     println!("{:?}", to_sfen);
-    //let side_to_move = pos.side_to_move();
-    //println!("{:?}", side_to_move);
 
 }
 
@@ -84,6 +82,6 @@ fn search_test() {
 
 fn main() {
     search_test();
-    //test();
+    //manual_test();
     //partial_pos_test();
 }
