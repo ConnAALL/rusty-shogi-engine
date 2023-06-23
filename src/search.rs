@@ -18,9 +18,10 @@ pub fn search(sfen: &str, depth: u32) -> Vec<String> {
         let mut temp_pos = pos.clone();
         temp_pos.make_move(move_item);
         let sfen = temp_pos.to_sfen_owned();
-        sfen_list.push(sfen.clone());
+        let flipped_sfen = sfen::flip(&sfen);
+        sfen_list.push(flipped_sfen.clone());
         
-        let deeper_moves = search(&sfen, depth - 1);
+        let deeper_moves = search(&flipped_sfen, depth - 1);
         sfen_list.extend(deeper_moves);
     }
 
@@ -28,8 +29,7 @@ pub fn search(sfen: &str, depth: u32) -> Vec<String> {
 }
 
 
-
-
+/*
 
 pub fn old_search(sfen: &str) -> Vec<String> {
     
@@ -69,26 +69,4 @@ pub fn search_dep_2(depth: i32, sfen: &str) -> Vec<String> {
     final_result
 }
 
-
-
-
-
-pub fn search_dep(depth: i32, parent: Vec<String>) -> Vec<String> {
-    
-    let mut result = parent.clone();
-    let mut final_result = Vec::new();
-    for dep in 1..=depth {
-        
-        let mut next_sfen_list = Vec::new();
-        for sfen in &result {
-            let moves = old_search(sfen);
-            next_sfen_list.extend(moves.clone());
-        }
-
-        final_result.extend(next_sfen_list.clone());
-        result = next_sfen_list;    
-    }
-    
-    final_result
-}
-
+*/

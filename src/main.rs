@@ -3,8 +3,6 @@
 mod search;
 mod view;
 mod sfen;
-use shogi_legality_lite::all_legal_moves_partial;
-//use shogi_core::{PartialPosition, Square, Piece};
 
 const SQUARES: [&str; 82] = ["init",
 "SQ_1A",
@@ -89,47 +87,10 @@ const SQUARES: [&str; 82] = ["init",
 "SQ_9H",
 "SQ_9I"];
 
-fn search_test(sfen: &str) -> Vec<String> {
-
-    let positions = sfen::sfen_parse(sfen);
-    println!("{:?}", positions);
-    let pos = sfen::generate_pos(positions);
-    let next_moves = all_legal_moves_partial(&pos);
-    println!("All Possible Moves:");
-    let mut sfen_list = Vec::new();
-    for move_item in next_moves {
-            
-        // display move object
-        println!("{:?}", move_item);
-            
-        // display from sqr
-        let fromindex = move_item.from().unwrap().index();
-        let fromsqr = SQUARES[fromindex as usize];
-        println!("FROM: {:?}", fromsqr);
-            
-        // display to sqr
-        let toindex = move_item.to().index();
-        let tosqr = SQUARES[toindex as usize];
-        println!("TO: {:?}", tosqr);
-            
-        // clone position and "make" the move so we can obtain the sfen
-        let mut temp_pos = pos.clone();
-        temp_pos.make_move(move_item);
-        let sfen = temp_pos.to_sfen_owned();
-        sfen_list.push(sfen.clone());
-        println!("{}", sfen);
-        view::display_sfen(&sfen); 
-        println!("\n");
-    }
-
-    sfen_list
-}
-
-
 fn main() {
 
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let depth = 2;
+    let depth = 1;
 
     let nodes = search::search(&start, depth);
     
@@ -137,32 +98,6 @@ fn main() {
         println!("{:?}", node);
     }
     println!("{:?}", nodes.len());
-
-//    let mut total = Vec::<String>::new();
-    
-//    let test = search::search(&start);
-  //  for item in &test {
-    //    total.push(item.to_string());
-        
-//    }
-  //  for thingy in &total {
-    //    println!("{:?}", thingy);
-    //}
-
-    //let mut depth2 = Vec::<String>::new();
-    //for thing in &total {
-    //    let test2 = search::search(&thing); 
-    //    for item2 in &test2 {
-    //        depth2.push(item2.to_string());
-    //    }
-    //}
-
-
- //   let dep2 = search::search_dep_2(2, start);
-  //  println!("{:?}", dep2.len());
-    //for thing in dep2 {
-    //    println!("{:?}", thing);
-    //}
 
 }
 

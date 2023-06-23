@@ -288,3 +288,19 @@ pub fn generate_pos(board: Vec<(String, String)>) -> PartialPosition {
 }
 
 
+pub fn flip(sfen: &str) -> String {
+    let flipped_chars: String = sfen.chars()
+        .map(|c| {
+            if c.is_ascii_uppercase() {
+                c.to_ascii_lowercase()
+            } else if c.is_ascii_lowercase() {
+                c.to_ascii_uppercase()
+            } else {
+                c
+            }
+        })
+        .collect();
+
+    flipped_chars
+}
+
