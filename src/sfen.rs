@@ -288,19 +288,18 @@ pub fn generate_pos(board: Vec<(String, String)>) -> PartialPosition {
 }
 
 
-pub fn flip(sfen: &str) -> String {
-    let flipped_chars: String = sfen.chars()
-        .map(|c| {
-            if c.is_ascii_uppercase() {
-                c.to_ascii_lowercase()
-            } else if c.is_ascii_lowercase() {
-                c.to_ascii_uppercase()
-            } else {
-                c
-            }
-        })
-        .collect();
+pub fn get_color(sfen: &str) -> Color {
 
-    flipped_chars
+    let split: Vec<&str> = sfen.split_whitespace().collect();
+    let curr_side = split[1];
+    let mut side: Color = Color::White;
+    if curr_side == "b" {
+        side = Color::Black;
+    } else {
+        side = Color::White;
+    }
+    
+    side
 }
+
 
