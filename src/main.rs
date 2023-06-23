@@ -104,6 +104,13 @@ fn main() {
     }
 
     println!("Number of nodes: {:?}", nodes.len());
+
+    let max_depth = 5;
+
+    for dep in 1..=max_depth {
+        let node_count = search::perft(&start, dep);
+        println!("Depth: {:<2} Nodes: {}", dep, node_count);
+    }
 }
 
 

@@ -38,6 +38,29 @@ pub fn has_duplicates<T: std::cmp::Eq + std::hash::Hash>(vec: &[T]) -> bool {
     set.len() != vec.len()
 }
 
+pub fn perft(sfen: &str, depth: u32) -> u64 {
+    let positions = sfen::sfen_parse(sfen);
+    let pos = sfen::generate_pos(positions);
+
+    if depth == 0 {
+        return 1;
+    }
+
+    let next_moves = all_legal_moves_partial(&pos);
+    let mut node_count = 0;
+
+    for move_item in next_moves {
+        let mut temp_pos = pos.clone();
+        temp_pos.make_move(move_item);
+        let sfen = temp_pos.to_sfen_owned();
+        let flipped_sfen = sfen::flip(&sfen);
+
+        let child_count = perft(&flipped_sfen, depth - 1);
+        node_count += child_count;
+    }
+
+    node_count
+}
 
 /*
 
@@ -59,7 +82,7 @@ pub fn old_search(sfen: &str) -> Vec<String> {
 }
 
 
-pub fn search_dep_2(depth: i32, sfen: &str) -> Vec<String> {
+pub fn search_dep(depth: i32, sfen: &str) -> Vec<String> {
     
     let mut parent = Vec::new();
     parent.push(sfen.to_string());
