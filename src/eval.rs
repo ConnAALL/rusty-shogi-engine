@@ -31,16 +31,13 @@ REFERENCE FOR PROMOTED PIECES
 */
 
 
-pub fn pst_parse(sfen: &str) -> Vec<char> {
+fn pst_parse(sfen: &str) -> Vec<char> {
 
     let split: Vec<&str> = sfen.split_whitespace().collect();
     let pieces = split[0];
     // println!("{:?}", pieces);
     let replaced = pieces.replace("/", "");
-    println!("{:?}", replaced);
-    
     let clean = sfen::convert_promoted_pieces(&replaced);
-    println!("{:?}", clean);
 
     let mut result = Vec::new();
     for ch in clean.chars() {
@@ -57,7 +54,7 @@ pub fn pst_parse(sfen: &str) -> Vec<char> {
     result
 } 
 
-pub fn pst() {
+fn pst() {
     let pst: HashMap<&str, [i32; 81]> = {
         let mut map = HashMap::new();
         map.insert("P", [ 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -159,6 +156,75 @@ pub fn pst() {
     let value = pst[piece][(rank - 1) * 9 + (file as usize - 'a' as usize)];
 
     println!("The value is: {}", value);
+}
+
+
+pub fn evaluate_piece_table(sfen: &str) {
+    
+    let sfen_vec = pst_parse(sfen);
+
+    for i in sfen_vec {
+        
+        if i == 'p'{
+
+        } else if i == 'l' {
+
+        } else if i == 'n' {
+
+        } else if i == 's' {
+
+        } else if i == 'g' {
+
+        } else if i == 'r' {
+
+        } else if i == 'b' {
+
+        } else if i == 'e' {
+
+        } else if i == 'w' {
+
+        } else if i == 'z' {
+
+        } else if i == 'x' {
+
+        } else if i == 'y' {
+
+        } else if i == 'q' {
+
+        } else if i == 'P' {
+
+        } else if i == 'L' {
+
+        } else if i == 'N' {
+
+        } else if i == 'S' {
+
+        } else if i == 'G' {
+
+        } else if i == 'R' {
+
+        } else if i == 'B' {
+
+        } else if i == 'E' {
+
+        } else if i == 'W' {
+
+        } else if i == 'Z' {
+
+        } else if i == 'X' {
+
+        } else if i == 'Y' {
+
+        } else if i == 'Q' {
+        
+        } else if i == 'k' {
+
+        } else if i == 'K' {
+        
+        }
+
+    }
+
 }
 
 

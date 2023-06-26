@@ -87,8 +87,7 @@ fn main() {
     //partial_pos_test();
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
-    let sfen_tst = eval::pst_parse(sfen);
-    println!("{:?}", sfen_tst);
-
-    eval::pst();
+    let sfen_tst = eval::evaluate_piece_table(sfen);
+    //println!("{:?}", sfen_tst);
+    //eval::pst();
 }
