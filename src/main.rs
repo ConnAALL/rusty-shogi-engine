@@ -82,10 +82,11 @@ fn search_test() {
 
 
 fn main() {
-    let sfen = "+l+n+sgkgsnl/1+r5+b1/+ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
     //search_test();
     //manual_test();
     //partial_pos_test();
-    let sfen_tst = eval_pst::sfen_prse(sfen);
+    
+    let sfen = "+l+n+sgkgsnl/1+r5+b1/+ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
+    let sfen_tst = eval::pst_parse(sfen);
     println!("{:?}", sfen_tst);
 }
