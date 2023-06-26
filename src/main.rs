@@ -62,7 +62,6 @@ fn search_test() {
     //    println!("{:?}", view::display_sfen(node));
     //}
     
-
     if search::has_duplicates(&nodes) {
         println!("Duplicates found in the vector");
     } else {
@@ -80,25 +79,34 @@ fn search_test() {
     }
 }
 
-fn sfen_prse() {
+fn sfen_prse(sfen: &str) -> Vec<char> {
 
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
     let split: Vec<&str> = sfen.split_whitespace().collect();
     let pieces = split[0];
-
-    println!("{:?}", pieces);
-
-    for pce in pieces.chars() {
-        
-        println!("{:?}", pce);
+    // println!("{:?}", pieces);
+    let replaced = pieces.replace("/", "");
+    // println!("{:?}", replaced);
+    let mut result = Vec::new();
+    for ch in replaced.chars() {
+        if ch.is_digit(10) {
+            let count = ch.to_digit(10).unwrap();
+            for _ in 0..count {
+                result.push('*');
+            }
+        } else {
+            result.push(ch);
+        }
     }
-
+    
+    result
 } 
 
 
 fn main() {
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
     //search_test();
     //manual_test();
     //partial_pos_test();
-    sfen_prse();
+    let sfen_tst = sfen_prse(sfen);
+    println!("{:?}", sfen_tst);
 }
