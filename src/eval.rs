@@ -54,8 +54,8 @@ fn pst_parse(sfen: &str) -> Vec<char> {
     result
 } 
 
-fn pst() {
-    let pst: HashMap<&str, [i32; 81]> = {
+fn pst() -> HashMap<&'static str, [i32; 81]> {
+    let pst: HashMap<&'static str, [i32; 81]> = {
         let mut map = HashMap::new();
         map.insert("P", [ 0, 0, 0, 0, 0, 0, 0, 0, 0,
                           4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -149,49 +149,75 @@ fn pst() {
         map
     };
     
-    let file = 'a';
-    let rank = 4;
-    let piece = "P";
-
-    let value = pst[piece][(rank - 1) * 9 + (file as usize - 'a' as usize)];
-
-    println!("The value is: {}", value);
+    pst // return the hashmap
 }
 
 
 pub fn evaluate_piece_table(sfen: &str) {
     
-    let sfen_vec = pst_parse(sfen);
+    let mut white_score = 0;
+    let mut black_score = 0;
 
+    let pst_map = pst();
+    let sfen_vec = pst_parse(sfen);
+    let mut index = 0;
     for i in sfen_vec {
         
         if i == 'p'{
-
+            let value = pst_map["P"][index];
+            white_score += value;
+        
         } else if i == 'l' {
+            let value = pst_map["L"][index];
+            white_score += value;
 
         } else if i == 'n' {
+            let value = pst_map["N"][index];
+            white_score += value;
 
         } else if i == 's' {
+            let value = pst_map["S"][index];
+            white_score += value;
 
         } else if i == 'g' {
+            let value = pst_map["G"][index];
+            white_score += value;
 
         } else if i == 'r' {
+            let value = pst_map["R"][index];
+            white_score += value;
 
         } else if i == 'b' {
+            let value = pst_map["B"][index];
+            white_score += value;
 
-        } else if i == 'e' {
+        } else if i == 'e' /* PR rook */ {
+            let value = pst_map["E"][index];
+            white_score += value;
 
-        } else if i == 'w' {
+        } else if i == 'w' /* PR bishop */ {
+            let value = pst_map["W"][index];
+            white_score += value;
 
-        } else if i == 'z' {
+        } else if i == 'z' /* PR pawn */ {
+            let value = pst_map["G"][index];
+            white_score += value;
 
-        } else if i == 'x' {
+        } else if i == 'x' /* PR lance */ {
+            let value = pst_map["G"][index];
+            white_score += value;
 
-        } else if i == 'y' {
+        } else if i == 'y' /* PR knight */ {
+            let value = pst_map["G"][index];
+            white_score += value;
 
-        } else if i == 'q' {
+        } else if i == 'q' /* PR siLver */ {
+            let value = pst_map["G"][index];
+            white_score += value; 
+        }
 
-        } else if i == 'P' {
+        // black
+        else if i == 'P' {
 
         } else if i == 'L' {
 
@@ -223,8 +249,10 @@ pub fn evaluate_piece_table(sfen: &str) {
         
         }
 
+        index += 1;
     }
 
+    println!("{:?}", white_score);
 }
 
 
