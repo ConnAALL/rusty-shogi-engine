@@ -96,6 +96,6 @@ fn main() {
     //println!("{:?}", test);
     
     let eval_pst = eval::evaluate_piece_table(sfen, "black");
-    //println!("{:?}", sfen_tst);
+    println!("{:?}", eval_pst);
 
 }
