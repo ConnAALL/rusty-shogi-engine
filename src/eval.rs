@@ -15,23 +15,17 @@ use crate::sfen;
 
 /*
 REFERENCE FOR PROMOTED PIECES
-    +P => Z
-    +p => z
+    +P / +p ==> Z / z
     
-    +L => X
-    +l => x
+    +L / +l ==> X / x
     
-    +N => Y
-    +n => y
+    +N / +n ==> Y / y
 
-    +S => Q
-    +s => q
+    +S / +s ==> Q / q
 
-    +B => W
-    +b => w
+    +B / +b ==> W / w
 
-    +R => E
-    +r => e
+    +R / +r ==> E / e
 */
 
 
