@@ -5,19 +5,21 @@
 use shogi_core::PartialPosition;
 use shogi_core::{Square, Piece, Color, PieceKind};
 
-fn convert_promoted_pieces(sfen: &str) -> String {
+pub fn convert_promoted_pieces(sfen: &str) -> String {
     let mut result = String::new();
     let mut skip_next = false;
+    let mut index = 0;
     
     for c in sfen.chars() {
         if skip_next {
             skip_next = false;
+            index += 1;
             continue;
         }
         
         match c {
             '+' => {
-                let next_char = sfen.chars().nth(result.len() + 1);
+                let next_char = sfen.chars().nth(index + 1);
                 if let Some(promoted_piece) = next_char {
                     let unique_char = match promoted_piece {
                         'P' => 'Z',
@@ -40,6 +42,8 @@ fn convert_promoted_pieces(sfen: &str) -> String {
             },
             _ => result.push(c),
         }
+
+        index+= 1;
     }
     
     result
