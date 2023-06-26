@@ -7,7 +7,7 @@ mod eval;
 
 
 fn manual_test() {
-    
+
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
 
     let initial_moves = search::single_search(start);
@@ -91,6 +91,10 @@ fn main() {
     //println!("SFEN: {:?}", sfen);
     //view::display_sfen(sfen);
 
+
+    //let test = sfen::flip(sfen);
+    //println!("{:?}", test);
+    
     let eval_pst = eval::evaluate_piece_table(sfen, "black");
     //println!("{:?}", sfen_tst);
 

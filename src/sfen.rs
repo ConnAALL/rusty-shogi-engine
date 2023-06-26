@@ -7,6 +7,18 @@ use shogi_core::{Square, Piece, Color, PieceKind};
 
 
 pub fn flip(sfen: &str) -> String {
+    
+    let mut split: Vec<&str> = sfen.split_whitespace().collect();
+    let board = split[0];
+    let flip: String = board.chars().rev().collect();
+    split[0] = &flip;
+    let joined = split.join(" ");
+    
+    joined
+}
+
+
+pub fn flip_case(sfen: &str) -> String {
     let flipped_chars: String = sfen.chars()
         .map(|c| {
             if c.is_ascii_uppercase() {

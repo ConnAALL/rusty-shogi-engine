@@ -160,17 +160,24 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) {
     let mut black_score = 0;
 
     let pst_map = pst();
+    let mut sfen_vec = Vec::<char>::new();
+
     if color == "black" {
-       let sfen = SFEN::flip(sfen);
+        let case_flip = SFEN::flip_case(sfen); // swaps lowercase with uppercase
+        let flipped = SFEN::flip(&case_flip); // actual board flip
+        println!("SFEN: {:?}", flipped);
+        view::display_sfen(&flipped);
+        sfen_vec = pst_parse(&flipped);
+    } else if color == "white" {
+        println!("SFEN: {:?}", sfen);
+        view::display_sfen(sfen);
+        sfen_vec = pst_parse(sfen);
     }
     
-    println!("SFEN: {:?}", sfen);
-    view::display_sfen(sfen);
-
-    let sfen_vec = pst_parse(sfen);
+    
     let mut index = 0;
     for i in sfen_vec {
-        
+
         if i == 'p'{
             let value = pst_map["P"][index];
             if color == "black" {
