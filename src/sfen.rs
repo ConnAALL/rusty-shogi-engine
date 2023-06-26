@@ -5,6 +5,24 @@
 use shogi_core::PartialPosition;
 use shogi_core::{Square, Piece, Color, PieceKind};
 
+
+pub fn flip(sfen: &str) -> String {
+    let flipped_chars: String = sfen.chars()
+        .map(|c| {
+            if c.is_ascii_uppercase() {
+                c.to_ascii_lowercase()
+            } else if c.is_ascii_lowercase() {
+                c.to_ascii_uppercase()
+            } else {
+                c
+            }
+        })
+        .collect();
+
+    flipped_chars
+}
+
+
 pub fn convert_promoted_pieces(sfen: &str) -> String {
     let mut result = String::new();
     let mut skip_next = false;

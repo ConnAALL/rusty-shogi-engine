@@ -8,7 +8,8 @@
     * 6. Biship Mobility
  */
 
-use crate::sfen;
+use crate::view;
+use crate::sfen as SFEN;
 use std::collections::HashMap;
 
 // ############################################################################################
@@ -37,7 +38,7 @@ fn pst_parse(sfen: &str) -> Vec<char> {
     let pieces = split[0];
     // println!("{:?}", pieces);
     let replaced = pieces.replace("/", "");
-    let clean = sfen::convert_promoted_pieces(&replaced);
+    let clean = SFEN::convert_promoted_pieces(&replaced);
 
     let mut result = Vec::new();
     for ch in clean.chars() {
@@ -153,69 +154,129 @@ fn pst() -> HashMap<&'static str, [i32; 81]> {
 }
 
 
-pub fn evaluate_piece_table(sfen: &str, color: &str) {
+pub fn evaluate_piece_table(mut sfen: &str, color: &str) {
     
     let mut white_score = 0;
     let mut black_score = 0;
 
     let pst_map = pst();
+    if color == "black" {
+       let sfen = SFEN::flip(sfen);
+    }
+    
+    println!("SFEN: {:?}", sfen);
+    view::display_sfen(sfen);
+
     let sfen_vec = pst_parse(sfen);
     let mut index = 0;
     for i in sfen_vec {
         
         if i == 'p'{
             let value = pst_map["P"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
         
         } else if i == 'l' {
             let value = pst_map["L"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'n' {
             let value = pst_map["N"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 's' {
             let value = pst_map["S"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'g' {
             let value = pst_map["G"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'r' {
             let value = pst_map["R"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'b' {
             let value = pst_map["B"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'e' /* PR rook */ {
             let value = pst_map["E"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'w' /* PR bishop */ {
             let value = pst_map["W"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'z' /* PR pawn */ {
             let value = pst_map["G"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'x' /* PR lance */ {
             let value = pst_map["G"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'y' /* PR knight */ {
             let value = pst_map["G"][index];
-            white_score += value;
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
 
         } else if i == 'q' /* PR siLver */ {
             let value = pst_map["G"][index];
-            white_score += value; 
+            if color == "black" {
+                black_score += value
+            } else if color == "white" {
+                white_score += value;
+            }
         }
 
+        /*
         else if i == 'P' {
             let value = pst_map["P"][index];
             black_score += value;
@@ -268,7 +329,9 @@ pub fn evaluate_piece_table(sfen: &str, color: &str) {
             let value = pst_map["G"][index];
             black_score += value;
         
-        } else if i == 'k' {
+        }  */ 
+
+        else if i == 'k' {
 
         } else if i == 'K' {
         

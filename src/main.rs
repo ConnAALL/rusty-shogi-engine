@@ -88,8 +88,8 @@ fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
     
-    println!("SFEN: {:?}", sfen);
-    view::display_sfen(sfen);
+    //println!("SFEN: {:?}", sfen);
+    //view::display_sfen(sfen);
 
     let eval_pst = eval::evaluate_piece_table(sfen, "black");
     //println!("{:?}", sfen_tst);
