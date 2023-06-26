@@ -3,7 +3,7 @@
 mod search;
 mod view;
 mod sfen;
-mod eval_pst;
+mod eval;
 
 
 fn manual_test() {
