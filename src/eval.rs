@@ -163,7 +163,8 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
     let mut sfen_vec = Vec::<char>::new();
 
     if color == "black" {
-        let case_flip = SFEN::flip_case(sfen); // swaps lowercase with uppercase
+        let clean = SFEN::convert_promoted_pieces(&sfen);
+        let case_flip = SFEN::flip_case(&clean); // swaps lowercase with uppercase
         let flipped = SFEN::flip(&case_flip); // actual board flip
         println!("SFEN: {:?}", flipped);
         view::display_sfen(&flipped);
