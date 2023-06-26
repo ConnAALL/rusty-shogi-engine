@@ -86,7 +86,7 @@ fn main() {
     //manual_test();
     //partial_pos_test();
     
-    let sfen = "+l+n+sgkgsnl/1+r5+b1/+ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
     let sfen_tst = eval::pst_parse(sfen);
     println!("{:?}", sfen_tst);
 }
