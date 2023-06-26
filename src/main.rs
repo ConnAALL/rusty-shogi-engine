@@ -80,8 +80,25 @@ fn search_test() {
     }
 }
 
+fn sfen_prse() {
+
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
+    let split: Vec<&str> = sfen.split_whitespace().collect();
+    let pieces = split[0];
+
+    println!("{:?}", pieces);
+
+    for pce in pieces.chars() {
+        
+        println!("{:?}", pce);
+    }
+
+} 
+
+
 fn main() {
-    search_test();
+    //search_test();
     //manual_test();
     //partial_pos_test();
+    sfen_prse();
 }
