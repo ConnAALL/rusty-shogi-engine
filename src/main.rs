@@ -91,7 +91,7 @@ fn main() {
     println!("SFEN: {:?}", sfen);
     view::display_sfen(sfen);
 
-    let sfen_tst = eval::evaluate_piece_table(sfen);
+    let eval_pst = eval::evaluate_piece_table(sfen, "black");
     //println!("{:?}", sfen_tst);
-    //eval::pst();
+
 }

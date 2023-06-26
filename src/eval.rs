@@ -153,7 +153,7 @@ fn pst() -> HashMap<&'static str, [i32; 81]> {
 }
 
 
-pub fn evaluate_piece_table(sfen: &str) {
+pub fn evaluate_piece_table(sfen: &str, color: &str) {
     
     let mut white_score = 0;
     let mut black_score = 0;
@@ -216,32 +216,57 @@ pub fn evaluate_piece_table(sfen: &str) {
             white_score += value; 
         }
 
-        // black
         else if i == 'P' {
+            let value = pst_map["P"][index];
+            black_score += value;
 
         } else if i == 'L' {
+            let value = pst_map["L"][index];
+            black_score += value;
 
         } else if i == 'N' {
+            let value = pst_map["N"][index];
+            black_score += value;
 
         } else if i == 'S' {
+            let value = pst_map["S"][index];
+            black_score += value;
 
         } else if i == 'G' {
+            let value = pst_map["G"][index];
+            black_score += value;
 
         } else if i == 'R' {
+            let value = pst_map["R"][index];
+            black_score += value;
 
         } else if i == 'B' {
+            let value = pst_map["B"][index];
+            black_score += value;
 
         } else if i == 'E' {
+            let value = pst_map["E"][index];
+            black_score += value;
 
         } else if i == 'W' {
+            let value = pst_map["W"][index];
+            black_score += value;
 
         } else if i == 'Z' {
+            let value = pst_map["G"][index];
+            black_score += value;
 
         } else if i == 'X' {
+            let value = pst_map["G"][index];
+            black_score += value;
 
         } else if i == 'Y' {
+            let value = pst_map["G"][index];
+            black_score += value;
 
         } else if i == 'Q' {
+            let value = pst_map["G"][index];
+            black_score += value;
         
         } else if i == 'k' {
 
@@ -252,7 +277,11 @@ pub fn evaluate_piece_table(sfen: &str) {
         index += 1;
     }
 
-    println!("{:?}", white_score);
+    if color == "white" {
+        println!("{:?}", white_score);
+    } else if color == "black"{
+        println!("{:?}", black_score);
+    }
 }
 
 
