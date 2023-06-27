@@ -1,12 +1,13 @@
 /* Russell Kosovsky, Jim O'Conner
- * Module containing the 6 eval functions
-    * 1. Piece Square Tables
-    * 2. Promoted Pieces
-    * 3. King Vulnerability
-    * 4. Rook Mobility
-    * 5. Lance Mobility
-    * 6. Biship Mobility
- */
+ 
+    * Module containing the 6 eval functions
+        * 1. Piece Square Tables
+        * 2. Promoted Pieces
+        * 3. Mobility
+        * 4. King Vulnerability
+    * 
+
+*/
 
 
 use crate::view;
@@ -15,24 +16,17 @@ use std::collections::HashMap;
 use shogi_legality_lite::normal_from_candidates;
 use shogi_core::{Square, Piece, Color, PieceKind};
 
-
-// ############################################################################################
-// ################################## 1. PIECE SQUARE TABLES ##################################
-// ############################################################################################
-
 /*
-REFERENCE FOR PROMOTED PIECES
-    +P / +p ==> Z / z
-    
-    +L / +l ==> X / x
-    
-    +N / +n ==> Y / y
-
-    +S / +s ==> Q / q
-
-    +B / +b ==> W / w
-
-    +R / +r ==> E / e
+    ############################################################################################
+    ################################## 1. PIECE SQUARE TABLES ##################################
+    ############################################################################################
+    REFERENCE FOR PROMOTED PIECES
+        +P / +p ==> Z / z
+        +L / +l ==> X / x
+        +N / +n ==> Y / y
+        +S / +s ==> Q / q
+        +B / +b ==> W / w
+        +R / +r ==> E / e
 */
 
 
@@ -179,7 +173,7 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
         sfen_vec = pst_parse(sfen);
     }
     
-    
+
     let mut index = 0;
     for i in sfen_vec {
 
@@ -308,13 +302,11 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
 }
 
 
-// ############################################################################################
-
-
-
-// ############################################################################################
-// #################################### 2. PROMOTED PIECES ####################################
-// ############################################################################################
+/* 
+   ############################################################################################
+   #################################### 2. PROMOTED PIECES ####################################
+   ############################################################################################
+*/
 
 
 pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
@@ -342,14 +334,11 @@ pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
 }
 
 
-// ############################################################################################
-
-
-
-// ##########################################################################################
-// #################################### 4. ROOK MOBILITY ####################################
-// ##########################################################################################
-
+/* 
+   ###########################################################################################
+   ####################################### 3. MOBILITY #######################################
+   ###########################################################################################
+*/
 
 pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
@@ -366,7 +355,7 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
      80  71  62  53  44  35  26  17  8  #  8  
      81  72  63  54  45  36  27  18  9  #  9    
 */
-
+    
     // Convert the coordinate to file and rank indices
     let file = coord.chars().nth(0).unwrap() as u8 - b'A' + 1;
     let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
@@ -399,162 +388,19 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
     // Return the count of possible moves and the captured pieces
     (num_moves, captured_pieces)
 }
+ 
 
 /*
-    let board = Board::from_sfen(sfen).unwrap();
-    let row_key: Vec<char> = vec!['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-    let row: char = coord.chars().next().unwrap();
-    let column: char = coord.chars().nth(1).unwrap();
-    let x: u32 = column.to_digit(10).unwrap();
-    let y: usize = row_key.iter().position(|&r| r == row).unwrap();
-    let mut mobility: u32 = 0;
-    let mut piece_to_capture: Vec<char> = Vec::new();
-
-    if rook.is_ascii_lowercase() {
-        // WHITE
-        // UP
-        for i in (y + 1)..9 {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
-                if piece.symbol().is_ascii_uppercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-
-        // DOWN
-        for i in (0..y).rev() {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
-                if piece.symbol().is_ascii_uppercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-
-        // RIGHT
-        for i in (x + 1)..10 {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
-                if piece.symbol().is_ascii_uppercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-
-        // LEFT
-        for i in (1..x).rev() {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
-                if piece.symbol().is_ascii_uppercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-    } else {
-        // BLACK
-        // UP
-        for i in (y + 1)..9 {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
-                if piece.symbol().is_ascii_lowercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-
-        // DOWN
-        for i in (0..y).rev() {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
-                if piece.symbol().is_ascii_lowercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-
-        // RIGHT
-        for i in (x + 1)..10 {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
-                if piece.symbol().is_ascii_lowercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-
-        // LEFT
-        for i in (1..x).rev() {
-            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
-                if piece.symbol().is_ascii_lowercase() {
-                    mobility += 1;
-                    piece_to_capture.push(piece.symbol());
-                }
-                break;
-            } else {
-                mobility += 1;
-            }
-        }
-    }
-
-    (mobility, piece_to_capture)
-}
-
+   ###########################################################################################
+   ################################## 4. KING VULNERABILITY ##################################
+   ###########################################################################################
 */
 
+pub fn enemy_king_vuln(sfen: &str, coord: &str) {
 
+/*  Evaluate the 8 squares surrounding the King, and then maybe the 16 squares areound that.
+    a square is contributing positively to vulnerability if it is being covered by a friendly piece. If
+    an enemy can move to a square without being captured it is not safe. Additionally, we need to
+    the King's escape routes. */
 
-
-
-// ##########################################################################################
-
-
-
-// ###########################################################################################
-// #################################### 5. LANCE MOBILITY ####################################
-// ###########################################################################################
-
-// ###########################################################################################
-
-
-
-// ############################################################################################
-// #################################### 6. BISHOP MOBILITY ####################################
-// ############################################################################################
-
-// ############################################################################################
-
-
-
-// ###########################################################################################
-// ################################## 3. KING VULNERABILITY ##################################
-// ###########################################################################################
-
-// ###########################################################################################
-
-
-
-
-
-
+}
