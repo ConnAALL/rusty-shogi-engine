@@ -12,6 +12,8 @@
 use crate::view;
 use crate::sfen as SFEN;
 use std::collections::HashMap;
+use shogi_legality_lite::normal_from_candidates;
+use shogi_core::{Square, Piece, Color, PieceKind};
 
 
 // ############################################################################################
@@ -347,6 +349,183 @@ pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
 // ##########################################################################################
 // #################################### 4. ROOK MOBILITY ####################################
 // ##########################################################################################
+
+
+pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
+
+/*   FILE >>>  
+     I   H   G   F   E   D   C   B   A  
+     #   #   #   #   #   #   #   #   #  #  
+     73  64  55  46  37  28  19  10  1  #  1  R
+     74  65  56  47  38  29  20  11  2  #  2  A
+     75  66  57  48  39  30  21  12  3  #  3  N
+     76  67  58  49  40  31  22  13  4  #  4  K
+     77  68  59  50  41  32  23  14  5  #  5  
+     78  69  60  51  42  33  24  15  6  #  6  
+     79  70  61  52  43  34  25  16  7  #  7  
+     80  71  62  53  44  35  26  17  8  #  8  
+     81  72  63  54  45  36  27  18  9  #  9    
+*/
+
+    // Convert the coordinate to file and rank indices
+    let file = coord.chars().nth(0).unwrap() as u8 - b'A' + 1;
+    let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
+    println!("file: {:?}", file);
+    println!("rank: {:?}", rank);
+
+    // Parse the SFEN string into a position
+    let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos = SFEN::generate_pos(positions); // creates a "partial position" out of it
+    pos.side_to_move_set(SFEN::get_color(sfen)); // finalize the partial position
+
+    // Find the rook's square based on the given file and rank
+    let rook_square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
+    println!("rook sqr: {:?}", rook_square);
+
+    // Get the Bitboard of possible rook moves from the LiteLegalityChecker
+    let possible_moves = normal_from_candidates(&pos, rook_square);
+
+    // Count the number of squares the rook can move to
+    let num_moves = possible_moves.count() as usize;
+
+    // Iterate over the possible moves and find the captured pieces
+    let mut captured_pieces = Vec::<(PieceKind, Color)>::new();
+    for to_square in possible_moves {
+        if let Some(captured_piece) = pos.piece_at(to_square) {
+            captured_pieces.push(captured_piece.to_parts());
+        }
+    }
+
+    // Return the count of possible moves and the captured pieces
+    (num_moves, captured_pieces)
+}
+
+/*
+    let board = Board::from_sfen(sfen).unwrap();
+    let row_key: Vec<char> = vec!['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    let row: char = coord.chars().next().unwrap();
+    let column: char = coord.chars().nth(1).unwrap();
+    let x: u32 = column.to_digit(10).unwrap();
+    let y: usize = row_key.iter().position(|&r| r == row).unwrap();
+    let mut mobility: u32 = 0;
+    let mut piece_to_capture: Vec<char> = Vec::new();
+
+    if rook.is_ascii_lowercase() {
+        // WHITE
+        // UP
+        for i in (y + 1)..9 {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
+                if piece.symbol().is_ascii_uppercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+
+        // DOWN
+        for i in (0..y).rev() {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
+                if piece.symbol().is_ascii_uppercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+
+        // RIGHT
+        for i in (x + 1)..10 {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
+                if piece.symbol().is_ascii_uppercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+
+        // LEFT
+        for i in (1..x).rev() {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
+                if piece.symbol().is_ascii_uppercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+    } else {
+        // BLACK
+        // UP
+        for i in (y + 1)..9 {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
+                if piece.symbol().is_ascii_lowercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+
+        // DOWN
+        for i in (0..y).rev() {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row_key[i], x))) {
+                if piece.symbol().is_ascii_lowercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+
+        // RIGHT
+        for i in (x + 1)..10 {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
+                if piece.symbol().is_ascii_lowercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+
+        // LEFT
+        for i in (1..x).rev() {
+            if let Some(piece) = board.piece_at(shogi::Position::from((row, i))) {
+                if piece.symbol().is_ascii_lowercase() {
+                    mobility += 1;
+                    piece_to_capture.push(piece.symbol());
+                }
+                break;
+            } else {
+                mobility += 1;
+            }
+        }
+    }
+
+    (mobility, piece_to_capture)
+}
+
+*/
+
+
+
+
 
 // ##########################################################################################
 
