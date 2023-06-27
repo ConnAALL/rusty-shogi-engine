@@ -6,34 +6,6 @@ mod sfen;
 mod eval;
 
 
-fn manual_test() {
-
-    let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-
-    let initial_moves = search::single_search(start);
-    
-    for bs in &initial_moves {
-        println!("\nSFEN: {:?}", bs);
-        //view::display_sfen(bs);
-    }
-    println!("\nNumber of moves: {:?}", initial_moves.len());
-
-    println!("\n############################################################################################\n");
-
-    let one = &initial_moves[0];
-    println!("ROOT SFEN: {:?}", one);
-    view::display_sfen(one);
-
-
-    println!("#############################################################");
-
-    let one_moves = search::single_search(one);
-    for bs in &one_moves {
-        println!("\nSFEN: {:?}", bs);
-        view::display_sfen(bs);
-    }
-}
-
 fn partial_pos_test() {
 
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
@@ -86,16 +58,16 @@ fn main() {
     //manual_test();
     //partial_pos_test();
     
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/LNSGKGSN1 w - 1";
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5RL/LNSGKGSN1 w - 1";
+    let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
     
     //println!("SFEN: {:?}", sfen);
     //view::display_sfen(sfen);
+    //let eval_pst = eval::evaluate_piece_table(sfen, "black");
+    //println!("{:?}", eval_pst);
 
-
-    //let test = sfen::flip(sfen);
-    //println!("{:?}", test);
-    
-    let eval_pst = eval::evaluate_piece_table(sfen, "black");
-    println!("{:?}", eval_pst);
+    let (black_pieces, white_pieces) = eval::promoted_pieces(prom_sfen);
+    println!("Number blacks promoted pieces: {:?}", black_pieces);
+    println!("Number whites promoted pieces: {:?}", white_pieces);
 
 }
