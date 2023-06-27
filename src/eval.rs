@@ -7,7 +7,7 @@
         * 4. King Vulnerability
     * 
 
-*/
+ */
 
 
 use crate::view;
@@ -17,9 +17,11 @@ use shogi_legality_lite::normal_from_candidates;
 use shogi_core::{Square, Piece, Color, PieceKind};
 
 /*
+
     ############################################################################################
     ################################## 1. PIECE SQUARE TABLES ##################################
     ############################################################################################
+    
     REFERENCE FOR PROMOTED PIECES
         +P / +p ==> Z / z
         +L / +l ==> X / x
@@ -27,7 +29,8 @@ use shogi_core::{Square, Piece, Color, PieceKind};
         +S / +s ==> Q / q
         +B / +b ==> W / w
         +R / +r ==> E / e
-*/
+
+ */
 
 
 fn pst_parse(sfen: &str) -> Vec<char> {
@@ -303,10 +306,12 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
 
 
 /* 
+
    ############################################################################################
    #################################### 2. PROMOTED PIECES ####################################
    ############################################################################################
-*/
+
+ */
 
 
 pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
@@ -335,26 +340,30 @@ pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
 
 
 /* 
+   
    ###########################################################################################
    ####################################### 3. MOBILITY #######################################
    ###########################################################################################
-*/
+
+ */
 
 pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
-/*   FILE >>>  
-     I   H   G   F   E   D   C   B   A  
-     #   #   #   #   #   #   #   #   #  #  
-     73  64  55  46  37  28  19  10  1  #  1  R
-     74  65  56  47  38  29  20  11  2  #  2  A
-     75  66  57  48  39  30  21  12  3  #  3  N
-     76  67  58  49  40  31  22  13  4  #  4  K
-     77  68  59  50  41  32  23  14  5  #  5  
-     78  69  60  51  42  33  24  15  6  #  6  
-     79  70  61  52  43  34  25  16  7  #  7  
-     80  71  62  53  44  35  26  17  8  #  8  
-     81  72  63  54  45  36  27  18  9  #  9    
-*/
+/*   
+ *              SQUARE INDEXES
+ *    FILE >>>  
+ *    I   H   G   F   E   D   C   B   A  
+ *    #   #   #   #   #   #   #   #   #  #  
+ *    73  64  55  46  37  28  19  10  1  #  1  R
+ *    74  65  56  47  38  29  20  11  2  #  2  A
+ *    75  66  57  48  39  30  21  12  3  #  3  N
+ *    76  67  58  49  40  31  22  13  4  #  4  K
+ *    77  68  59  50  41  32  23  14  5  #  5  
+ *    78  69  60  51  42  33  24  15  6  #  6  
+ *    79  70  61  52  43  34  25  16  7  #  7  
+ *    80  71  62  53  44  35  26  17  8  #  8  
+ *    81  72  63  54  45  36  27  18  9  #  9    
+ */
     
     // Convert the coordinate to file and rank indices
     let file = coord.chars().nth(0).unwrap() as u8 - b'A' + 1;
@@ -391,16 +400,18 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
  
 
 /*
+
    ###########################################################################################
    ################################## 4. KING VULNERABILITY ##################################
    ###########################################################################################
-*/
+ 
+ */
 
 pub fn enemy_king_vuln(sfen: &str, coord: &str) {
 
-/*  Evaluate the 8 squares surrounding the King, and then maybe the 16 squares areound that.
-    a square is contributing positively to vulnerability if it is being covered by a friendly piece. If
-    an enemy can move to a square without being captured it is not safe. Additionally, we need to
-    the King's escape routes. */
+/* Evaluate the 8 squares surrounding the King, and then maybe the 16 squares areound that.
+   a square is contributing positively to vulnerability if it is being covered by a friendly piece. If
+   an enemy can move to a square without being captured it is not safe. Additionally, we need to
+   the King's escape routes. */
 
 }
