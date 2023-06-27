@@ -409,12 +409,47 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
  */
 
+
+// Function to check if a piece can attack a given square
+fn can_attack(pos: PartialPosition, piece: Piece, src: Square, dst: Square) -> bool {
+
+    let mv = Move::Normal {
+            from: src,
+            to: dst,
+            promote: false,
+        };
+    
+    let legal_move = is_legal_partial_lite(pos, mv);
+
+    legal_move
+}
+
+
+// Function to find the attackers of a given square
+fn attackers(
+    pos: &PartialPosition,
+    color: Color,
+    square: Square,
+) -> Vec<Square> {
+    let mut result = Vec::new();
+
+    for src_square in Square::ALL_SQUARES {
+        if let Some(piece) = pos.get_piece(src_square) {
+            if piece.color() == color && can_attack(pos, piece, src_square, square) {
+                result.push(src_square);
+            }
+        }
+    }
+
+    result
+}
+
+
 pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
 
-/* Evaluate the 8 squares surrounding the King, and then maybe the 16 squares areound that. A 
-   square is contributing positively to vulnerability if it is being covered by a friendly piece. 
-   If an enemy can move to a square without being captured it is not safe. Additionally, we need 
-   to know the King's escape routes. */
+/* Evaluate the 8 squares surrounding the King. A square is contributing positively to vulnerabilityif
+   if it is being covered by a friendly piece. If an enemy can move to a square without being captured 
+   it is not safe. Additionally, we need to know the King's escape routes. */
 
     const ATK_WEIGHT: u32 = 1;
     const DEF_WEIGHT: u32 = 1;
@@ -429,8 +464,8 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     pos.side_to_move_set(player); // finalize the partial position
 
     // Find the kings's square based on the given file and rank
-    //let king_square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
-    let king_square = pos.king_position(SFEN::get_color(sfen));
+    let king_square = pos.king_position(player);
+    
     // Print square index
     println!("king sqr: {:?}", king_square);
 
@@ -449,26 +484,39 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     
     let files = (file - 1..=file + 1).filter(|&f| b'A' <= f && f <= b'I');
     let ranks = (rank - 1..=rank + 1).filter(|&r| 1 <= r && r <= 9);
-    let squares: Vec<String> = files
-        .flat_map(|f| ranks.clone().map(move |r| format!("{}{}", (f as char), r)))
-        .filter(|s| s != coord)
+    let squares: Vec<Square> = files
+        .flat_map(|f| ranks.clone().map(move |r| Square::new(f,r)))
+        .filter(|&s| s != king_square)
         .collect();
 
     // Calculate the number of pieces that can attack the squares surrounding the king
+    let legality_checker = LiteLegalityChecker;
+    let num_attackers = squares.iter().filter(|&s| {
+        let attackers = attackers(&pos, color, *s);
+        !attackers.is_empty()
+    }).count() as u32;
 
     // Calculate the number of pieces that can defend the squares surrounding the king
+    let num_defenders = squares.iter().filter(|&s| {
+        let defenders = attackers(&pos, enemy_color, *s);
+        !defenders.is_empty()
+    }).count() as u32;
 
     // Calculate the number of pieces that can attack the king directly
+    let num_king_attackers = attackers(&pos, enemy_color, king_square).len() as u32;
 
     // Calculate the number of escape routes the King has
+    let num_escapes = legality_checker.all_legal_moves_partial(&pos).len() as u32;
 
     // Modify the values with internal weightings
     let king_vulnerability = (num_attackers * ATK_WEIGHT
-                              - num_defenders * DEF_WEIGHT
-                              + num_king_attackers * K_ATK_WEIGHT
-                              - num_escapes * ESC_WEIGHT)
-                              .max(0);
+        - num_defenders * DEF_WEIGHT
+        + num_king_attackers * K_ATK_WEIGHT
+        - num_escapes * ESC_WEIGHT)
+        .max(0);
 
     king_vulnerability
 
 }
+
+
