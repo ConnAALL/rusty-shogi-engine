@@ -378,6 +378,8 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
     // Find the rook's square based on the given file and rank
     let rook_square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
+
+    // Print square index
     println!("rook sqr: {:?}", rook_square);
 
     // Get the Bitboard of possible rook moves from the LiteLegalityChecker
