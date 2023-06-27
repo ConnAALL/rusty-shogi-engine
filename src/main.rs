@@ -63,7 +63,7 @@ fn king_vuln_test() {
     println!("SFEN: {:?}", sfen);
     view::display_sfen(sfen);
 
-    let king_vuln = eval::enemy_king_vulnerability(sfen, coord);
+    let king_vuln = eval::enemy_king_vuln(sfen, coord);
     println!("KING VULN: {:?}", king_vuln);
 
 }
@@ -75,17 +75,20 @@ fn main() {
     
     //search_test();
     
-    //----------------------PIECE_SQR_TBL_TEST---------------------------
+    //--------------------------PIECE_SQR_TBL_TEST--------------------------
     //println!("SFEN: {:?}", sfen);
     //view::display_sfen(sfen);
     //let eval_pst = eval::evaluate_piece_table(sfen, "black");
     //println!("{:?}", eval_pst);
 
-    //-----------------------PROM_PIECES_TEST-----------------------------
+    //--------------------------PROM_PIECES_TEST--------------------------
     //let (black_pieces, white_pieces) = eval::promoted_pieces(prom_sfen);
     //println!("Number blacks promoted pieces: {:?}", black_pieces);
     //println!("Number whites promoted pieces: {:?}", white_pieces);
 
-    //-----------------------ROOK_MOBIL_TEST-----------------------------
-    test_rook_mobility();
+    //---------------------------MOBILITY_TEST---------------------------
+    //test_rook_mobility();
+
+    //---------------------------KING_VULN_TEST---------------------------
+    king_vuln_test();
 }

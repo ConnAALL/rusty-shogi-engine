@@ -409,14 +409,66 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
  */
 
-pub fn enemy_king_vuln(sfen: &str, coord: &str) {
+pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
 
 /* Evaluate the 8 squares surrounding the King, and then maybe the 16 squares areound that. A 
    square is contributing positively to vulnerability if it is being covered by a friendly piece. 
    If an enemy can move to a square without being captured it is not safe. Additionally, we need 
    to know the King's escape routes. */
 
+    const ATK_WEIGHT: u32 = 1;
+    const DEF_WEIGHT: u32 = 1;
+    const K_ATK_WEIGHT: u32 = 1;
+    const ESC_WEIGHT: u32 = 1;
+    
 
+    // Parse the SFEN string into a position
+    let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos = SFEN::generate_pos(positions); // creates a "partial position" out of it
+    let player = SFEN::get_color(sfen);
+    pos.side_to_move_set(player); // finalize the partial position
 
+    // Find the kings's square based on the given file and rank
+    //let king_square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
+    let king_square = pos.king_position(SFEN::get_color(sfen));
+    // Print square index
+    println!("king sqr: {:?}", king_square);
+
+    // Determine the color and enemy color based on the piece's case
+    let (color, enemy_color) = if player == Color::White {
+        ("WHITE", "BLACK")
+    } else {
+        ("BLACK", "WHITE")
+    };
+
+    // Construct the list of 8 squares that surround the king
+    let file = coord.chars().nth(0).unwrap() as u8 - b'A' + 1; 
+    let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
+    println!("file: {:?}", file);
+    println!("rank: {:?}", rank);
+    
+    let files = (file - 1..=file + 1).filter(|&f| b'A' <= f && f <= b'I');
+    let ranks = (rank - 1..=rank + 1).filter(|&r| 1 <= r && r <= 9);
+    let squares: Vec<String> = files
+        .flat_map(|f| ranks.clone().map(move |r| format!("{}{}", (f as char), r)))
+        .filter(|s| s != coord)
+        .collect();
+
+    // Calculate the number of pieces that can attack the squares surrounding the king
+
+    // Calculate the number of pieces that can defend the squares surrounding the king
+
+    // Calculate the number of pieces that can attack the king directly
+
+    // Calculate the number of escape routes the King has
+
+    // Modify the values with internal weightings
+    let king_vulnerability = (num_attackers * ATK_WEIGHT
+                              - num_defenders * DEF_WEIGHT
+                              + num_king_attackers * K_ATK_WEIGHT
+                              - num_escapes * ESC_WEIGHT)
+                              .max(0);
+
+    king_vulnerability
 
 }
