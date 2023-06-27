@@ -37,11 +37,13 @@ fn search_test() {
 }
 
 fn test_rook_mobility() {
+
     let sfen = "lnsgkgsnl/1r5b1/p1ppppppp/p8/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
     let coord = "C1";
     
     println!("SFEN: {:?}", sfen);
     view::display_sfen(sfen);
+    
     println!("------------------------------------------------------------------------------------");
     println!("AT: {:?}", coord);
     println!("------------------------------------------------------------------------------------");
@@ -50,8 +52,21 @@ fn test_rook_mobility() {
 
     println!("Number of possible moves: {}", num_moves);
     println!("Captured pieces: {:?}", captured_pieces);
+
 }
 
+fn king_vuln_test() {
+
+    let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L w Sbgn3p 124";
+    let coord = "H8";
+    
+    println!("SFEN: {:?}", sfen);
+    view::display_sfen(sfen);
+
+    let king_vuln = eval::enemy_king_vulnerability(sfen, coord);
+    println!("KING VULN: {:?}", king_vuln);
+
+}
 
 fn main() {
     

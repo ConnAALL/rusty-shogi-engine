@@ -400,18 +400,21 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
  
 
 /*
-
+   
    ###########################################################################################
    ################################## 4. KING VULNERABILITY ##################################
    ###########################################################################################
- 
+
  */
 
 pub fn enemy_king_vuln(sfen: &str, coord: &str) {
 
-/* Evaluate the 8 squares surrounding the King, and then maybe the 16 squares areound that.
-   a square is contributing positively to vulnerability if it is being covered by a friendly piece. If
-   an enemy can move to a square without being captured it is not safe. Additionally, we need to
-   the King's escape routes. */
+/* Evaluate the 8 squares surrounding the King, and then maybe the 16 squares areound that. A 
+   square is contributing positively to vulnerability if it is being covered by a friendly piece. 
+   If an enemy can move to a square without being captured it is not safe. Additionally, we need 
+   to know the King's escape routes. */
+
+
+
 
 }
