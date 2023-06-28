@@ -13,8 +13,10 @@
 use crate::view;
 use crate::sfen as SFEN;
 use std::collections::HashMap;
-use shogi_legality_lite::normal_from_candidates;
-use shogi_core::{Square, Piece, Color, PieceKind};
+//use shogi_legality_lite::normal_from_candidates;
+use shogi_core::{Square, Piece, Color, Move, PieceKind};
+use shogi_legality_lite::{LegalityChecker, LiteLegalityChecker};
+
 
 /*
 
@@ -419,8 +421,9 @@ fn can_attack(pos: PartialPosition, piece: Piece, src: Square, dst: Square) -> b
             promote: false,
         };
     
-    let legal_move = is_legal_partial_lite(pos, mv);
-
+    let legality_checker = LegalityChecker;
+    let legal_move = legality_checker.is_legal_partial_lite(pos, mv);
+    
     legal_move
 }
 
