@@ -413,51 +413,50 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
 
 // Function to check if a piece can attack a given square
-fn can_attack(pos: PartialPosition, piece: Piece, src: Square, dst: Square) -> bool {
-
+fn can_attack(pos: &PartialPosition, piece: Piece, src: Option<Square>, dst: Option<Square>) -> bool {
     let mv = Move::Normal {
-            from: src,
-            to: dst,
-            promote: false,
-        };
+        from: src,
+        to: dst,
+        promote: false,
+    };
     
-    let legal_move = is_legal_partial_lite(&pos, mv);
+    let legal_move = is_legal_partial_lite(pos, mv);
     
     legal_move
+
 }
 
 
 // Function to find the attackers of a given square
-fn attackers(
-    pos: &PartialPosition,
-    color: Color,
-    square: Square,
-) -> Vec<Square> {
+fn attackers(pos: &PartialPosition, color: Color, square: Option<Square>) -> Vec<Option<Square>> {
     let mut result = Vec::new();
 
-    for src_square in Square::ALL_SQUARES {
-        if let Some(piece) = pos.get_piece(src_square) {
-            if piece.color() == color && can_attack(pos.clone(), piece, src_square, square) {
-                result.push(src_square);
+    for file in b'A'..=b'I' {
+        for rank in 1..=9 {
+            let src_square = Square::new(file, rank);
+            if let Some(piece) = pos.piece_at(src_square) {
+                if piece.color() == color && can_attack(pos, piece, src_square, square) {
+                    result.push(src_square);
+                }
             }
         }
     }
 
     result
+
 }
 
 
 pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
-    
+
     const ATK_WEIGHT: u32 = 1;
     const DEF_WEIGHT: u32 = 1;
     const K_ATK_WEIGHT: u32 = 1;
     const ESC_WEIGHT: u32 = 1;
 
-
     // Parse the SFEN string into a position
     let positions = SFEN::sfen_parse(sfen);
-    let mut pos = SFEN::generate_pos(positions);
+    let mut pos = SFEN::generate_pos(positions.clone());
     pos.side_to_move_set(SFEN::get_color(sfen));
 
     // Find the king's square based on the given file and rank
@@ -476,7 +475,7 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     // Construct the list of 8 squares that surround the king
     let files = (file - 1..=file + 1).filter(|&f| b'A' <= f && f <= b'I');
     let ranks = (rank - 1..=rank + 1).filter(|&r| 1 <= r && r <= 9);
-    let squares: Vec<Square> = files
+    let squares: Vec<Option<Square>> = files
         .flat_map(|f| ranks.clone().map(move |r| Square::new(f, r)))
         .filter(|&s| s != king_square)
         .collect();
@@ -487,16 +486,18 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
         !attackers.is_empty()
     }).count() as u32;
 
-    // Calculate the number of pieces that can defend the squares surrounding the king
+    // Calculate the number of pieces that can defend the
+    // squares surrounding the king
     let num_defenders = squares.iter().filter(|&&s| {
         let defenders = attackers(&pos, enemy_color, s);
         !defenders.is_empty()
     }).count() as u32;
 
-    // Calculate the number of pieces that can attack the king directly
-    let num_king_attackers = attackers(&pos, enemy_color, king_square).len() as u32;
+    // Calculate the number of pieces attacking the king
+    let king_attackers = attackers(&pos, enemy_color, king_square);
+    let num_king_attackers = king_attackers.len() as u32;
 
-    // Calculate the number of escape routes the King has
+    // Calculate the number of escape routes the king has
     let num_escapes = all_legal_moves_partial(&pos).len() as u32;
 
     // Modify the values with internal weightings
@@ -509,5 +510,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     king_vulnerability
 
 }
+
 
 
