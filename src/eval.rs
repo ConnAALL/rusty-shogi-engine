@@ -13,9 +13,9 @@
 use crate::view;
 use crate::sfen as SFEN;
 use std::collections::HashMap;
-//use shogi_legality_lite::normal_from_candidates;
-use shogi_core::{Square, Piece, Color, Move, PieceKind};
-use shogi_legality_lite::{LegalityChecker, LiteLegalityChecker};
+use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
+use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
+
 
 
 /*
@@ -421,8 +421,7 @@ fn can_attack(pos: PartialPosition, piece: Piece, src: Square, dst: Square) -> b
             promote: false,
         };
     
-    let legality_checker = LegalityChecker;
-    let legal_move = legality_checker.is_legal_partial_lite(pos, mv);
+    let legal_move = is_legal_partial_lite(&pos, mv);
     
     legal_move
 }
@@ -438,7 +437,7 @@ fn attackers(
 
     for src_square in Square::ALL_SQUARES {
         if let Some(piece) = pos.get_piece(src_square) {
-            if piece.color() == color && can_attack(pos, piece, src_square, square) {
+            if piece.color() == color && can_attack(pos.clone(), piece, src_square, square) {
                 result.push(src_square);
             }
         }
@@ -449,59 +448,48 @@ fn attackers(
 
 
 pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
-
-/* Evaluate the 8 squares surrounding the King. A square is contributing positively to vulnerabilityif
-   if it is being covered by a friendly piece. If an enemy can move to a square without being captured 
-   it is not safe. Additionally, we need to know the King's escape routes. */
-
+    
     const ATK_WEIGHT: u32 = 1;
     const DEF_WEIGHT: u32 = 1;
     const K_ATK_WEIGHT: u32 = 1;
     const ESC_WEIGHT: u32 = 1;
-    
+
 
     // Parse the SFEN string into a position
-    let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
-    let mut pos = SFEN::generate_pos(positions); // creates a "partial position" out of it
-    let player = SFEN::get_color(sfen);
-    pos.side_to_move_set(player); // finalize the partial position
+    let positions = SFEN::sfen_parse(sfen);
+    let mut pos = SFEN::generate_pos(positions);
+    pos.side_to_move_set(SFEN::get_color(sfen));
 
-    // Find the kings's square based on the given file and rank
-    let king_square = pos.king_position(player);
-    
-    // Print square index
-    println!("king sqr: {:?}", king_square);
+    // Find the king's square based on the given file and rank
+    let file = coord.chars().next().unwrap() as u8 - b'A' + 1;
+    let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
+    let king_square = Square::new(file, rank);
 
-    // Determine the color and enemy color based on the piece's case
+    // Determine the color and enemy color based on the player's case
+    let player = pos.side_to_move();
     let (color, enemy_color) = if player == Color::White {
-        ("WHITE", "BLACK")
+        (Color::White, Color::Black)
     } else {
-        ("BLACK", "WHITE")
+        (Color::Black, Color::White)
     };
 
     // Construct the list of 8 squares that surround the king
-    let file = coord.chars().nth(0).unwrap() as u8 - b'A' + 1; 
-    let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
-    println!("file: {:?}", file);
-    println!("rank: {:?}", rank);
-    
     let files = (file - 1..=file + 1).filter(|&f| b'A' <= f && f <= b'I');
     let ranks = (rank - 1..=rank + 1).filter(|&r| 1 <= r && r <= 9);
     let squares: Vec<Square> = files
-        .flat_map(|f| ranks.clone().map(move |r| Square::new(f,r)))
+        .flat_map(|f| ranks.clone().map(move |r| Square::new(f, r)))
         .filter(|&s| s != king_square)
         .collect();
 
     // Calculate the number of pieces that can attack the squares surrounding the king
-    let legality_checker = LiteLegalityChecker;
-    let num_attackers = squares.iter().filter(|&s| {
-        let attackers = attackers(&pos, color, *s);
+    let num_attackers = squares.iter().filter(|&&s| {
+        let attackers = attackers(&pos, color, s);
         !attackers.is_empty()
     }).count() as u32;
 
     // Calculate the number of pieces that can defend the squares surrounding the king
-    let num_defenders = squares.iter().filter(|&s| {
-        let defenders = attackers(&pos, enemy_color, *s);
+    let num_defenders = squares.iter().filter(|&&s| {
+        let defenders = attackers(&pos, enemy_color, s);
         !defenders.is_empty()
     }).count() as u32;
 
@@ -509,7 +497,7 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     let num_king_attackers = attackers(&pos, enemy_color, king_square).len() as u32;
 
     // Calculate the number of escape routes the King has
-    let num_escapes = legality_checker.all_legal_moves_partial(&pos).len() as u32;
+    let num_escapes = all_legal_moves_partial(&pos).len() as u32;
 
     // Modify the values with internal weightings
     let king_vulnerability = (num_attackers * ATK_WEIGHT
