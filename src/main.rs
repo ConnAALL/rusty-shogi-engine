@@ -4,6 +4,9 @@ mod search;
 mod view;
 mod sfen;
 mod eval;
+use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
+use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
+
 
 
 fn search_test() {
@@ -67,6 +70,45 @@ fn king_vuln_test() {
     println!("KING VULN: {:?}", king_vuln);
 
 }
+fn king_vuln_sfen() {
+
+    let sfen = "lnsgkgsnl/4r2b1/pppp1pppp/9/9/9/PPPP1PPPP/1B5R1/LNSGKGSNL w - 1";
+    let coord = "E9";
+    
+    println!("SFEN: {:?}", sfen);
+    view::display_sfen(sfen);
+    
+    let king_vuln = eval::enemy_king_vuln(sfen, coord);
+    println!("KING VULN: {:?}", king_vuln);
+
+}
+
+
+fn partial_pos_test() {
+
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/8K/9/9/PPPPPPPPP/1B5R1/LNSG1GSNL w - 1";
+    
+    println!("SFEN: {:?}", sfen);
+    view::display_sfen(sfen);
+    
+    // Parse the SFEN string into a position
+    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos = sfen::generate_pos(positions); // creates a "partial position" out of it
+    pos.side_to_move_set(sfen::get_color(sfen)); // finalize the partial position
+    println!("{:?}", pos.side_to_move());
+
+    let mv = Move::Normal {
+            from: Square::SQ_1C,
+            to: Square::SQ_1D,
+            promote: false,
+        };
+    println!("move: {:?}", mv);
+    println!("legal? {:?}", is_legal_partial_lite(&pos, mv));
+
+    pos.make_move(mv);
+
+    view::display_sfen(&pos.to_sfen_owned());
+}
 
 fn main() {
     
@@ -90,5 +132,9 @@ fn main() {
     //test_rook_mobility();
 
     //---------------------------KING_VULN_TEST---------------------------
-    king_vuln_test();
+    king_vuln_sfen();
+    //king_vuln_test();
+    
+    //
+    //partial_pos_test();
 }
