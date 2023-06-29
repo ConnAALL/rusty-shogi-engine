@@ -468,8 +468,8 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     let file = coord.chars().next().unwrap() as u8 - b'A' + 1;
     let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
     let king_square = Square::new(file, rank);
-    println!("file: {:?}", file);
-    println!("rank: {:?}", rank);
+    //println!("file: {:?}", file);
+    //println!("rank: {:?}", rank);
     println!("King's Square: {:?}", king_square);
 
 
@@ -488,14 +488,13 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     println!("\nConstructing the list of 8 squares that surround the king");
     let files = (file.saturating_sub(1)..=file.saturating_add(1)).filter(|&f| 1 <= f && f <= 9);
     let ranks = (rank.saturating_sub(1)..=rank.saturating_add(1)).filter(|&r| 1 <= r && r <= 9);
-    //let ranks = (rank - 1..=rank + 1).filter(|&r| 1 <= r && r <= 9);
-    println!("files: {:?}", files.clone().collect::<Vec<_>>());
-    println!("ranks: {:?}", ranks.clone().collect::<Vec<_>>());
+    //println!("files: {:?}", files.clone().collect::<Vec<_>>());
+    //println!("ranks: {:?}", ranks.clone().collect::<Vec<_>>());
     let squares: Vec<Option<Square>> = files
         .flat_map(|f| ranks.clone().map(move |r| Square::new(f, r)))
         .filter(|&s| s != king_square)
         .collect();
-    println!("SQUARES surrounding king: {:?}", squares);
+    //println!("SQUARES surrounding king: {:?}", squares);
 
     // Calculate the number of pieces that can attack the squares surrounding the king
     println!("\nCalculateing the number of pieces that can attack the squares surrounding the king");

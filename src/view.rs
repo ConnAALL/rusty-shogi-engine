@@ -5,6 +5,7 @@ pub fn display_sfen(sfen: &str) {
     let board_layout = parts[0];
 
     //println!("+---------+---------+---------+---------+---------+---------+---------+---------+---------+");
+    println!("----------------------------------------------");
 
     for row in board_layout.split('/') {
         let mut row_string = "|".to_string();
@@ -15,7 +16,7 @@ pub fn display_sfen(sfen: &str) {
                 let num_spaces: u32 = ch.to_digit(10).unwrap();
                 squares_count += num_spaces;
                 for _ in 0..num_spaces {
-                    row_string.push_str("   |");
+                    row_string.push_str("    |");
                 }
             } else if ch == '+' {
                 // Check if there is a piece character after '+'
@@ -28,7 +29,7 @@ pub fn display_sfen(sfen: &str) {
                 }
             } else {
                 squares_count += 1;
-                row_string.push_str(&format!(" {} |", ch));
+                row_string.push_str(&format!("  {} |", ch));
             }
             // Check for row size
             if squares_count > 9 {
@@ -36,7 +37,7 @@ pub fn display_sfen(sfen: &str) {
             }
         }
         println!("{}", row_string);
-        //println!("+---------+---------+---------+---------+---------+---------+---------+---------+---------+");
+        println!("----------------------------------------------");
     }
 }
 
