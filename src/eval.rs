@@ -414,27 +414,31 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
 // Function to check if a piece can attack a given square
 fn can_attack(pos: &PartialPosition, piece: Piece, src: Option<Square>, dst: Option<Square>) -> bool {
-    let mv = Move::Normal {
-        from: src,
-        to: dst,
-        promote: false,
-    };
+    println!("dst: {:?}", dst);
+    if let (Some(from), Some(to)) = (src, dst) {
+        let mv = Move::Normal {
+            from,
+            to,
+            promote: false,
+        };
+        return is_legal_partial_lite(pos, mv);
     
-    let legal_move = is_legal_partial_lite(pos, mv);
-    
-    legal_move
-
+    } else {
+        return false;
+    }
 }
 
 
 // Function to find the attackers of a given square
 fn attackers(pos: &PartialPosition, color: Color, square: Option<Square>) -> Vec<Option<Square>> {
+    println!("Entered ATTACKERS!");
     let mut result = Vec::new();
 
-    for file in b'A'..=b'I' {
+    for file in 1..=9 {
         for rank in 1..=9 {
             let src_square = Square::new(file, rank);
-            if let Some(piece) = pos.piece_at(src_square) {
+            //println!("square: {:?}", src_square);
+            if let Some(piece) = pos.piece_at(src_square.unwrap()) {
                 if piece.color() == color && can_attack(pos, piece, src_square, square) {
                     result.push(src_square);
                 }
@@ -458,11 +462,16 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
     let positions = SFEN::sfen_parse(sfen);
     let mut pos = SFEN::generate_pos(positions.clone());
     pos.side_to_move_set(SFEN::get_color(sfen));
+    println!("Side to Move: {:?}", pos.side_to_move());
 
     // Find the king's square based on the given file and rank
     let file = coord.chars().next().unwrap() as u8 - b'A' + 1;
     let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
     let king_square = Square::new(file, rank);
+    println!("file: {:?}", file);
+    println!("rank: {:?}", rank);
+    println!("King's Square: {:?}", king_square);
+
 
     // Determine the color and enemy color based on the player's case
     let player = pos.side_to_move();
@@ -472,33 +481,52 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
         (Color::Black, Color::White)
     };
 
+    println!("Color: {:?}", color);
+    println!("Enemy Color: {:?}", enemy_color);
+
     // Construct the list of 8 squares that surround the king
-    let files = (file - 1..=file + 1).filter(|&f| b'A' <= f && f <= b'I');
-    let ranks = (rank - 1..=rank + 1).filter(|&r| 1 <= r && r <= 9);
+    println!("\nConstructing the list of 8 squares that surround the king");
+    let files = (file.saturating_sub(1)..=file.saturating_add(1)).filter(|&f| 1 <= f && f <= 9);
+    let ranks = (rank.saturating_sub(1)..=rank.saturating_add(1)).filter(|&r| 1 <= r && r <= 9);
+    //let ranks = (rank - 1..=rank + 1).filter(|&r| 1 <= r && r <= 9);
+    println!("files: {:?}", files.clone().collect::<Vec<_>>());
+    println!("ranks: {:?}", ranks.clone().collect::<Vec<_>>());
     let squares: Vec<Option<Square>> = files
         .flat_map(|f| ranks.clone().map(move |r| Square::new(f, r)))
         .filter(|&s| s != king_square)
         .collect();
+    println!("SQUARES surrounding king: {:?}", squares);
 
     // Calculate the number of pieces that can attack the squares surrounding the king
+    println!("\nCalculateing the number of pieces that can attack the squares surrounding the king");
     let num_attackers = squares.iter().filter(|&&s| {
         let attackers = attackers(&pos, color, s);
         !attackers.is_empty()
     }).count() as u32;
+    println!("num pieces that can attack the surrounding sqrs: {:?}", num_attackers);
+
+
+
 
     // Calculate the number of pieces that can defend the
     // squares surrounding the king
-    let num_defenders = squares.iter().filter(|&&s| {
-        let defenders = attackers(&pos, enemy_color, s);
-        !defenders.is_empty()
-    }).count() as u32;
+    let num_defenders = squares
+        .iter()
+        .filter(|&&s| {
+            let defenders = attackers(&pos, enemy_color, s);
+            !defenders.is_empty()
+    })
+    .count() as u32;
+    //println!("num pieces that can defend the surrounding sqrs: {:?}", num_defenders);
 
     // Calculate the number of pieces attacking the king
     let king_attackers = attackers(&pos, enemy_color, king_square);
     let num_king_attackers = king_attackers.len() as u32;
+    //println!("num pieces that can attack the king: {:?}", king_attackers);
 
     // Calculate the number of escape routes the king has
     let num_escapes = all_legal_moves_partial(&pos).len() as u32;
+    //println!("num escape routes for king: {:?}", num_escapes);
 
     // Modify the values with internal weightings
     let king_vulnerability = (num_attackers * ATK_WEIGHT
