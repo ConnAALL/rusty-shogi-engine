@@ -414,7 +414,7 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
 // Function to check if a piece can attack a given square
 fn can_attack(pos: &PartialPosition, piece: Piece, src: Option<Square>, dst: Option<Square>) -> bool {
-    println!("dst: {:?}", dst);
+    //println!("dst: {:?}", dst);
     if let (Some(from), Some(to)) = (src, dst) {
         let mv = Move::Normal {
             from,
@@ -431,7 +431,7 @@ fn can_attack(pos: &PartialPosition, piece: Piece, src: Option<Square>, dst: Opt
 
 // Function to find the attackers of a given square
 fn attackers(pos: &PartialPosition, color: Color, square: Option<Square>) -> Vec<Option<Square>> {
-    println!("Entered ATTACKERS!");
+    //println!("Entered ATTACKERS!");
     let mut result = Vec::new();
 
     for file in 1..=9 {
@@ -499,34 +499,39 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> u32 {
 
     // Calculate the number of pieces that can attack the squares surrounding the king
     println!("\nCalculateing the number of pieces that can attack the squares surrounding the king");
+    pos.side_to_move_set(color);
     let num_attackers = squares.iter().filter(|&&s| {
+        //println!("S: {:?}", s);
         let attackers = attackers(&pos, color, s);
         !attackers.is_empty()
     }).count() as u32;
     println!("num pieces that can attack the surrounding sqrs: {:?}", num_attackers);
 
+//  * Working up to here ----------------------------------------------------------------------------
 
-
-
-    // Calculate the number of pieces that can defend the
-    // squares surrounding the king
-    let num_defenders = squares
-        .iter()
-        .filter(|&&s| {
-            let defenders = attackers(&pos, enemy_color, s);
-            !defenders.is_empty()
-    })
-    .count() as u32;
-    //println!("num pieces that can defend the surrounding sqrs: {:?}", num_defenders);
+    // Calculate the number of pieces that can defend the squares surrounding the king
+    println!("\nCalculateing the number of pieces that can defend the squares surrounding the king");
+    pos.side_to_move_set(enemy_color);
+    let num_defenders = squares.iter().filter(|&&s| {
+        let defenders = attackers(&pos, enemy_color, s);
+        !defenders.is_empty()
+    }).count() as u32;
+    println!("num pieces that can defend the surrounding sqrs: {:?}", num_defenders);
 
     // Calculate the number of pieces attacking the king
+    println!("\nCalculateing the number of pieces attacking the king");
+    pos.side_to_move_set(color);
     let king_attackers = attackers(&pos, enemy_color, king_square);
     let num_king_attackers = king_attackers.len() as u32;
-    //println!("num pieces that can attack the king: {:?}", king_attackers);
+    println!("num pieces that can attack the king: {:?}", king_attackers);
 
     // Calculate the number of escape routes the king has
-    let num_escapes = all_legal_moves_partial(&pos).len() as u32;
-    //println!("num escape routes for king: {:?}", num_escapes);
+    println!("\nCalculateing number of escape routes for the king");
+    pos.side_to_move_set(enemy_color);
+    let escapes = normal_from_candidates(&pos, king_square.clone().unwrap());
+    println!("escapes: {:?}", escapes);
+    let num_escapes = escapes.count() as u32;
+    println!("num escape routes for king: {:?}", num_escapes);
 
     // Modify the values with internal weightings
     let king_vulnerability = (num_attackers * ATK_WEIGHT
