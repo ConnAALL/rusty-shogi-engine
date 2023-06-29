@@ -468,11 +468,15 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     const K_ATK_WEIGHT: i32 = 1;
     const ESC_WEIGHT: i32 = 1;
 
+
+
     // Parse the SFEN string into a position
     let positions = SFEN::sfen_parse(sfen);
     let mut pos = SFEN::generate_pos(positions.clone());
     pos.side_to_move_set(SFEN::get_color(sfen));
     println!("Side to Move: {:?}", pos.side_to_move());
+
+
 
     // Find the king's square based on the given file and rank
     let file = coord.chars().next().unwrap() as u8 - b'A' + 1;
@@ -481,6 +485,7 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     //println!("file: {:?}", file);
     //println!("rank: {:?}", rank);
     println!("King's Square: {:?}", king_square);
+
 
 
     // Determine the color and enemy color based on the player's case
@@ -494,6 +499,8 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("Color: {:?}", color);
     println!("Enemy Color: {:?}", enemy_color);
 
+
+
     // Construct the list of 8 squares that surround the king
     println!("\n-------------Constructing the list of 8 squares that surround the king");
     let files = (file.saturating_sub(1)..=file.saturating_add(1)).filter(|&f| 1 <= f && f <= 9);
@@ -506,6 +513,8 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
         .collect();
     println!("SQUARES surrounding king: {:?}\n", squares);
 
+
+
     // Calculate the number of pieces that can attack the squares surrounding the king
     println!("\n-------------Calculateing the number of pieces that can attack the squares surrounding the king");
     pos.side_to_move_set(color);
@@ -515,6 +524,7 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
         !attackers.is_empty()
     }).count() as i32;
     println!("num pieces that can attack the surrounding sqrs: {:?}\n", num_attackers);
+
 
 
     // Calculate the number of pieces that can defend the squares surrounding the king
@@ -531,20 +541,24 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("num pieces that can defend the surrounding sqrs: {:?}\n", num_defenders);
 
 
-//  * Working up to here ----------------------------------------------------------------------------
-
 
     // Calculate the number of pieces attacking the king
     println!("\n-------------Calculateing the number of pieces attacking the king");
-    pos.side_to_move_set(enemy_color);
+    pos.side_to_move_set(color);
     println!("turn: {:?}", pos.side_to_move());
     //let king_attackers = attackers(&pos, color, king_square);
     //let num_king_attackers = king_attackers.len() as i32;
     let in_check = shogi_legality_lite::is_in_check_partial_lite(&pos);
     let num_checks = all_checks_partial(&pos);
+    let status = shogi_legality_lite::status_partial(&pos);
     println!("in check?: {:?}", in_check);
-    println!("num squares that can attack the king: {:?}\n", num_checks);
+    for sqr in &num_checks {
+        println!("Check at: {:?}", sqr);
+    }
+    println!("pos status: {:?}", status);
     let num_king_attackers = num_checks.len() as i32;
+
+
 
     // Calculate the number of escape routes the king has
     println!("\n-------------Calculateing number of escape routes for the king");
@@ -555,6 +569,8 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("num escape routes for king: {:?}\n", num_escapes);
 
     println!(" ");
+
+
 
     // Modify the values with internal weightings
     let king_vulnerability = (num_attackers * ATK_WEIGHT
