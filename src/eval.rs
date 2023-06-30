@@ -14,15 +14,11 @@ use crate::view;
 use crate::sfen as SFEN;
 use std::collections::HashMap;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial, all_checks_partial};
-use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, PartialPosition, Piece, PieceKind,
-                  PositionStatus, Square};
+use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, PartialPosition, Piece, PieceKind, PositionStatus, Square};
 
 
 /*
-
-    ############################################################################################
     ################################## 1. PIECE SQUARE TABLES ##################################
-    ############################################################################################
     
     REFERENCE FOR PROMOTED PIECES
         +P / +p ==> Z / z
@@ -31,7 +27,6 @@ use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, Parti
         +S / +s ==> Q / q
         +B / +b ==> W / w
         +R / +r ==> E / e
-
  */
 
 
@@ -307,13 +302,7 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
 }
 
 
-/* 
-
-   ############################################################################################
-   #################################### 2. PROMOTED PIECES ####################################
-   ############################################################################################
-
- */
+//   #################################### 2. PROMOTED PIECES ####################################
 
 
 pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
@@ -341,13 +330,7 @@ pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
 }
 
 
-/* 
-   
-   ###########################################################################################
-   ####################################### 3. MOBILITY #######################################
-   ###########################################################################################
-
- */
+//   ####################################### 3. MOBILITY #######################################
 
 
 pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
@@ -404,13 +387,7 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 }
  
 
-/*
-   
-   ###########################################################################################
-   ################################## 4. KING VULNERABILITY ##################################
-   ###########################################################################################
-
- */
+//   ################################## 4. KING VULNERABILITY ##################################
 
 
 // Function to check if a piece can attack a given square
@@ -471,13 +448,11 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     const ESC_WEIGHT: i32 = 1;
 
 
-
     // Parse the SFEN string into a position
     let positions = SFEN::sfen_parse(sfen);
     let mut pos = SFEN::generate_pos(positions.clone());
     pos.side_to_move_set(SFEN::get_color(sfen));
     println!("Side to Move: {:?}", pos.side_to_move());
-
 
 
     // Find the king's square based on the given file and rank
@@ -487,7 +462,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     //println!("file: {:?}", file);
     //println!("rank: {:?}", rank);
     println!("King's Square: {:?}", king_square);
-
 
 
     // Determine the color and enemy color based on the player's case
@@ -500,7 +474,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
 
     println!("Color: {:?}", color);
     println!("Enemy Color: {:?}", enemy_color);
-
 
 
     // Construct the list of 8 squares that surround the king
@@ -516,7 +489,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("SQUARES surrounding king: {:?}\n", squares);
 
 
-
     // Calculate the number of pieces that can attack the squares surrounding the king
     println!("\n-------------Calculateing the number of pieces that can attack the squares surrounding the king");
     pos.side_to_move_set(color);
@@ -526,7 +498,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
         !attackers.is_empty()
     }).count() as i32;
     println!("num pieces that can attack the surrounding sqrs: {:?}\n", num_attackers);
-
 
 
     // Calculate the number of pieces that can defend the squares surrounding the king
@@ -543,7 +514,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("num pieces that can defend the surrounding sqrs: {:?}\n", num_defenders);
 
 
-
     // Calculate the number of pieces attacking the king
     println!("\n-------------Calculateing the number of pieces attacking the king");
     pos.side_to_move_set(color);
@@ -557,7 +527,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     let num_king_attackers = num_checks.len() as i32;
 
 
-
     // Calculate the number of escape routes the king has
     println!("\n-------------Calculateing number of escape routes for the king");
     pos.side_to_move_set(enemy_color);
@@ -567,7 +536,6 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("num escape routes for king: {:?}\n", num_escapes);
 
     println!(" ");
-
 
 
     // Modify the values with internal weightings

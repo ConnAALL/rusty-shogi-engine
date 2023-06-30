@@ -133,9 +133,9 @@ fn main() {
     //test_rook_mobility();
 
     //---------------------------KING_VULN_TEST---------------------------
-    //king_vuln_sfen();
+    king_vuln_sfen();
     //king_vuln_test();
     
     //
-    partial_pos_test();
+    //partial_pos_test();
 }
