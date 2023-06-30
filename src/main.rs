@@ -86,7 +86,7 @@ fn king_vuln_sfen() {
 
 fn partial_pos_test() {
 
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/8K/9/9/PPPPPPPPP/1B5R1/LNSG1GSNL w - 1";
+    let sfen = "lnsgkgsnl/4r2b1/pppp1pppp/9/9/9/PPPP1PPPP/1B1P1l1R1/LNSGKGSNL w - 1";
     
     println!("SFEN: {:?}", sfen);
     view::display_sfen(sfen);
@@ -98,13 +98,14 @@ fn partial_pos_test() {
     println!("{:?}", pos.side_to_move());
 
     let mv = Move::Normal {
-            from: Square::SQ_1C,
-            to: Square::SQ_1D,
+            from: Square::SQ_5A,
+            to: Square::SQ_5I,
             promote: false,
         };
     println!("move: {:?}", mv);
-    println!("legal? {:?}", is_legal_partial_lite(&pos, mv));
-
+    //println!("legal? {:?}", is_legal_partial_lite(&pos, mv));
+    println!("legal? {:?}", shogi_legality_lite::prelegality::is_valid(&pos, mv));
+    println!("mate?: {:?}", shogi_legality_lite::prelegality::is_mate(&pos));
     pos.make_move(mv);
 
     view::display_sfen(&pos.to_sfen_owned());
@@ -132,9 +133,9 @@ fn main() {
     //test_rook_mobility();
 
     //---------------------------KING_VULN_TEST---------------------------
-    king_vuln_sfen();
+    //king_vuln_sfen();
     //king_vuln_test();
     
     //
-    //partial_pos_test();
+    partial_pos_test();
 }

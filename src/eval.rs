@@ -13,8 +13,9 @@
 use crate::view;
 use crate::sfen as SFEN;
 use std::collections::HashMap;
-use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial, all_checks_partial};
+use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, PartialPosition, Piece, PieceKind,
+                  PositionStatus, Square};
 
 
 /*
@@ -81,7 +82,7 @@ fn pst() -> HashMap<&'static str, [i32; 81]> {
                           0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
         map.insert("N", [ 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    4, 4, 4, 4, 4, 4, 4, 4, 4,
+                          4, 4, 4, 4, 4, 4, 4, 4, 4,
                           6, 6, 6, 6, 6, 6, 6, 6, 6,
                           8, 8, 8, 8, 8, 8, 8, 8, 8,
                           6, 6, 6, 6, 6, 6, 6, 6, 6,
@@ -348,6 +349,7 @@ pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
 
  */
 
+
 pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 
 /*   
@@ -548,14 +550,10 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("turn: {:?}", pos.side_to_move());
     //let king_attackers = attackers(&pos, color, king_square);
     //let num_king_attackers = king_attackers.len() as i32;
-    let in_check = shogi_legality_lite::is_in_check_partial_lite(&pos);
     let num_checks = all_checks_partial(&pos);
-    let status = shogi_legality_lite::status_partial(&pos);
-    println!("in check?: {:?}", in_check);
     for sqr in &num_checks {
         println!("Check at: {:?}", sqr);
     }
-    println!("pos status: {:?}", status);
     let num_king_attackers = num_checks.len() as i32;
 
 
