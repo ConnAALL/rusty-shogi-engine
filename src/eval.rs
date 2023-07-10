@@ -537,7 +537,7 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
 
     for move_item in next_moves {
         
-        if move_item.to() == enemy_king_sqr.unwrap() {
+        if move_item.to() == enemy_king_sqr.unwrap() && move_item.is_promoting() == false {
             attacks.push(move_item);
             println!("{:?}", move_item);
         }

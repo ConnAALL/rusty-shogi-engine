@@ -4,10 +4,8 @@ mod search;
 mod view;
 mod sfen;
 mod eval;
-mod king_attackers;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
-
 
 
 fn search_test() {
@@ -40,6 +38,7 @@ fn search_test() {
     }
 }
 
+
 fn test_rook_mobility() {
 
     let sfen = "lnsgkgsnl/1r5b1/p1ppppppp/p8/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
@@ -59,6 +58,7 @@ fn test_rook_mobility() {
 
 }
 
+
 fn king_vuln_test() {
 
     let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L w Sbgn3p 124";
@@ -76,7 +76,7 @@ fn king_vuln_test() {
 }
 
 
-fn partial_pos_test() {
+fn king_attackers_test() {
 
     let sfen = "lnsgkgsnl/4r2b1/pppp1pppp/9/9/9/PPPP1PPPP/1B1P1l1R1/LNSGKGSNL w - 1";
     
@@ -106,15 +106,16 @@ fn partial_pos_test() {
 
     let res = pos.to_sfen_owned();
     view::display_sfen(&res);
-
+   
     let next_moves = all_legal_moves_partial(&pos); 
+
+    let mut attacks = Vec::new();
 
     for move_item in next_moves {
         
-        if move_item.to() == enemy_king_sqr.unwrap() {
-            println!("{:?}", move_item);
+        if move_item.to() == enemy_king_sqr.unwrap() && move_item.is_promoting() == false {
+            attacks.push(move_item);
         }
-
     }
 
     // change back to king
@@ -128,24 +129,7 @@ fn partial_pos_test() {
     let fin = pos.to_sfen_owned();
     view::display_sfen(&fin);
 
-
-
-}
-
-
-fn kng_attackers() {
-
-    let sfen = "lnsgkgsnl/6b1/pppp1pppp/9/9/9/PPPP1PPPP/1B2R4/LNSGKGSNL w - 1";
-    //let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
-    println!("SFEN: {:?}", sfen);
-    view::display_sfen(sfen);
-
-    let board = king_attackers::parse_board(sfen);
-    let king_color = king_attackers::Color::White; // Assuming white king is the target
-
-    let attacking_pieces = king_attackers::count_attacking_pieces(&board, king_color);
-
-    println!("Number of enemy pieces attacking the king: {}", attacking_pieces);
+    println!("{:?}", attacks);
 }
 
 
@@ -172,7 +156,7 @@ fn main() {
 
     //---------------------------KING_VULN_TEST---------------------------
     king_vuln_test();
-    //kng_attackers();
+    //king_attackers_test();
 
     //
     //partial_pos_test();
