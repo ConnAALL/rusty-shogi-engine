@@ -614,11 +614,36 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     let mut white_fitness = 0;
     let mut black_fitness = 0;
 
+// ---------------------------------PROMOTED PIECES---------------------------------
     let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
     white_fitness += white_pp * PROMOTED_PIECES;
     black_fitness += black_pp * PROMOTED_PIECES;
 
-    return(white_fitness as f32, black_fitness as f32);
     
+// ---------------------------------PIECE SQUARE TABLES---------------------------------
+
+    let white_pst = evaluate_piece_table(&sfen, "white");
+    let black_pst = evaluate_piece_table(&sfen, "black");
+
+    white_fitness += white_pst as u32;
+    black_fitness += black_pst as u32;
+
+
+// ---------------------------------KING VULN---------------------------------
+
+    
+
+    //white_fitness += white_king_vln;
+    //black_fitness += black_king_vln;
+
+// ---------------------------------PROMOTED PIECES---------------------------------
+
+// ---------------------------------PROMOTED PIECES---------------------------------
+
+// ---------------------------------PROMOTED PIECES---------------------------------
+    
+
+    return(white_fitness as f32, black_fitness as f32);
+
 }
 
