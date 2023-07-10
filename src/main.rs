@@ -70,7 +70,7 @@ fn king_vuln_test() {
     println!("SFEN: {:?}", sfen);
     view::display_sfen(sfen);
 
-    let king_vuln = eval::enemy_king_vuln(sfen, coord);
+    let king_vuln = eval::enemy_king_vuln(sfen, Color::White);
     println!("KING VULN: {:?}", king_vuln);
 
 }

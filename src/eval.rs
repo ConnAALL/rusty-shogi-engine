@@ -462,7 +462,7 @@ fn attackers(pos: &PartialPosition, color: Color, square: Option<Square>) -> Vec
 }
 
 
-pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
+pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
 
     const ATK_WEIGHT: i32 = 1;
     const DEF_WEIGHT: f32 = 0.5;
@@ -473,18 +473,8 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     // Parse the SFEN string into a position
     let positions = SFEN::sfen_parse(sfen);
     let mut pos = SFEN::generate_pos(positions.clone());
-    pos.side_to_move_set(SFEN::get_color(sfen));
+    pos.side_to_move_set(side);
     println!("Side to Move: {:?}", pos.side_to_move());
-
-
-    // Find the king's square based on the given file and rank
-    let file = coord.chars().next().unwrap() as u8 - b'A' + 1;
-    let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
-    let king_square = Square::new(file, rank);
-    //println!("file: {:?}", file);
-    //println!("rank: {:?}", rank);
-    println!("King's Square: {:?}", king_square);
-
 
     // Determine the color and enemy color based on the player's case
     let player = pos.side_to_move();
@@ -497,6 +487,11 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("Color: {:?}", color);
     println!("Enemy Color: {:?}", enemy_color);
 
+    let king_square = pos.king_position(enemy_color);
+    println!("King's Square: {:?}", king_square);
+
+    let file = king_square.unwrap().file();
+    let rank = king_square.unwrap().rank();
 
     // --------------------------------------------------------------------------------------------------
     // Construct the list of 8 squares that surround the king
@@ -608,13 +603,13 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
 }
 
 
-
 pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let mut white_fitness = 0;
     let mut black_fitness = 0;
 
 // ---------------------------------PROMOTED PIECES---------------------------------
+
     let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
     white_fitness += white_pp * PROMOTED_PIECES;
     black_fitness += black_pp * PROMOTED_PIECES;
@@ -631,18 +626,26 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
 // ---------------------------------KING VULN---------------------------------
 
+    let white_king_vln = enemy_king_vuln(&sfen, Color::White);
+    let black_king_vln = enemy_king_vuln(&sfen, Color::Black);
+
+    println!("white_king_vln: {:?}", white_king_vln);
+    println!("black_king_vln: {:?}", black_king_vln);
+    
+    white_fitness += white_king_vln;
+    black_fitness += black_king_vln;
+
+// ---------------------------------ROOK MOBIL---------------------------------
+
+
+// ---------------------------------LANCE MOBIL---------------------------------
+
+
+// ---------------------------------BISHOP MOBIL---------------------------------
     
 
-    //white_fitness += white_king_vln;
-    //black_fitness += black_king_vln;
-
-// ---------------------------------PROMOTED PIECES---------------------------------
-
-// ---------------------------------PROMOTED PIECES---------------------------------
-
-// ---------------------------------PROMOTED PIECES---------------------------------
+// ---------------------------------RETURN BOTH FITNESSES
     
-
     return(white_fitness as f32, black_fitness as f32);
 
 }
