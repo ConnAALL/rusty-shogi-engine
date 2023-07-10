@@ -18,20 +18,20 @@ use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, Parti
 
 
 // CONST WEIGHTS FOR PIECES IN HAND 
-const PAWN_HAND: i32 = 0;
-const LANCE_HAND: i32 = 18;
-const KNIGHT_HAND: i32 = 9;
-const SILVER_HAND: i32 = 15;
-const GOLD_HAND: i32 = 22;
-const ROOK_HAND: i32 = 18;
-const BISHOP_HAND: i32 = 2;
+const PAWN_HAND: u32 = 0;
+const LANCE_HAND: u32 = 18;
+const KNIGHT_HAND: u32 = 9;
+const SILVER_HAND: u32 = 15;
+const GOLD_HAND: u32 = 22;
+const ROOK_HAND: u32 = 18;
+const BISHOP_HAND: u32 = 2;
 
 // CONST WEIGHTS FOR EVAL FEATURE VARIATES
-const LANCE_MOBIL: i32 = 17;
-const ROOK_MOBIL: i32 = 16;
-const BISHOP_MOBIL: i32 = 17;
-const PROMOTED_PIECES: i32 = 27;
-const KING_VULN: i32 = 22;
+const LANCE_MOBIL: u32 = 17;
+const ROOK_MOBIL: u32 = 16;
+const BISHOP_MOBIL: u32 = 17;
+const PROMOTED_PIECES: u32 = 27;
+const KING_VULN: u32 = 22;
 
 
 /*
@@ -607,7 +607,10 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
 
 pub fn evaluate(sfen: &str) -> (f32, f32) {
 
-    let (white_pp, black_pp) = promoted_pieces(sfen);
+    let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
+
+    let white_pp = white_pp * PROMOTED_PIECES;
+    let black_pp = black_pp * PROMOTED_PIECES;
 
     return(white_pp as f32, black_pp as f32);
     
