@@ -337,3 +337,19 @@ pub fn get_color(sfen: &str) -> Color {
 }
 
 
+pub fn get_enemy_color(sfen: &str) -> Color {
+
+    let split: Vec<&str> = sfen.split_whitespace().collect();
+    let curr_side = split[1];
+    let mut side: Color = Color::White;
+    if curr_side == "w" {
+        side = Color::Black;
+    } else {
+        side = Color::White;
+    }
+    
+    side
+}
+
+
+

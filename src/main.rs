@@ -91,51 +91,53 @@ fn partial_pos_test() {
     
     println!("SFEN: {:?}", sfen);
     view::display_sfen(sfen);
+
+    let color = sfen::get_color(sfen);
+    let enemy_color = sfen::get_enemy_color(sfen);
     
     // Parse the SFEN string into a position
     let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
     let mut pos = sfen::generate_pos(positions); // creates a "partial position" out of it
-    pos.side_to_move_set(sfen::get_color(sfen)); // finalize the partial position
-    println!("{:?}", pos.side_to_move());
-
-    let mv = Move::Normal {
-            from: Square::SQ_5A,
-            to: Square::SQ_5I,
-            promote: false,
-        };
-    println!("move: {:?}", mv);
-    //println!("legal? {:?}", is_legal_partial_lite(&pos, mv));
-    println!("legal? {:?}", shogi_legality_lite::prelegality::is_valid(&pos, mv));
-    println!("mate?: {:?}", shogi_legality_lite::prelegality::is_mate(&pos));
-    pos.make_move(mv);
-
-    view::display_sfen(&pos.to_sfen_owned());
-}
-
-fn bb() {
-
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
+    pos.side_to_move_set(color); // finalize the partial position
     
-    let side = sfen::get_color(sfen);
+    let enemy_king_sqr = pos.king_position(enemy_color);
 
-    println!("SFEN: {:?}", sfen);
-    view::display_sfen(sfen);
-    
-    // Parse the SFEN string into a position
-    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
-    let mut pos = sfen::generate_pos(positions); // creates a "partial position" out of it
-    pos.side_to_move_set(side); // finalize the partial position
+    println!("Side To Move: {:?}", color);
+    println!("enemy king square: {:?}", enemy_king_sqr);
+
+    // change king to a pawn
+    println!("changing king to pawn:");
+    if enemy_color == Color::White {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::W_P));
+    } else {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::B_P));
+    }
+
+    let res = pos.to_sfen_owned();
+    view::display_sfen(&res);
+
+    let next_moves = all_legal_moves_partial(&pos); 
+
+    for move_item in next_moves {
+        
+        if move_item.to() == enemy_king_sqr.unwrap() {
+            println!("{:?}", move_item);
+        }
+
+    }
+
+    // change back to king
+    println!("changing back to king:");
+    if enemy_color == Color::White {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::W_K));
+    } else {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::B_K));
+    }
+
+    let fin = pos.to_sfen_owned();
+    view::display_sfen(&fin);
 
 
-    let bb = pos.player_bitboard(side);
-    println!("{:?}", bb);
-
-    for from in bb {
-
-        let to_candidates = normal_from_candidates(&pos, from);
-    println!("{:?}", &to_candidates);
-     
-    } 
 
 }
 
@@ -180,9 +182,8 @@ fn main() {
     //---------------------------KING_VULN_TEST---------------------------
     //king_vuln_sfen();
     //king_vuln_test();
-    kng_attackers();
+    //kng_attackers();
 
     //
-    //bb();
-    //partial_pos_test();
+    partial_pos_test();
 }
