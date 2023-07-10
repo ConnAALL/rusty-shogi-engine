@@ -107,7 +107,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
     }
 
     if let Some((king_i, king_j)) = king_pos {
-        // Check for attacks from each opponent piece
         for i in 0..9 {
             for j in 0..9 {
                 if let Some(piece) = board[i][j] {
@@ -116,7 +115,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
 
                         match piece_type {
                             PieceType::King => {
-                                // King can attack in any direction (orthogonal or diagonal)
                                 for k in 0..8 {
                                     let ni = i as isize + dx[k];
                                     let nj = j as isize + dy[k];
@@ -129,7 +127,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
                                 }
                             }
                             PieceType::Rook => {
-                                // Rook can attack in orthogonal directions
                                 for k in 0..4 {
                                     let mut ni = i as isize + dx[k];
                                     let mut nj = j as isize + dy[k];
@@ -148,7 +145,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
                                 }
                             }
                             PieceType::Bishop => {
-                                // Bishop can attack in diagonal directions
                                 for k in 4..8 {
                                     let mut ni = i as isize + dx[k];
                                     let mut nj = j as isize + dy[k];
@@ -167,7 +163,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
                                 }
                             }
                             PieceType::Gold => {
-                                // Gold can attack one square in any direction (orthogonal or diagonal)
                                 for k in 0..8 {
                                     let ni = i as isize + dx[k];
                                     let nj = j as isize + dy[k];
@@ -180,7 +175,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
                                 }
                             }
                             PieceType::Silver => {
-                                // Silver can attack one square diagonally or one square straight forward
                                 let ni = i as isize - 1;
                                 let nj = j as isize - 1;
 
@@ -210,7 +204,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
                                 }
                             }
                             PieceType::Knight => {
-                                // Knight can attack in two possible forward positions
                                 let ni = i as isize - 2;
                                 let nj = j as isize - 1;
 
@@ -226,7 +219,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
                                 }
                             }
                             PieceType::Lance => {
-                                // Lance can attack in orthogonal direction (forward)
                                 let ni = i as isize - 1;
                                 let nj = j as isize;
 
@@ -235,7 +227,6 @@ pub fn count_attacking_pieces(board: &Board, king_color: Color) -> usize {
                                 }
                             }
                             PieceType::Pawn => {
-                                // Pawn can attack one square straight forward
                                 let ni = i as isize - 1;
                                 let nj = j as isize;
 
