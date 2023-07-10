@@ -64,21 +64,12 @@ fn king_vuln_test() {
     let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L w Sbgn3p 124";
     let coord = "H8";
     
-    println!("SFEN: {:?}", sfen);
-    view::display_sfen(sfen);
-
-    let king_vuln = eval::enemy_king_vuln(sfen, coord);
-    println!("KING VULN: {:?}", king_vuln);
-
-}
-fn king_vuln_sfen() {
-
-    let sfen = "lnsgkgsnl/4r2b1/pppp1pppp/9/9/9/PPPP1PPPP/1B5R1/LNSGKGSNL w - 1";
-    let coord = "E9";
+    //let sfen = "lnsgkgsnl/4r2b1/pppp1pppp/9/9/9/PPPP1PPPP/1B5R1/LNSGKGSNL w - 1";
+    //let coord = "E9";
     
     println!("SFEN: {:?}", sfen);
     view::display_sfen(sfen);
-    
+
     let king_vuln = eval::enemy_king_vuln(sfen, coord);
     println!("KING VULN: {:?}", king_vuln);
 
@@ -180,10 +171,9 @@ fn main() {
     //test_rook_mobility();
 
     //---------------------------KING_VULN_TEST---------------------------
-    //king_vuln_sfen();
-    //king_vuln_test();
+    king_vuln_test();
     //kng_attackers();
 
     //
-    partial_pos_test();
+    //partial_pos_test();
 }

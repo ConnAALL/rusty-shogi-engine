@@ -515,18 +515,44 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
 
 
 
+
     // Calculate the number of pieces attacking the king
     println!("\n-------------Calculateing the number of pieces attacking the king");
+    println!("Side To Move: {:?}", color);
     pos.side_to_move_set(color);
-    println!("turn: {:?}", pos.side_to_move());
-    //let king_attackers = attackers(&pos, color, king_square);
-    //let num_king_attackers = king_attackers.len() as i32;
-    let num_checks = all_checks_partial(&pos);
-    for sqr in &num_checks {
-        println!("Check at: {:?}", sqr);
+    let enemy_king_sqr = pos.king_position(enemy_color);
+    println!("enemy king square: {:?}", enemy_king_sqr);
+    
+    // change king to a pawn
+    println!("changing king to pawn:");
+    if enemy_color == Color::White {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::W_P));
+    } else {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::B_P));
     }
-    let num_king_attackers = num_checks.len() as i32;
 
+    let next_moves = all_legal_moves_partial(&pos); 
+    
+    let mut attacks = Vec::new();
+
+    for move_item in next_moves {
+        
+        if move_item.to() == enemy_king_sqr.unwrap() {
+            attacks.push(move_item);
+            println!("{:?}", move_item);
+        }
+    }
+
+    // change back to king
+    println!("changing back to king:");
+    if enemy_color == Color::White {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::W_K));
+    } else {
+        pos.piece_set(enemy_king_sqr.unwrap(), Some(Piece::B_K));
+    }
+
+    let num_king_attackers = attacks.len() as i32;
+    println!("number of king attackers: {:?}", num_king_attackers);
 
 
     // Calculate the number of escape routes the king has
