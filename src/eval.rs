@@ -514,6 +514,7 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
     println!("num pieces that can defend the surrounding sqrs: {:?}\n", num_defenders);
 
 
+
     // Calculate the number of pieces attacking the king
     println!("\n-------------Calculateing the number of pieces attacking the king");
     pos.side_to_move_set(color);
@@ -525,6 +526,7 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
         println!("Check at: {:?}", sqr);
     }
     let num_king_attackers = num_checks.len() as i32;
+
 
 
     // Calculate the number of escape routes the king has
