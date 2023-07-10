@@ -13,8 +13,12 @@
 use crate::view;
 use crate::sfen as SFEN;
 use std::collections::HashMap;
-use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial, all_checks_partial};
-use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, PartialPosition, Piece, PieceKind, PositionStatus, Square};
+
+use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, 
+                          all_legal_moves_partial, all_checks_partial};
+
+use shogi_core::{ Bitboard, Color, IllegalMoveKind, Square, PartialPosition, 
+                  Piece, PieceKind, PositionStatus, Move, LegalityChecker};
 
 
 // CONST WEIGHTS FOR PIECES IN HAND 
@@ -607,12 +611,14 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
 
 pub fn evaluate(sfen: &str) -> (f32, f32) {
 
+    let mut white_fitness = 0;
+    let mut black_fitness = 0;
+
     let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
+    white_fitness += white_pp * PROMOTED_PIECES;
+    black_fitness += black_pp * PROMOTED_PIECES;
 
-    let white_pp = white_pp * PROMOTED_PIECES;
-    let black_pp = black_pp * PROMOTED_PIECES;
-
-    return(white_pp as f32, black_pp as f32);
+    return(white_fitness as f32, black_fitness as f32);
     
 }
 
