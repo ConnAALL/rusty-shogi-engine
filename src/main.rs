@@ -138,6 +138,10 @@ fn eval_test() {
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     view::display_sfen(&sfen);
     let fitness = eval::evaluate(&sfen);
+    let (white_fitness, black_fitness) = eval::evaluate(&sfen);
+    println!("white fitness: {:?}", white_fitness);
+    println!("black fitness: {:?}", black_fitness);
+
 }
 
 
@@ -163,9 +167,12 @@ fn main() {
     //test_rook_mobility();
 
     //---------------------------KING_VULN_TEST---------------------------
-    king_vuln_test();
+    //king_vuln_test();
     //king_attackers_test();
 
-    //
-    //partial_pos_test();
+    //-----------------------------EVAL_TEST-----------------------------
+    eval_test();
 }
+
+
+

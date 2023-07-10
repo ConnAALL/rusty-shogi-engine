@@ -17,6 +17,23 @@ use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_leg
 use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, PartialPosition, Piece, PieceKind, PositionStatus, Square};
 
 
+// CONST WEIGHTS FOR PIECES IN HAND 
+const PAWN_HAND: i32 = 0;
+const LANCE_HAND: i32 = 18;
+const KNIGHT_HAND: i32 = 9;
+const SILVER_HAND: i32 = 15;
+const GOLD_HAND: i32 = 22;
+const ROOK_HAND: i32 = 18;
+const BISHOP_HAND: i32 = 2;
+
+// CONST WEIGHTS FOR EVAL FEATURE VARIATES
+const LANCE_MOBIL: i32 = 17;
+const ROOK_MOBIL: i32 = 16;
+const BISHOP_MOBIL: i32 = 17;
+const PROMOTED_PIECES: i32 = 27;
+const KING_VULN: i32 = 22;
+
+
 /*
     ################################## 1. PIECE SQUARE TABLES ##################################
     
@@ -30,29 +47,7 @@ use shogi_core::{ Bitboard, Color, IllegalMoveKind, LegalityChecker, Move, Parti
  */
 
 
-fn pst_parse(sfen: &str) -> Vec<char> {
-
-    let split: Vec<&str> = sfen.split_whitespace().collect();
-    let pieces = split[0];
-    // println!("{:?}", pieces);
-    let replaced = pieces.replace("/", "");
-    let clean = SFEN::convert_promoted_pieces(&replaced);
-
-    let mut result = Vec::new();
-    for ch in clean.chars() {
-        if ch.is_digit(10) {
-            let count = ch.to_digit(10).unwrap();
-            for _ in 0..count {
-                result.push('*');
-            }
-        } else {
-            result.push(ch);
-        }
-    }
-    
-    result
-} 
-
+// CONST PST WEIGHTS
 fn pst() -> HashMap<&'static str, [i32; 81]> {
     let pst: HashMap<&'static str, [i32; 81]> = {
         let mut map = HashMap::new();
@@ -136,20 +131,44 @@ fn pst() -> HashMap<&'static str, [i32; 81]> {
                           6,  8,  15, 0,  4,  29, 12, 30, 12,
                           20, 12, 7,  24, 7,  27, 13, 10, 5]);
 
-        map.insert("E", [ 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                          4, 4, 4, 4, 4, 4, 4, 4, 4,
-                          6, 6, 6, 6, 6, 6, 6, 6, 6,
-                          8, 8, 8, 8, 8, 8, 8, 8, 8,
-                          6, 6, 6, 6, 6, 6, 6, 6, 6,
-                          4, 4, 4, 4, 4, 4, 4, 4, 4,
-                          2, 2, 2, 2, 2, 2, 2, 2, 2,
-                          0, 0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        map.insert("E", [ 21, 0,  6,  13, 31, 28, 6,  2,  31,
+                          8,  19, 30, 2,  25, 0,  4,  9,  17,
+                          10, 28, 18, 2,  31, 6,  20, 18, 6,
+                          8,  24, 31, 6,  2,  25, 7,  20, 2,
+                          22, 17, 25, 23, 15, 18, 19, 0,  27,
+                          23, 20, 24, 31, 26, 11, 6,  19, 8,
+                          11, 0,  2,  7,  7,  2,  29, 31, 5,
+                          8,  10, 13, 6,  26, 19, 16, 25, 28,
+                          15, 30, 1,  30, 20, 25, 11, 31, 23]);
         map
     };
     
     pst // return the hashmap
 }
+
+
+fn pst_parse(sfen: &str) -> Vec<char> {
+
+    let split: Vec<&str> = sfen.split_whitespace().collect();
+    let pieces = split[0];
+    // println!("{:?}", pieces);
+    let replaced = pieces.replace("/", "");
+    let clean = SFEN::convert_promoted_pieces(&replaced);
+
+    let mut result = Vec::new();
+    for ch in clean.chars() {
+        if ch.is_digit(10) {
+            let count = ch.to_digit(10).unwrap();
+            for _ in 0..count {
+                result.push('*');
+            }
+        } else {
+            result.push(ch);
+        }
+    }
+    
+    result
+} 
 
 
 pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
@@ -366,7 +385,7 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
     let rook_square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
 
     // Print square index
-    println!("rook sqr: {:?}", rook_square);
+    //println!("rook sqr: {:?}", rook_square);
 
     // Get the Bitboard of possible rook moves from the LiteLegalityChecker
     let possible_moves = normal_from_candidates(&pos, rook_square);
@@ -585,4 +604,12 @@ pub fn enemy_king_vuln(sfen: &str, coord: &str) -> i32 {
 }
 
 
+
+pub fn evaluate(sfen: &str) -> (f32, f32) {
+
+    let (white_pp, black_pp) = promoted_pieces(sfen);
+
+    return(white_pp as f32, black_pp as f32);
+    
+}
 
