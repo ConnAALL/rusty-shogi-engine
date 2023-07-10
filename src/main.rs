@@ -133,6 +133,14 @@ fn king_attackers_test() {
 }
 
 
+fn eval_test() {
+    
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    view::display_sfen(&sfen);
+    let fitness = eval::evaluate(&sfen);
+}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5RL/LNSGKGSN1 w - 1";
