@@ -386,13 +386,13 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
     pos.side_to_move_set(SFEN::get_color(sfen)); // finalize the partial position
 
     // Find the rook's square based on the given file and rank
-    let rook_square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
+    let square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
 
     // Print square index
     //println!("rook sqr: {:?}", rook_square);
 
     // Get the Bitboard of possible rook moves from the LiteLegalityChecker
-    let possible_moves = normal_from_candidates(&pos, rook_square);
+    let possible_moves = normal_from_candidates(&pos, square);
 
     // Count the number of squares the rook can move to
     let num_moves = possible_moves.count() as usize;
