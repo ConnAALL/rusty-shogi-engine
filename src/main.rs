@@ -4,6 +4,7 @@ mod search;
 mod view;
 mod sfen;
 mod eval;
+mod king_attackers;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
@@ -111,6 +112,50 @@ fn partial_pos_test() {
     view::display_sfen(&pos.to_sfen_owned());
 }
 
+fn bb() {
+
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
+    
+    let side = sfen::get_color(sfen);
+
+    println!("SFEN: {:?}", sfen);
+    view::display_sfen(sfen);
+    
+    // Parse the SFEN string into a position
+    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos = sfen::generate_pos(positions); // creates a "partial position" out of it
+    pos.side_to_move_set(side); // finalize the partial position
+
+
+    let bb = pos.player_bitboard(side);
+    println!("{:?}", bb);
+
+    for from in bb {
+
+        let to_candidates = normal_from_candidates(&pos, from);
+    println!("{:?}", &to_candidates);
+     
+    } 
+
+}
+
+
+fn kng_attackers() {
+
+    let sfen = "lnsgkgsnl/6b1/pppp1pppp/9/9/9/PPPP1PPPP/1B2R4/LNSGKGSNL w - 1";
+    //let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
+    println!("SFEN: {:?}", sfen);
+    view::display_sfen(sfen);
+
+    let board = king_attackers::parse_board(sfen);
+    let king_color = king_attackers::Color::White; // Assuming white king is the target
+
+    let attacking_pieces = king_attackers::count_attacking_pieces(&board, king_color);
+
+    println!("Number of enemy pieces attacking the king: {}", attacking_pieces);
+}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5RL/LNSGKGSN1 w - 1";
@@ -133,9 +178,11 @@ fn main() {
     //test_rook_mobility();
 
     //---------------------------KING_VULN_TEST---------------------------
-    king_vuln_sfen();
+    //king_vuln_sfen();
     //king_vuln_test();
-    
+    kng_attackers();
+
     //
+    //bb();
     //partial_pos_test();
 }
