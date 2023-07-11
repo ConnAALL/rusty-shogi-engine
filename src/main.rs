@@ -110,19 +110,7 @@ fn king_attackers_test() {
     view::display_sfen(&fin);
 
     println!("{:?}", attacks);
-}
-
-
-fn eval_test() {
-    
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    view::display_sfen(&sfen);
-    let fitness = eval::evaluate(&sfen);
-    let (white_fitness, black_fitness) = eval::evaluate(&sfen);
-    println!("white fitness: {:?}", white_fitness);
-    println!("black fitness: {:?}", black_fitness);
-
-}
+} 
 
 
 fn coord_test() {
@@ -187,6 +175,18 @@ fn mobility_tests() {
 }
 
 
+fn eval_test() {
+    
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    view::display_sfen(&sfen);
+    let fitness = eval::evaluate(&sfen);
+    let (white_fitness, black_fitness) = eval::evaluate(&sfen);
+    println!("white fitness: {:?}", white_fitness);
+    println!("black fitness: {:?}", black_fitness);
+
+}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
@@ -213,11 +213,10 @@ fn main() {
     //king_attackers_test();
 
     //-----------------------------EVAL_TEST-----------------------------
-    //eval_test();
+    eval_test();
 
     //coord_test();
-
-    mobility_tests();
+    //mobility_tests();
 
 }
 

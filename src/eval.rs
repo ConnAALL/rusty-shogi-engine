@@ -753,9 +753,11 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     black_fitness += black_king_vln as u32 * KING_VULN;
 
 // ---------------------------------ROOK MOBIL---------------------------------
-/*
+
     let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
 
+    println!("white_rook_mobil: {:?}", white_rook_mobil);
+    println!("black_rook_mobil: {:?}", black_rook_mobil);
     
     white_fitness += white_rook_mobil * ROOK_MOBIL;
     black_fitness += black_rook_mobil * ROOK_MOBIL;
@@ -764,6 +766,8 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
     
+    println!("white_lance_mobil: {:?}", white_lance_mobil);
+    println!("black_lance_mobil: {:?}", black_lance_mobil);
     
     white_fitness += white_lance_mobil * LANCE_MOBIL;
     black_fitness += black_lance_mobil * LANCE_MOBIL;
@@ -772,10 +776,12 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     
     let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
     
+    println!("white_bish_mobil: {:?}", white_bish_mobil);
+    println!("black_bish_mobil: {:?}", black_bish_mobil);
     
-    white_fitness += white_bishop_mobil * BISHOP_MOBIL;
-    black_fitness += black_bishop_mobil * BISHOP_MOBIL;
-*/
+    white_fitness += white_bish_mobil * BISHOP_MOBIL;
+    black_fitness += black_bish_mobil * BISHOP_MOBIL;
+
 // ---------------------------------RETURN BOTH FITNESSES
     
     return(white_fitness as f32, black_fitness as f32);
