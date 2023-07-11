@@ -730,7 +730,6 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
     white_fitness += white_pp * PROMOTED_PIECES;
     black_fitness += black_pp * PROMOTED_PIECES;
-
     
 // ---------------------------------PIECE SQUARE TABLES---------------------------------
 
@@ -739,7 +738,6 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     white_fitness += white_pst as u32;
     black_fitness += black_pst as u32;
-
 
 // ---------------------------------KING VULN---------------------------------
 
@@ -781,6 +779,10 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     
     white_fitness += white_bish_mobil * BISHOP_MOBIL;
     black_fitness += black_bish_mobil * BISHOP_MOBIL;
+
+// ---------------------------------PIECES IN HAND---------------------------------
+
+
 
 // ---------------------------------RETURN BOTH FITNESSES
     
