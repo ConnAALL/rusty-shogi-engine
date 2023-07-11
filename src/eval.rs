@@ -632,8 +632,8 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     println!("white_king_vln: {:?}", white_king_vln);
     println!("black_king_vln: {:?}", black_king_vln);
     
-    white_fitness += white_king_vln;
-    black_fitness += black_king_vln;
+    white_fitness += white_king_vln as u32;
+    black_fitness += black_king_vln as u32;
 
 // ---------------------------------ROOK MOBIL---------------------------------
 
