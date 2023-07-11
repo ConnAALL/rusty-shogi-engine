@@ -39,26 +39,6 @@ fn search_test() {
 }
 
 
-fn test_rook_mobility() {
-
-    let sfen = "lnsgkgsnl/1r5b1/p1ppppppp/p8/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1";
-    let coord = "C1";
-    
-    println!("SFEN: {:?}", sfen);
-    view::display_sfen(sfen);
-    
-    println!("------------------------------------------------------------------------------------");
-    println!("AT: {:?}", coord);
-    println!("------------------------------------------------------------------------------------");
-
-    let (num_moves, captured_pieces) = eval::mobility(sfen, coord);
-
-    println!("Number of possible moves: {}", num_moves);
-    println!("Captured pieces: {:?}", captured_pieces);
-
-}
-
-
 fn king_vuln_test() {
 
     let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L w Sbgn3p 124";
@@ -151,27 +131,48 @@ fn coord_test() {
     view::display_sfen(&sfen);
 
     let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos = sfen::generate_pos(positions.clone()); // creates a "partial position" out of it
+    pos.side_to_move_set(sfen::get_color(sfen));
     
     println!("Positions: {:?}", positions);
+
+    let mut white_rook_mobil = 0;
+    let mut black_rook_mobil = 0;
     
     for sqr in &positions {
+       
         if sqr.1 == "W_R" {
-            println!("WHITE ROOK: {:?}", sqr);
+            pos.side_to_move_set(Color::White);
+            let coord = &sqr.0;
+            println!("COORD: {:?}", coord);
+            let sfen = pos.to_sfen_owned();
+            let mobil = eval::mobility(&sfen, coord.to_string());
+            white_rook_mobil += mobil;
+            println!("MOBILITY: {:?}", mobil);
+
+        } else if sqr.1 == "B_R" {
+            pos.side_to_move_set(Color::Black);
+            let coord = &sqr.0;
+            println!("COORD: {:?}", coord);
+            let sfen = pos.to_sfen_owned();
+            let mobil = eval::mobility(&sfen, coord.to_string());
+            black_rook_mobil += mobil;
+            println!("MOBILITY: {:?}", mobil);
         }
     }
-    
 
-    let mut pos = sfen::generate_pos(positions); // creates a "partial position" out of it
-    
-    pos.side_to_move_set(sfen::get_color(sfen));
+    println!("Final White Mobility: {:?}", white_rook_mobil);
+    println!("Final Black Mobility: {:?}", black_rook_mobil);
 
 }
 
 
 fn main() {
     
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5RL/LNSGKGSN1 w - 1";
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
+
+    view::display_sfen(sfen);
     
     //search_test();
     
@@ -196,7 +197,13 @@ fn main() {
     //-----------------------------EVAL_TEST-----------------------------
     //eval_test();
 
-    coord_test();
+    //coord_test();
+
+    let (w_mob, b_mob) = eval::rook_mobility(&sfen);
+    println!("white mobil: {:?}", w_mob);
+    println!("black mobil: {:?}", b_mob);
+
+
 }
 
 

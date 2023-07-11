@@ -356,7 +356,7 @@ pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
 //   ####################################### 3. MOBILITY #######################################
 
 
-pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
+pub fn mobility(sfen: &str, coord: String) -> u32 {
 
 /*   
  *              SQUARE INDEXES
@@ -375,10 +375,10 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
  */
     
     // Convert the coordinate to file and rank indices
-    let file = coord.chars().nth(0).unwrap() as u8 - b'A' + 1;
-    let rank = coord.chars().nth(1).unwrap() as u8 - b'1' + 1;
-    println!("file: {:?}", file);
-    println!("rank: {:?}", rank);
+    let file = coord.chars().nth(3).unwrap() as u8 - b'1' + 1;
+    let rank = coord.chars().nth(4).unwrap() as u8 - b'A' + 1;
+    //println!("file: {:?}", file);
+    //println!("rank: {:?}", rank);
 
     // Parse the SFEN string into a position
     let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
@@ -395,7 +395,7 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
     let possible_moves = normal_from_candidates(&pos, square);
 
     // Count the number of squares the rook can move to
-    let num_moves = possible_moves.count() as usize;
+    let num_moves = possible_moves.count() as u32;
 
     // Iterate over the possible moves and find the captured pieces
     let mut captured_pieces = Vec::<(PieceKind, Color)>::new();
@@ -406,28 +406,51 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
     }
 
     // Return the count of possible moves and the captured pieces
-    (num_moves, captured_pieces)
+    //(num_moves, captured_pieces)
+    num_moves
 }
 
 
 pub fn rook_mobility(sfen: &str) -> (u32, u32) {
 
-    view::display_sfen(&sfen);
     let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
-    println!("Positions: {:?}", positions);
+    let mut pos = SFEN::generate_pos(positions.clone()); // creates a "partial position" out of it
+    pos.side_to_move_set(SFEN::get_color(sfen));
+    
+    //println!("Positions: {:?}", positions);
+
+    let mut white_rook_mobil = 0;
+    let mut black_rook_mobil = 0;
+    
     for sqr in &positions {
+       
         if sqr.1 == "W_R" {
-            println!("WHITE ROOK: {:?}", sqr);
+            pos.side_to_move_set(Color::White);
+            let coord = &sqr.0;
+            //println!("COORD: {:?}", coord);
+            let sfen = pos.to_sfen_owned();
+            let mobil = mobility(&sfen, coord.to_string());
+            white_rook_mobil += mobil;
+            //println!("MOBILITY: {:?}", mobil);
+
         } else if sqr.1 == "B_R" {
-            println!("BLACK ROOK: {:?}", sqr);
+            pos.side_to_move_set(Color::Black);
+            let coord = &sqr.0;
+            //println!("COORD: {:?}", coord);
+            let sfen = pos.to_sfen_owned();
+            let mobil = mobility(&sfen, coord.to_string());
+            black_rook_mobil += mobil;
+            //println!("MOBILITY: {:?}", mobil);
         }
     }
 
-    (white_mobil_value, black_mobil_value)
+    //println!("Final White Mobility: {:?}", white_rook_mobil);
+    //println!("Final Black Mobility: {:?}", black_rook_mobil);
+    (white_rook_mobil, black_rook_mobil)
 
 }
 
-
+/*
 pub fn lance_mobility(sfen: &str) -> (u32, u32) {
     
     view::display_sfen(&sfen);
@@ -463,7 +486,7 @@ pub fn bishop_mobility(sfen: &str) -> (u32, u32) {
 
 }
 
-
+*/
 //   ################################## 4. KING VULNERABILITY ##################################
 
 
@@ -690,7 +713,7 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     black_fitness += black_king_vln as u32 * KING_VULN;
 
 // ---------------------------------ROOK MOBIL---------------------------------
-
+/*
     let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
 
     
@@ -712,7 +735,7 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     
     white_fitness += white_bishop_mobil * BISHOP_MOBIL;
     black_fitness += black_bishop_mobil * BISHOP_MOBIL;
-
+*/
 // ---------------------------------RETURN BOTH FITNESSES
     
     return(white_fitness as f32, black_fitness as f32);
