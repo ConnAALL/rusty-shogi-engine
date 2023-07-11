@@ -145,6 +145,29 @@ fn eval_test() {
 }
 
 
+fn coord_test() {
+    
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    view::display_sfen(&sfen);
+
+    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    
+    println!("Positions: {:?}", positions);
+    
+    for sqr in &positions {
+        if sqr.1 == "W_R" {
+            println!("WHITE ROOK: {:?}", sqr);
+        }
+    }
+    
+
+    let mut pos = sfen::generate_pos(positions); // creates a "partial position" out of it
+    
+    pos.side_to_move_set(sfen::get_color(sfen));
+
+}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5RL/LNSGKGSN1 w - 1";
@@ -171,7 +194,9 @@ fn main() {
     //king_attackers_test();
 
     //-----------------------------EVAL_TEST-----------------------------
-    eval_test();
+    //eval_test();
+
+    coord_test();
 }
 
 

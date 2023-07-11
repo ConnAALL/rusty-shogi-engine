@@ -408,7 +408,57 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
     // Return the count of possible moves and the captured pieces
     (num_moves, captured_pieces)
 }
- 
+
+
+pub fn rook_mobility(sfen: &str) -> u32 {
+
+    view::display_sfen(&sfen);
+    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    println!("Positions: {:?}", positions);
+    for sqr in &positions {
+        if sqr.1 == "W_R" {
+            println!("WHITE ROOK: {:?}", sqr);
+        } else if sqr.1 == "B_R" {
+            println!("BLACK ROOK: {:?}", sqr);
+        }
+    }
+
+}
+
+
+pub fn lance_mobility(sfen: &str) -> u32 {
+    
+    view::display_sfen(&sfen);
+    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    println!("Positions: {:?}", positions);
+    for sqr in &positions {
+        if sqr.1 == "W_L" {
+            println!("WHITE LANCE: {:?}", sqr);
+        } else if sqr.1 == "B_L" {
+            println!("BLACK LANCE: {:?}", sqr);
+        }
+    }
+
+
+}
+
+
+pub fn bishop_mobility(sfen: &str) -> u32 {
+    
+    view::display_sfen(&sfen);
+    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    println!("Positions: {:?}", positions);
+    for sqr in &positions {
+        if sqr.1 == "W_B" {
+            println!("WHITE BISHOP: {:?}", sqr);
+        } else if sqr.1 == "B_R" {
+            println!("BLACK BISHOP: {:?}", sqr);
+        }
+    }
+
+
+}
+
 
 //   ################################## 4. KING VULNERABILITY ##################################
 
@@ -637,12 +687,24 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
 // ---------------------------------ROOK MOBIL---------------------------------
 
+    let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
+
+    white_fitness += 
+    black_fitness += 
 
 // ---------------------------------LANCE MOBIL---------------------------------
 
+    let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
+    
+    white_fitness += 
+    black_fitness += 
 
 // ---------------------------------BISHOP MOBIL---------------------------------
     
+    let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
+    
+    white_fitness += 
+    black_fitness += 
 
 // ---------------------------------RETURN BOTH FITNESSES
     
