@@ -177,8 +177,7 @@ fn mobility_tests() {
 
 fn hand_test() {
 
-    //let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L w Sbgn3p 124";
+    let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L b Sbgn3p 124";
     view::display_sfen(&sfen);
     
     let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
@@ -189,9 +188,6 @@ fn hand_test() {
     
     println!("white hand: {:?}", white_hand);
     println!("black hand: {:?}", black_hand);
-
-
-
 
 }
 
