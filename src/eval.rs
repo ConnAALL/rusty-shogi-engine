@@ -410,10 +410,10 @@ pub fn mobility(sfen: &str, coord: &str) -> (usize, Vec<(PieceKind, Color)>) {
 }
 
 
-pub fn rook_mobility(sfen: &str) -> u32 {
+pub fn rook_mobility(sfen: &str) -> (u32, u32) {
 
     view::display_sfen(&sfen);
-    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
     println!("Positions: {:?}", positions);
     for sqr in &positions {
         if sqr.1 == "W_R" {
@@ -423,13 +423,15 @@ pub fn rook_mobility(sfen: &str) -> u32 {
         }
     }
 
+    (white_mobil_value, black_mobil_value)
+
 }
 
 
-pub fn lance_mobility(sfen: &str) -> u32 {
+pub fn lance_mobility(sfen: &str) -> (u32, u32) {
     
     view::display_sfen(&sfen);
-    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
     println!("Positions: {:?}", positions);
     for sqr in &positions {
         if sqr.1 == "W_L" {
@@ -439,14 +441,15 @@ pub fn lance_mobility(sfen: &str) -> u32 {
         }
     }
 
+    (white_mobil_value, black_mobil_value)
 
 }
 
 
-pub fn bishop_mobility(sfen: &str) -> u32 {
+pub fn bishop_mobility(sfen: &str) -> (u32, u32) {
     
     view::display_sfen(&sfen);
-    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
     println!("Positions: {:?}", positions);
     for sqr in &positions {
         if sqr.1 == "W_B" {
@@ -456,6 +459,7 @@ pub fn bishop_mobility(sfen: &str) -> u32 {
         }
     }
 
+    (white_mobil_value, black_mobil_value)
 
 }
 
@@ -682,29 +686,32 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     println!("white_king_vln: {:?}", white_king_vln);
     println!("black_king_vln: {:?}", black_king_vln);
     
-    white_fitness += white_king_vln as u32;
-    black_fitness += black_king_vln as u32;
+    white_fitness += white_king_vln as u32 * KING_VULN;
+    black_fitness += black_king_vln as u32 * KING_VULN;
 
 // ---------------------------------ROOK MOBIL---------------------------------
 
     let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
 
-    white_fitness += 
-    black_fitness += 
+    
+    white_fitness += white_rook_mobil * ROOK_MOBIL;
+    black_fitness += black_rook_mobil * ROOK_MOBIL;
 
 // ---------------------------------LANCE MOBIL---------------------------------
 
     let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
     
-    white_fitness += 
-    black_fitness += 
+    
+    white_fitness += white_lance_mobil * LANCE_MOBIL;
+    black_fitness += black_lance_mobil * LANCE_MOBIL;
 
 // ---------------------------------BISHOP MOBIL---------------------------------
     
     let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
     
-    white_fitness += 
-    black_fitness += 
+    
+    white_fitness += white_bishop_mobil * BISHOP_MOBIL;
+    black_fitness += black_bishop_mobil * BISHOP_MOBIL;
 
 // ---------------------------------RETURN BOTH FITNESSES
     
