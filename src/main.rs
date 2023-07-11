@@ -169,7 +169,7 @@ fn coord_test() {
 
 fn mobility_tests() {
 
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PP1PPPPPP/1B5R1/LNSGKGSNL b - 1";
     view::display_sfen(sfen);
 
     let (wr_mob, br_mob) = eval::rook_mobility(&sfen);
@@ -180,6 +180,9 @@ fn mobility_tests() {
     println!("white lance mobil: {:?}", wl_mob);
     println!("black lance mobil: {:?}", bl_mob);
 
+    let (wb_mob, bb_mob) = eval::bishop_mobility(&sfen);
+    println!("white bishop mobil: {:?}", wb_mob);
+    println!("black bishop mobil: {:?}", bb_mob);
 
 }
 

@@ -451,7 +451,6 @@ pub fn rook_mobility(sfen: &str) -> (u32, u32) {
 }
 
 
-
 pub fn lance_mobility(sfen: &str) -> (u32, u32) {
 
     let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
@@ -490,30 +489,44 @@ pub fn lance_mobility(sfen: &str) -> (u32, u32) {
 }
 
 
-
-
-
-/*
-
-
 pub fn bishop_mobility(sfen: &str) -> (u32, u32) {
-    
-    view::display_sfen(&sfen);
+
     let positions = SFEN::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
-    println!("Positions: {:?}", positions);
+    let mut pos = SFEN::generate_pos(positions.clone()); // creates a "partial position" out of it
+    pos.side_to_move_set(SFEN::get_color(sfen));
+    
+    //println!("Positions: {:?}", positions);
+
+    let mut white_bishop_mobil = 0;
+    let mut black_bishop_mobil = 0;
+    
     for sqr in &positions {
+       
         if sqr.1 == "W_B" {
-            println!("WHITE BISHOP: {:?}", sqr);
-        } else if sqr.1 == "B_R" {
-            println!("BLACK BISHOP: {:?}", sqr);
+            pos.side_to_move_set(Color::White);
+            let coord = &sqr.0;
+            //println!("COORD: {:?}", coord);
+            let sfen = pos.to_sfen_owned();
+            let mobil = mobility(&sfen, coord.to_string());
+            white_bishop_mobil += mobil;
+            //println!("MOBILITY: {:?}", mobil);
+
+        } else if sqr.1 == "B_B" {
+            pos.side_to_move_set(Color::Black);
+            let coord = &sqr.0;
+            //println!("COORD: {:?}", coord);
+            let sfen = pos.to_sfen_owned();
+            let mobil = mobility(&sfen, coord.to_string());
+            black_bishop_mobil += mobil;
+            //println!("MOBILITY: {:?}", mobil);
         }
     }
 
-    (white_mobil_value, black_mobil_value)
+    (white_bishop_mobil, black_bishop_mobil)
 
 }
 
-*/
+
 //   ################################## 4. KING VULNERABILITY ##################################
 
 
