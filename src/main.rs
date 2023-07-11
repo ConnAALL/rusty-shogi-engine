@@ -167,12 +167,27 @@ fn coord_test() {
 }
 
 
+fn mobility_tests() {
+
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    view::display_sfen(sfen);
+
+    let (wr_mob, br_mob) = eval::rook_mobility(&sfen);
+    println!("white rook mobil: {:?}", wr_mob);
+    println!("black rook mobil: {:?}", br_mob);
+    
+    let (wl_mob, bl_mob) = eval::lance_mobility(&sfen);
+    println!("white lance mobil: {:?}", wl_mob);
+    println!("black lance mobil: {:?}", bl_mob);
+
+
+}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
-
-    view::display_sfen(sfen);
     
     //search_test();
     
@@ -199,10 +214,7 @@ fn main() {
 
     //coord_test();
 
-    let (w_mob, b_mob) = eval::rook_mobility(&sfen);
-    println!("white mobil: {:?}", w_mob);
-    println!("black mobil: {:?}", b_mob);
-
+    mobility_tests();
 
 }
 
