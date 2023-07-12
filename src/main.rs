@@ -179,15 +179,14 @@ fn hand_test() {
 
     //let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L w Sbgn3p 124";
-    view::display_sfen(&sfen);
-    
-    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
-    let mut pos = sfen::generate_pos(positions.clone()); // creates a "partial position" out of it
 
-    let white_hand = pos.hand_of_a_player(Color::White);
-    let black_hand = pos.hand_of_a_player(Color::Black);
+    println!("SFEN: {:?}", sfen);
+
+        
+    let (white_hand, black_hand) = eval::hand_pieces(&sfen);
     
     println!("white hand: {:?}", white_hand);
+    println!("\n");
     println!("black hand: {:?}", black_hand);
 
 
@@ -213,6 +212,12 @@ fn main() {
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
     
+    // testing sfen side setter
+    println!("sfen: {:?}", sfen);
+    let new_sfen = sfen::set_sfen_turn(&sfen, "b");
+    println!("changing side to black {:?}", new_sfen);
+
+
     //search_test();
     
     //--------------------------PIECE_SQR_TBL_TEST--------------------------

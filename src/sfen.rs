@@ -351,5 +351,16 @@ pub fn get_enemy_color(sfen: &str) -> Color {
     side
 }
 
+pub fn set_sfen_turn(sfen: &str, turn: &str) -> String {
+    
+    let mut parts: Vec<&str> = sfen.split(' ').collect();
+
+    if parts.len() > 1 && (turn == "b" || turn == "w") {
+        parts[1] = turn;
+    }
+
+    parts.join(" ")
+}
+
 
 

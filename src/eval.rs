@@ -720,6 +720,37 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
 }
 
 
+pub fn hand_pieces(sfen: &str) -> (Vec<String>, Vec<String>) {
+    
+    let mut white_pieces = Vec::new();
+    let mut black_pieces = Vec::new();
+
+    let parts: Vec<&str> = sfen.split_whitespace().collect();
+    if parts.len() < 3 {
+        return (white_pieces, black_pieces);  // return empty if there's no pieces in hand info
+    }
+
+    let pieces_in_hand = parts[2];
+    let mut current_count: Option<u32> = None;
+    for c in pieces_in_hand.chars() {
+        if let Some(n) = c.to_digit(10) {  // if it's a digit, store it and continue
+            current_count = Some(n);
+        } else {
+            let piece = c.to_string();
+            let pieces = vec![piece.clone(); current_count.unwrap_or(1) as usize];
+            if c.is_uppercase() {
+                black_pieces.extend(pieces);
+            } else {
+                white_pieces.extend(pieces);
+            }
+            current_count = None;
+        }
+    }
+
+    (white_pieces, black_pieces)
+}
+
+
 pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let mut white_fitness = 0;
