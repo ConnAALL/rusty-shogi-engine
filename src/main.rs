@@ -187,7 +187,6 @@ fn hand_test() {
     println!("SFEN: {:?}", sfen);
 
         
-    //let (white_hand, black_hand) = eval::hand_pieces(&sfen);
     let (white_hand, black_hand) = eval::eval_hand(&sfen);
     
     println!("white hand: {:?}", white_hand);
@@ -200,7 +199,6 @@ fn eval_test() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     view::display_sfen(&sfen);
-    let fitness = eval::evaluate(&sfen);
     let (white_fitness, black_fitness) = eval::evaluate(&sfen);
     println!("white fitness: {:?}", white_fitness);
     println!("black fitness: {:?}", black_fitness);
@@ -213,12 +211,6 @@ fn main() {
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
     
-    // testing sfen side setter
-    println!("sfen: {:?}", sfen);
-    let new_sfen = sfen::set_sfen_turn(&sfen, "b");
-    println!("changing side to black {:?}", new_sfen);
-
-
     //search_test();
     
     //--------------------------PIECE_SQR_TBL_TEST--------------------------

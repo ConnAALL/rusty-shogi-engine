@@ -187,12 +187,12 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
         let clean = SFEN::convert_promoted_pieces(&sfen);
         let case_flip = SFEN::flip_case(&clean); // swaps lowercase with uppercase
         let flipped = SFEN::flip(&case_flip); // actual board flip
-        println!("SFEN: {:?}", flipped);
-        view::display_sfen(&flipped);
+        //println!("SFEN: {:?}", flipped);
+        //view::display_sfen(&flipped);
         sfen_vec = pst_parse(&flipped);
     } else if color == "white" {
-        println!("SFEN: {:?}", sfen);
-        view::display_sfen(sfen);
+        //println!("SFEN: {:?}", sfen);
+        //view::display_sfen(sfen);
         sfen_vec = pst_parse(sfen);
     }
     
@@ -591,7 +591,7 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
     let positions = SFEN::sfen_parse(sfen);
     let mut pos = SFEN::generate_pos(positions.clone());
     pos.side_to_move_set(side);
-    println!("Side to Move: {:?}", pos.side_to_move());
+    //println!("Side to Move: {:?}", pos.side_to_move());
 
     // Determine the color and enemy color based on the player's case
     let player = pos.side_to_move();
@@ -601,18 +601,18 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
         (Color::Black, Color::White)
     };
 
-    println!("Color: {:?}", color);
-    println!("Enemy Color: {:?}", enemy_color);
+    //println!("Color: {:?}", color);
+    //println!("Enemy Color: {:?}", enemy_color);
 
     let king_square = pos.king_position(enemy_color);
-    println!("King's Square: {:?}", king_square);
+    //println!("King's Square: {:?}", king_square);
 
     let file = king_square.unwrap().file();
     let rank = king_square.unwrap().rank();
 
     // --------------------------------------------------------------------------------------------------
     // Construct the list of 8 squares that surround the king
-    println!("\n-------------Constructing the list of 8 squares that surround the king");
+    //println!("\n-------------Constructing the list of 8 squares that surround the king");
     let files = (file.saturating_sub(1)..=file.saturating_add(1)).filter(|&f| 1 <= f && f <= 9);
     let ranks = (rank.saturating_sub(1)..=rank.saturating_add(1)).filter(|&r| 1 <= r && r <= 9);
     //println!("files: {:?}", files.clone().collect::<Vec<_>>());
@@ -621,24 +621,24 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
         .flat_map(|f| ranks.clone().map(move |r| Square::new(f, r)))
         .filter(|&s| s != king_square)
         .collect();
-    println!("SQUARES surrounding king: {:?}\n", squares);
+    //println!("SQUARES surrounding king: {:?}\n", squares);
 
 
     // --------------------------------------------------------------------------------------------------
     // Calculate the number of pieces that can attack the squares surrounding the king
-    println!("\n-------------Calculateing the number of pieces that can attack the squares surrounding the king");
+    //println!("\n-------------Calculateing the number of pieces that can attack the squares surrounding the king");
     pos.side_to_move_set(color);
     let num_attackers = squares.iter().filter(|&&s| {
         //println!("S: {:?}", s);
         let attackers = attackers(&pos, color, s);
         !attackers.is_empty()
     }).count() as i32;
-    println!("num_attackers: {:?}\n", num_attackers);
+    //println!("num_attackers: {:?}\n", num_attackers);
 
 
     // --------------------------------------------------------------------------------------------------
     // Calculate the number of pieces that can defend the squares surrounding the king
-    println!("\n-------------Calculateing the number of pieces that can defend the squares surrounding the king");
+    //println!("\n-------------Calculateing the number of pieces that can defend the squares surrounding the king");
     pos.side_to_move_set(enemy_color);
     let mut total_defenders = Vec::<Option<Square>>::new();
     for s in squares {
@@ -648,12 +648,12 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
     };
     //println!("Total defenders: {:?}", total_defenders);
     let num_defenders = total_defenders.len() as i32; 
-    println!("num_defenders: {:?}\n", num_defenders);
+    //println!("num_defenders: {:?}\n", num_defenders);
 
 
     // --------------------------------------------------------------------------------------------------
     // Calculate the number of pieces attacking the king
-    println!("\n-------------Calculateing the number of pieces attacking the king");
+    //println!("\n-------------Calculateing the number of pieces attacking the king");
     //println!("Side To Move: {:?}", color);
     pos.side_to_move_set(color);
     let enemy_king_sqr = pos.king_position(enemy_color);
@@ -688,26 +688,18 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
     }
 
     let num_king_attackers = attacks.len() as i32;
-    println!("num_king_attackers: {:?}", num_king_attackers);
+    //println!("num_king_attackers: {:?}", num_king_attackers);
 
 
     // --------------------------------------------------------------------------------------------------
     // Calculate the number of escape routes the king has
-    println!("\n-------------Calculateing number of escape routes for the king");
+    //println!("\n-------------Calculateing number of escape routes for the king");
     pos.side_to_move_set(enemy_color);
     let escapes = normal_from_candidates(&pos, king_square.clone().unwrap());
     //println!("escapes: {:?}", escapes);
     let num_escapes = escapes.count() as i32;
-    println!("num_escapes: {:?}\n", num_escapes);
+    //println!("num_escapes: {:?}\n", num_escapes);
 
-    println!(" ");
-    
-    println!("calculating weighted score: ");
-    println!("num_attackers * ATK_WEIGHT (1)
-            - num_defenders * DEF_WEIGHT (0.5)
-            + num_king_attackers * K_ATK_WEIGHT (1)
-            - num_escapes * ESC_WEIGHT (1)");
-    
     // Modify the values with internal weightings
     let king_vulnerability = (num_attackers * ATK_WEIGHT
                             - num_defenders * DEF_WEIGHT as i32
@@ -721,38 +713,6 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
 
 
 //   ################################## 5. PIECES IN HAND ##################################
-
-
-pub fn hand_pieces(sfen: &str) -> (Vec<String>, Vec<String>) {
-    
-    let mut white_pieces = Vec::new();
-    let mut black_pieces = Vec::new();
-
-    let parts: Vec<&str> = sfen.split_whitespace().collect();
-    if parts.len() < 3 {
-        return (white_pieces, black_pieces);  
-    }
-
-    let pieces_in_hand = parts[2];
-    let mut current_count: Option<u32> = None;
-    for c in pieces_in_hand.chars() {
-        if let Some(n) = c.to_digit(10) {              
-            current_count = Some(n);
-        } else {
-            let piece = c.to_string();
-            let pieces = vec![piece.clone(); current_count.unwrap_or(1) as usize];
-            if c.is_uppercase() {
-                black_pieces.extend(pieces);
-            } else {
-                white_pieces.extend(pieces);
-            }
-            current_count = None;
-        }
-    }
-
-    (white_pieces, black_pieces)
-}
-
 
 
 pub fn eval_hand(sfen: &str) -> (u32, u32) {
@@ -781,8 +741,6 @@ pub fn eval_hand(sfen: &str) -> (u32, u32) {
             current_count = None;
         }
     }
-
-    //(white_pieces, black_pieces)
 
     let mut white_hand_value = 0;
     let mut black_hand_value = 0;
@@ -841,8 +799,8 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     let white_king_vln = enemy_king_vuln(&sfen, Color::White);
     let black_king_vln = enemy_king_vuln(&sfen, Color::Black);
 
-    println!("white_king_vln: {:?}", white_king_vln);
-    println!("black_king_vln: {:?}", black_king_vln);
+    //println!("white_king_vln: {:?}", white_king_vln);
+    //println!("black_king_vln: {:?}", black_king_vln);
     
     white_fitness += white_king_vln as u32 * KING_VULN;
     black_fitness += black_king_vln as u32 * KING_VULN;
@@ -851,8 +809,8 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
 
-    println!("white_rook_mobil: {:?}", white_rook_mobil);
-    println!("black_rook_mobil: {:?}", black_rook_mobil);
+    //println!("white_rook_mobil: {:?}", white_rook_mobil);
+    //println!("black_rook_mobil: {:?}", black_rook_mobil);
     
     white_fitness += white_rook_mobil * ROOK_MOBIL;
     black_fitness += black_rook_mobil * ROOK_MOBIL;
@@ -861,8 +819,8 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
     
-    println!("white_lance_mobil: {:?}", white_lance_mobil);
-    println!("black_lance_mobil: {:?}", black_lance_mobil);
+    //println!("white_lance_mobil: {:?}", white_lance_mobil);
+    //println!("black_lance_mobil: {:?}", black_lance_mobil);
     
     white_fitness += white_lance_mobil * LANCE_MOBIL;
     black_fitness += black_lance_mobil * LANCE_MOBIL;
@@ -871,8 +829,8 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     
     let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
     
-    println!("white_bish_mobil: {:?}", white_bish_mobil);
-    println!("black_bish_mobil: {:?}", black_bish_mobil);
+    //println!("white_bish_mobil: {:?}", white_bish_mobil);
+    //println!("black_bish_mobil: {:?}", black_bish_mobil);
     
     white_fitness += white_bish_mobil * BISHOP_MOBIL;
     black_fitness += black_bish_mobil * BISHOP_MOBIL;
@@ -884,8 +842,8 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     white_fitness += white_hand;
     black_fitness += black_hand;
     
-    println!("white hand: {:?}", white_hand);
-    println!("black hand: {:?}", black_hand);
+    //println!("white hand: {:?}", white_hand);
+    //println!("black hand: {:?}", black_hand);
 
 // ---------------------------------RETURN BOTH FITNESSES
     
