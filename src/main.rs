@@ -187,10 +187,10 @@ fn hand_test() {
     println!("SFEN: {:?}", sfen);
 
         
-    let (white_hand, black_hand) = eval::hand_pieces(&sfen);
+    //let (white_hand, black_hand) = eval::hand_pieces(&sfen);
+    let (white_hand, black_hand) = eval::eval_hand(&sfen);
     
     println!("white hand: {:?}", white_hand);
-    println!("\n");
     println!("black hand: {:?}", black_hand);
 
 }

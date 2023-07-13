@@ -720,6 +720,9 @@ pub fn enemy_king_vuln(sfen: &str, side: Color) -> i32 {
 }
 
 
+//   ################################## 5. PIECES IN HAND ##################################
+
+
 pub fn hand_pieces(sfen: &str) -> (Vec<String>, Vec<String>) {
     
     let mut white_pieces = Vec::new();
@@ -727,13 +730,13 @@ pub fn hand_pieces(sfen: &str) -> (Vec<String>, Vec<String>) {
 
     let parts: Vec<&str> = sfen.split_whitespace().collect();
     if parts.len() < 3 {
-        return (white_pieces, black_pieces);  // return empty if there's no pieces in hand info
+        return (white_pieces, black_pieces);  
     }
 
     let pieces_in_hand = parts[2];
     let mut current_count: Option<u32> = None;
     for c in pieces_in_hand.chars() {
-        if let Some(n) = c.to_digit(10) {  // if it's a digit, store it and continue
+        if let Some(n) = c.to_digit(10) {              
             current_count = Some(n);
         } else {
             let piece = c.to_string();
@@ -748,6 +751,69 @@ pub fn hand_pieces(sfen: &str) -> (Vec<String>, Vec<String>) {
     }
 
     (white_pieces, black_pieces)
+}
+
+
+
+pub fn eval_hand(sfen: &str) -> (u32, u32) {
+    
+    let mut white_pieces = Vec::new();
+    let mut black_pieces = Vec::new();
+
+    let parts: Vec<&str> = sfen.split_whitespace().collect();
+    //if parts.len() < 3 {
+    //    return (white_pieces, black_pieces);  
+    //}
+
+    let pieces_in_hand = parts[2];
+    let mut current_count: Option<u32> = None;
+    for c in pieces_in_hand.chars() {
+        if let Some(n) = c.to_digit(10) {              
+            current_count = Some(n);
+        } else {
+            let piece = c.to_string();
+            let pieces = vec![piece.clone(); current_count.unwrap_or(1) as usize];
+            if c.is_uppercase() {
+                black_pieces.extend(pieces);
+            } else {
+                white_pieces.extend(pieces);
+            }
+            current_count = None;
+        }
+    }
+
+    //(white_pieces, black_pieces)
+
+    let mut white_hand_value = 0;
+    let mut black_hand_value = 0;
+
+    for piece in white_pieces {
+        white_hand_value += match piece.as_str() {
+            "p" => PAWN_HAND,
+            "l" => LANCE_HAND,
+            "n" => KNIGHT_HAND,
+            "s" => SILVER_HAND,
+            "g" => GOLD_HAND,
+            "r" => ROOK_HAND,
+            "b" => BISHOP_HAND,
+            _ => 0,
+        };
+    }
+    for piece in black_pieces {
+        black_hand_value += match piece.as_str() {
+            "P" => PAWN_HAND,
+            "L" => LANCE_HAND,
+            "N" => KNIGHT_HAND,
+            "S" => SILVER_HAND,
+            "G" => GOLD_HAND,
+            "R" => ROOK_HAND,
+            "B" => BISHOP_HAND,
+            _ => 0,
+        };
+    }
+
+    (white_hand_value, black_hand_value)
+
 }
 
 
