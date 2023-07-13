@@ -240,11 +240,11 @@ fn main() {
     //king_attackers_test();
 
     //-----------------------------EVAL_TEST-----------------------------
-    //eval_test();
+    eval_test();
 
     //coord_test();
     //mobility_tests();
-    hand_test();
+    //hand_test();
 
 }
 

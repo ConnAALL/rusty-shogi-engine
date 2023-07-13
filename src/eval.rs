@@ -879,7 +879,13 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
 // ---------------------------------PIECES IN HAND---------------------------------
 
-
+    let (white_hand, black_hand) = eval_hand(&sfen);
+    
+    white_fitness += white_hand;
+    black_fitness += black_hand;
+    
+    println!("white hand: {:?}", white_hand);
+    println!("black hand: {:?}", black_hand);
 
 // ---------------------------------RETURN BOTH FITNESSES
     
