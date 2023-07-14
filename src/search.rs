@@ -70,15 +70,17 @@ pub fn single_search(sfen: &str) -> (Vec<String>, Vec<Move>) {
     pos.side_to_move_set(sfen::get_color(sfen));
     let next_moves = all_legal_moves_partial(&pos); 
     let mut sfen_list = Vec::new();
+    let mut move_list = Vec::new();
     
     for move_item in next_moves {
+        move_list.push(move_item);
         let mut temp_pos = pos.clone();
         temp_pos.make_move(move_item);
         let sfen = temp_pos.to_sfen_owned();
         sfen_list.push(sfen);
     }
 
-    sfen_list
+    return (sfen_list, move_list);
 }
 
 
