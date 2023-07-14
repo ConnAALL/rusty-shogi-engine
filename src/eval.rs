@@ -1,3 +1,5 @@
+
+
 /* Russell Kosovsky, Jim O'Conner
  
     * Module containing the 6 eval functions
@@ -13,10 +15,8 @@
 use crate::view;
 use crate::sfen as SFEN;
 use std::collections::HashMap;
-
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, 
                           all_legal_moves_partial, all_checks_partial};
-
 use shogi_core::{ Bitboard, Color, IllegalMoveKind, Square, PartialPosition, 
                   Piece, PieceKind, PositionStatus, Move, LegalityChecker};
 
@@ -148,6 +148,7 @@ fn pst() -> HashMap<&'static str, [i32; 81]> {
     };
     
     pst // return the hashmap
+
 }
 
 
@@ -172,6 +173,7 @@ fn pst_parse(sfen: &str) -> Vec<char> {
     }
     
     result
+
 } 
 
 
@@ -322,6 +324,7 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
     } else {
         0
     }
+
 }
 
 
@@ -350,6 +353,7 @@ pub fn promoted_pieces(sfen: &str) -> (u32, u32) {
     }
 
     (num_black_pieces, num_white_pieces)
+
 }
 
 
@@ -408,6 +412,7 @@ pub fn mobility(sfen: &str, coord: String) -> u32 {
     // Return the count of possible moves and the captured pieces
     //(num_moves, captured_pieces)
     num_moves
+
 }
 
 
@@ -549,6 +554,7 @@ fn can_attack(pos: &PartialPosition, piece: Piece, src: Option<Square>, dst: Opt
     } else {
        return false;
     }
+
 }
 
 
