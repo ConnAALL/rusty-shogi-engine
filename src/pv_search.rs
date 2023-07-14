@@ -1,9 +1,6 @@
 
 
 
-
-
-
 // The game state structure: Partial Position
 pub struct GameState
 
@@ -12,17 +9,18 @@ pub struct GameMove
 
 
 // Principal Variable Search Function
-fn pvs(state: &GameState, depth: i32, alpha: i32, beta: i32) -> i32 {
+fn pvs(sfen: &str, depth: i32, alpha: i32, beta: i32) -> i32 {
     
     if depth == 0 {
-        return state.evaluate(); // return the evaluation of the board state
+        return eval::evaluate(&sfen); // return the evaluation of the board state
     }
 
     let mut alpha = alpha;
-    let mut moves = state.generate_moves(); // generate all possible moves
+    
+    // might need to modify so that this stores the resulting move object as well as the sfen
+    let mut moves = search::single_search(&sfen); // generate all possible moves
 
-    // Sort the moves according to some heuristic.
-    // For simplicity, assume that the moves are already sorted.
+    // todo: Sort the moves according to some heuristic.
 
     // Search the first move
     let first_move = moves.remove(0);
