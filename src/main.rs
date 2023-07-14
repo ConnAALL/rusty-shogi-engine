@@ -1,9 +1,10 @@
 // Russell Kosovsky
 
-mod search;
 mod view;
 mod sfen;
 mod eval;
+mod search;
+mod pv_search;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 

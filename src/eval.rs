@@ -393,7 +393,7 @@ pub fn mobility(sfen: &str, coord: String) -> u32 {
     let square = shogi_core::Square::new(file, rank).expect("Invalid coordinate");
 
     // Print square index
-    //println!("rook sqr: {:?}", rook_square);
+    // println!("rook sqr: {:?}", rook_square);
 
     // Get the Bitboard of possible rook moves from the LiteLegalityChecker
     let possible_moves = normal_from_candidates(&pos, square);

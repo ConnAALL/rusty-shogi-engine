@@ -1,5 +1,13 @@
 
 
+use crate::view;
+use crate::sfen as SFEN;
+use std::collections::HashMap;
+use shogi_legality_lite::{ normal_from_candidates, is_legal_partial_lite, 
+                           all_legal_moves_partial, all_checks_partial};
+use shogi_core::{ Bitboard, Color, IllegalMoveKind, Square, PartialPosition, 
+                  Piece, PieceKind, PositionStatus, Move, LegalityChecker};
+
 
 // The game state structure: Partial Position
 pub struct GameState

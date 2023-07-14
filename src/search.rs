@@ -1,5 +1,8 @@
 
+
+use crate::view;
 use crate::sfen;
+use shogi_core::Move;
 use shogi_legality_lite::all_legal_moves_partial;
 use std::collections::HashSet;
 
@@ -60,7 +63,7 @@ pub fn perft(sfen: &str, depth: u32) -> u64 {
 }
 
 
-pub fn single_search(sfen: &str) -> Vec<String> {
+pub fn single_search(sfen: &str) -> (Vec<String>, Vec<Move>) {
     
     let positions = sfen::sfen_parse(sfen);
     let mut pos = sfen::generate_pos(positions);
