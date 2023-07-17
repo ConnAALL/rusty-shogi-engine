@@ -25,7 +25,6 @@ fn search_test() {
         println!("{:?}", view::display_sfen(outcome));
     }
     
-    
     if search::has_duplicates(&moves) {
         println!("Duplicates found in the vector");
     } else {
@@ -41,6 +40,7 @@ fn search_test() {
         let node_count = search::perft(&start, dep);
         println!("Depth: {:<2} Nodes: {}", dep, node_count);
     }
+
 }
 
 
