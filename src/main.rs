@@ -245,10 +245,10 @@ fn tree_test() {
 
     // Search for some elements
     println!("Searching for values in the tree...");
-    println!("Searching for 5: {}", if tree.search(5) { "Found" } else { "Not Found" });  
-    println!("Searching for 2: {}", if tree.search(2) { "Found" } else { "Not Found" });  
-    println!("Searching for 8: {}", if tree.search(8) { "Found" } else { "Not Found" });  
-    println!("Searching for 10: {}", if tree.search(10) { "Found" } else { "Not Found" }); 
+    println!("Searching for 5: {}", if tree.search(&5) { "Found" } else { "Not Found" });  
+    println!("Searching for 2: {}", if tree.search(&2) { "Found" } else { "Not Found" });  
+    println!("Searching for 8: {}", if tree.search(&8) { "Found" } else { "Not Found" });  
+    println!("Searching for 10: {}", if tree.search(&10) { "Found" } else { "Not Found" }); 
     println!();
 
     // Print the tree in order
