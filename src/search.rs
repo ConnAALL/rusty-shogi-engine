@@ -2,9 +2,47 @@
 
 use crate::view;
 use crate::sfen;
+use crate::tree::Tree;
 use shogi_core::Move;
 use shogi_legality_lite::all_legal_moves_partial;
 use std::collections::HashSet;
+
+
+// enumerate possible moves to a certain depth then genrate a tree representation //
+// TODO: fix issue with std::fmt::Display and figure out all the data types
+pub fn search_tree(sfen: &str, depth: u32, current_depth: u32) -> Tree<u32> {
+    let positions = sfen::sfen_parse(sfen);
+    let mut pos = sfen::generate_pos(positions.clone());
+    pos.side_to_move_set(sfen::get_color(sfen));
+
+    let mut tree = Tree::Node {
+        score: (),
+        board: pos.clone(),
+        sfen: sfen.to_string(),
+        children: Vec::new(),
+    };
+
+    if current_depth < depth {
+        let next_moves = all_legal_moves_partial(&pos);
+
+        for move_item in next_moves {
+            let mut temp_pos = pos.clone();
+            temp_pos.make_move(move_item);
+            let sfen = temp_pos.to_sfen_owned();
+
+            let child_tree = search_tree(&sfen, depth, current_depth + 1);
+
+            match &mut tree {
+                Tree::Node { children, .. } => {
+                    children.push(Box::new(child_tree));
+                },
+                Tree::Empty => (),
+            }
+        }
+    }
+
+    tree
+}
 
 
 pub fn search(sfen: &str, depth: u32, current_depth: u32) -> Vec<String> {

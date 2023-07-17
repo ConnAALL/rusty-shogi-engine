@@ -17,22 +17,22 @@ fn search_test() {
     let depth = 3;
     let current_depth = 0;
 
-    let nodes = search::search(&start, depth, current_depth);
+    let moves = search::search(&start, depth, current_depth);
     
-    /*
-    for node in &nodes {
-        println!("{:?}", node);
-        println!("{:?}", view::display_sfen(node));
+    
+    for outcome in &moves {
+        println!("{:?}", outcome);
+        println!("{:?}", view::display_sfen(outcome));
     }
-    */
     
-    if search::has_duplicates(&nodes) {
+    
+    if search::has_duplicates(&moves) {
         println!("Duplicates found in the vector");
     } else {
         println!("No duplicates found in the vector");
     }
 
-    println!("Number of moves: {:?}", nodes.len());
+    println!("Number of moves: {:?}", moves.len());
 
     println!("PERFT: ");
     let max_depth = 3;
