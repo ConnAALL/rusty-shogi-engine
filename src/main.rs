@@ -235,25 +235,45 @@ fn tree_test() {
     let mut pos = sfen::generate_pos(positions.clone()); // creates a "partial position" out of it
     pos.side_to_move_set(sfen::get_color(sfen));
 
+    let sfen2 = "lnsgkgsnl/1r5b1/pppppppp1/8p/9/8P/1PPPPPPPP/1B5R1/LNSGKGSNL w - 2";
+    let positions2 = sfen::sfen_parse(sfen2);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos2 = sfen::generate_pos(positions2.clone()); // creates a "partial position" out of it
+    pos2.side_to_move_set(sfen::get_color(sfen2));
+    
+    let sfen3 = "lnsgkgsnl/1r5b1/pppppppp1/8p/9/7PP/2PPPPPPP/1B5R1/LNSGKGSNL b - 3";
+    let positions3 = sfen::sfen_parse(sfen3);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos3 = sfen::generate_pos(positions3.clone()); // creates a "partial position" out of it
+    pos3.side_to_move_set(sfen::get_color(sfen3));
+    
+    let sfen4 = "lnsgkgsnl/1r5b1/ppppppp2/7pp/9/7PP/2PPPPPPP/1B5R1/LNSGKGSNL w - 4";
+    let positions4 = sfen::sfen_parse(sfen4);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos4 = sfen::generate_pos(positions4.clone()); // creates a "partial position" out of it
+    pos4.side_to_move_set(sfen::get_color(sfen4));
+
     // Create a new BinaryTree
     let mut tree = tree::Tree::new();
    
     // Insert some elements
-    println!("Inserting node into the tree...");
+    println!("Inserting nodes into the tree...");
     tree.insert(pos.clone(), sfen.to_string(), 8);
-    println!("Node inserted.\n");
+    tree.insert(pos2.clone(), sfen2.to_string(), 10);
+    tree.insert(pos3.clone(), sfen3.to_string(), 11);
+    tree.insert(pos4.clone(), sfen4.to_string(), 2);
+    println!("Nodes inserted.\n");
 
     // Search for some elements
     println!("Searching for values in the tree...");
-    println!("Searching for 5: {}", if tree.search(&5) { "Found" } else { "Not Found" });  
     println!("Searching for 2: {}", if tree.search(&2) { "Found" } else { "Not Found" });  
+    println!("Searching for 5: {}", if tree.search(&5) { "Found" } else { "Not Found" });  
+    println!("Searching for 7: {}", if tree.search(&7) { "Found" } else { "Not Found" });  
     println!("Searching for 8: {}", if tree.search(&8) { "Found" } else { "Not Found" });  
     println!("Searching for 10: {}", if tree.search(&10) { "Found" } else { "Not Found" }); 
+    println!("Searching for 11: {}", if tree.search(&11) { "Found" } else { "Not Found" }); 
     println!();
 
     // Print the tree in order
-    println!("Printing the tree in order:");
-    tree.print_in_order();
+    println!("Printing the nodes in the tree:");
+    tree.print_tree();
     println!();
 
 }

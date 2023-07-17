@@ -1,9 +1,8 @@
 // Russell Kosovsky 7/17/23
 
 
-
-
 use shogi_core::PartialPosition;
+
 
 pub enum Tree<T: Ord + std::fmt::Display + Default> {
     Empty,
@@ -15,18 +14,23 @@ pub enum Tree<T: Ord + std::fmt::Display + Default> {
     },
 }
 
+
 impl<T: Ord + std::fmt::Display + Default + Clone + PartialEq> Tree<T> {
 
     pub fn new() -> Self {
         Tree::Empty
     }
 
+
     pub fn insert(&mut self, board: PartialPosition, sfen: String, score: T) {
         match self {
             Tree::Node { score: _, children, .. } => {
-                for child in children {
-                    child.insert(board.clone(), sfen.clone(), score.clone());
-                }
+                children.push(Box::new(Tree::Node {
+                    score: score,
+                    board: board,
+                    sfen: sfen,
+                    children: Vec::new(),
+                }));
             },
             Tree::Empty => {
                 *self = Tree::Node {
@@ -38,6 +42,7 @@ impl<T: Ord + std::fmt::Display + Default + Clone + PartialEq> Tree<T> {
             },
         }
     }
+
 
     pub fn search(&self, score: &T) -> bool {
         match self {
@@ -52,11 +57,12 @@ impl<T: Ord + std::fmt::Display + Default + Clone + PartialEq> Tree<T> {
         }
     }
 
-    pub fn print_in_order(&self) {
+
+    pub fn print_tree(&self) {
         match self {
             Tree::Node { score, children, .. } => {
                 for child in children {
-                    child.print_in_order();
+                    child.print_tree();
                 }
                 println!("{}", score);
             },
