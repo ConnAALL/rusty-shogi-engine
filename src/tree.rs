@@ -69,6 +69,44 @@ impl<T: Ord + std::fmt::Display + Default + Clone + PartialEq> Tree<T> {
             Tree::Empty => (),
         }
     }
+
+
+    pub fn find_sfen(&self, score: &T) -> Option<String> {
+        match self {
+            Tree::Node { score: v, sfen, children, .. } => {
+                if v == score {
+                    Some(sfen.clone())
+                } else {
+                    for child in children {
+                        if let Some(found_sfen) = child.find_sfen(score) {
+                            return Some(found_sfen);
+                        }
+                    }
+                    None
+                }
+            },
+            Tree::Empty => None,
+        }
+    }
+
+
+    pub fn find_position(&self, score: &T) -> Option<PartialPosition> {
+        match self {
+            Tree::Node { score: v, board, children, .. } => {
+                if v == score {
+                    Some(board.clone())
+                } else {
+                    for child in children {
+                        if let Some(found_pos) = child.find_position(score) {
+                            return Some(found_pos);
+                        }
+                    }
+                    None
+                }
+            },
+            Tree::Empty => None,
+        }
+    }
 }
 
 

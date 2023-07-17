@@ -235,17 +235,17 @@ fn tree_test() {
     let mut pos = sfen::generate_pos(positions.clone()); // creates a "partial position" out of it
     pos.side_to_move_set(sfen::get_color(sfen));
 
-    let sfen2 = "lnsgkgsnl/1r5b1/pppppppp1/8p/9/8P/1PPPPPPPP/1B5R1/LNSGKGSNL w - 2";
+    let sfen2 = "lnsgkgsnl/1r5b1/pppppppp1/8p/9/8P/1PPPPPPPP/1B5R1/LNSGKGSNL w - 1";
     let positions2 = sfen::sfen_parse(sfen2);// creates list of board squares and the pieces on them (if there are any)
     let mut pos2 = sfen::generate_pos(positions2.clone()); // creates a "partial position" out of it
     pos2.side_to_move_set(sfen::get_color(sfen2));
     
-    let sfen3 = "lnsgkgsnl/1r5b1/pppppppp1/8p/9/7PP/2PPPPPPP/1B5R1/LNSGKGSNL b - 3";
+    let sfen3 = "lnsgkgsnl/1r5b1/pppppppp1/8p/9/7PP/2PPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let positions3 = sfen::sfen_parse(sfen3);// creates list of board squares and the pieces on them (if there are any)
     let mut pos3 = sfen::generate_pos(positions3.clone()); // creates a "partial position" out of it
     pos3.side_to_move_set(sfen::get_color(sfen3));
     
-    let sfen4 = "lnsgkgsnl/1r5b1/ppppppp2/7pp/9/7PP/2PPPPPPP/1B5R1/LNSGKGSNL w - 4";
+    let sfen4 = "lnsgkgsnl/1r5b1/ppppppp2/7pp/9/7PP/2PPPPPPP/1B5R1/LNSGKGSNL w - 1";
     let positions4 = sfen::sfen_parse(sfen4);// creates list of board squares and the pieces on them (if there are any)
     let mut pos4 = sfen::generate_pos(positions4.clone()); // creates a "partial position" out of it
     pos4.side_to_move_set(sfen::get_color(sfen4));
@@ -274,6 +274,29 @@ fn tree_test() {
     // Print the tree in order
     println!("Printing the nodes in the tree:");
     tree.print_tree();
+
+    println!();
+    
+    // Print the sfen of nodes with specific scores
+    println!("Printing sfen of nodes with specific scores:");
+    for score in &[2, 5, 7, 8, 10, 11] {
+        match tree.find_sfen(score) {
+            Some(sfen) => println!("Score: {}, SFEN: {}", score, sfen),
+            None => println!("Score: {} not found", score),
+        }
+    }
+    
+    println!();
+    
+    // Print the position of nodes with specific scores
+    println!("Printing position of nodes with specific scores:");
+    for score in &[2, 5, 7, 8, 10, 11] {
+        match tree.find_position(score) {
+            Some(position) => println!("Score: {}, Position (as sfen): {:?}", score, position.to_sfen_owned()),
+            None => println!("Score: {} not found", score),
+        }
+    }
+    
     println!();
 
 }
