@@ -6,6 +6,7 @@ mod eval;
 mod search;
 mod pv_search;
 mod tree;
+
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
@@ -18,10 +19,12 @@ fn search_test() {
 
     let nodes = search::search(&start, depth, current_depth);
     
-    //for node in &nodes {
-    //    println!("{:?}", node);
-    //    println!("{:?}", view::display_sfen(node));
-    //}
+    /*
+    for node in &nodes {
+        println!("{:?}", node);
+        println!("{:?}", view::display_sfen(node));
+    }
+    */
     
     if search::has_duplicates(&nodes) {
         println!("Duplicates found in the vector");
