@@ -5,6 +5,7 @@ mod sfen;
 mod eval;
 mod search;
 mod pv_search;
+mod tree;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
@@ -226,6 +227,38 @@ fn test_pvs() {
 }
 
 
+fn tree_test() {
+    
+    // Set up the initial game state
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
+    let mut pos = sfen::generate_pos(positions.clone()); // creates a "partial position" out of it
+    pos.side_to_move_set(sfen::get_color(sfen));
+
+    // Create a new BinaryTree
+    let mut tree = tree::Tree::new();
+   
+    // Insert some elements
+    println!("Inserting node into the tree...");
+    tree.insert(pos.clone(), sfen.to_string(), 8);
+    println!("Node inserted.\n");
+
+    // Search for some elements
+    println!("Searching for values in the tree...");
+    println!("Searching for 5: {}", if tree.search(5) { "Found" } else { "Not Found" });  
+    println!("Searching for 2: {}", if tree.search(2) { "Found" } else { "Not Found" });  
+    println!("Searching for 8: {}", if tree.search(8) { "Found" } else { "Not Found" });  
+    println!("Searching for 10: {}", if tree.search(10) { "Found" } else { "Not Found" }); 
+    println!();
+
+    // Print the tree in order
+    println!("Printing the tree in order:");
+    tree.print_in_order();
+    println!();
+
+}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
@@ -255,13 +288,13 @@ fn main() {
     //eval_test();
 
     //-----------------------------EVAL_TEST-----------------------------
-    test_pvs();
+    //test_pvs();
 
 
     //coord_test();
     //mobility_tests();
     //hand_test();
-     
+    tree_test()
 
 }
 
