@@ -1,5 +1,5 @@
 
-
+use crate::eval;
 use crate::view;
 use crate::sfen;
 use crate::tree::Tree;
@@ -16,7 +16,7 @@ pub fn search_tree(sfen: &str, depth: u32, current_depth: u32) -> Tree<u32> {
     pos.side_to_move_set(sfen::get_color(sfen));
 
     let mut tree = Tree::Node {
-        score: (),
+        score: eval::evaluate(sfen),
         board: pos.clone(),
         sfen: sfen.to_string(),
         children: Vec::new(),
