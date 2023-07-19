@@ -305,6 +305,28 @@ fn tree_test() {
 }
 
 
+
+
+pub fn test_tree_search() {
+    
+    let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    let depth = 2;
+    let current_depth = 0;
+
+    let moves = search::search(&start, depth, current_depth);
+   
+    println!("{:?}", moves.len());
+    println!("{:?}", moves);
+    
+    //for outcome in &moves {
+      //  println!("{:?}", outcome);
+        //println!("{:?}", view::display_sfen(outcome));
+    //}
+
+    
+}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
@@ -340,7 +362,7 @@ fn main() {
     //coord_test();
     //mobility_tests();
     //hand_test();
-    tree_test()
+    test_tree_search()
 
 }
 
