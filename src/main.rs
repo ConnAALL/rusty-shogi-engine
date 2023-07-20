@@ -331,7 +331,7 @@ pub fn minimax_playground() {
     view::display_sfen(&root_sfen);
     println!("Root Sfen: {:?}", root_sfen);
     
-    let dep = 1;
+    let dep = 2;
     println!("search depth: {:?}", dep);
 
     println!("\nEntering treesearch()!");

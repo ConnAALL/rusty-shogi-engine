@@ -149,8 +149,11 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
     }
 
     if is_maximizing_player { // Assuming this is the white player
+        println!("assuming white");
         let mut max_eval = (f32::MIN, f32::MIN);
+        println!("max_eval: {:?}", max_eval);
         let mut best_move = None;
+        println!("Then loops through children nodes and calls just_mini() again");
         for child in &tree.children {
             let (eval, move_) = just_mini(child, depth - 1, false);
             //let (eval, move_) = minimax(child, depth - 1, false);
@@ -159,11 +162,15 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
                 best_move = move_;
             }
         }
+        println!("returning...");
         return (max_eval, best_move);
     
     } else { // Assuming this is the black player
+        println!("assuming black");
         let mut min_eval = (f32::MAX, f32::MAX);
+        println!("min_eval: {:?}", min_eval);
         let mut best_move = None;
+        println!("Then loops through children nodes and calls just_mini() again");
         for child in &tree.children {
             let (eval, move_) = just_mini(child, depth - 1, true);
             //let (eval, move_) = minimax(child, depth - 1, true);
@@ -172,6 +179,7 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
                 best_move = move_;
             }
         }
+        println!("returning...");
         return (min_eval, best_move);
     }
 }
