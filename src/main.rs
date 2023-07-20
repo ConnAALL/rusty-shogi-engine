@@ -324,6 +324,14 @@ pub fn test_tree_search() {
 }
 
 
+//pub fn minimax_playground(); {
+
+
+
+
+//}
+
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
@@ -359,8 +367,8 @@ fn main() {
     //coord_test();
     //mobility_tests();
     //hand_test();
-    test_tree_search()
-
+    test_tree_search();
+    //minimax_playground();
 }
 
 

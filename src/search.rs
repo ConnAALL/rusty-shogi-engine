@@ -123,11 +123,86 @@ pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<
 
 
 // ##########################################################################################
+//                                  MINIMAX W/NO EVAL
+use random_number::random;
+// essentially just a random eval function
+pub fn randomize(sfen: &str) -> (f32, f32) {
+    let mut white_fitness: f32 = random!(1.0..20.0);
+    let mut black_fitness: f32 = random!(1.0..20.0);
+    return(white_fitness, black_fitness);
+}
 
 
+pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
+
+    if depth == 0 || tree.children.is_empty() {
+        return (randomize(&tree.sfen), tree.game_move.clone()); // Modify your evaluate function to fit your needs
+    }
+
+    if is_maximizing_player { // Assuming this is the white player
+        let mut max_eval = (f32::MIN, f32::MIN);
+        let mut best_move = None;
+        for child in &tree.children {
+            let (eval, move_) = minimax(child, depth - 1, false);
+            if eval.0 > max_eval.0 { // or use your own logic for comparing scores
+                max_eval = eval;
+                best_move = move_;
+            }
+        }
+        return (max_eval, best_move);
+    
+    } else { // Assuming this is the black player
+        let mut min_eval = (f32::MAX, f32::MAX);
+        let mut best_move = None;
+        for child in &tree.children {
+            let (eval, move_) = minimax(child, depth - 1, true);
+            if eval.1 < min_eval.1 { // or use your own logic for comparing scores
+                min_eval = eval;
+                best_move = move_;
+            }
+        }
+        return (min_eval, best_move);
+    }
+}
 
 
 // ##########################################################################################
+//                          `           MINIMAX
+
+// SKELETON EXAMPLE: def doesnt work don evn try 
+pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
+    if depth == 0 || tree.children.is_empty() {
+        return (eval::evaluate(&tree.sfen), tree.game_move.clone()); // Modify your evaluate function to fit your needs
+    }
+
+    if is_maximizing_player { // Assuming this is the white player
+        let mut max_eval = (f32::MIN, f32::MIN);
+        let mut best_move = None;
+        for child in &tree.children {
+            let (eval, move_) = minimax(child, depth - 1, false);
+            if eval.0 > max_eval.0 { // or use your own logic for comparing scores
+                max_eval = eval;
+                best_move = move_;
+            }
+        }
+        return (max_eval, best_move);
+    } else { // Assuming this is the black player
+        let mut min_eval = (f32::MAX, f32::MAX);
+        let mut best_move = None;
+        for child in &tree.children {
+            let (eval, move_) = minimax(child, depth - 1, true);
+            if eval.1 < min_eval.1 { // or use your own logic for comparing scores
+                min_eval = eval;
+                best_move = move_;
+            }
+        }
+        return (min_eval, best_move);
+    }
+}
+
+
+// ##########################################################################################
+//                                  OLD SEARCH STUFF
 
 
 pub fn single_search(sfen: &str) -> (Vec<String>, Vec<Move>) {
