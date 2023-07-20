@@ -316,7 +316,7 @@ pub fn test_tree_search() {
     //println!("{:?}", moves);
     
     for node in &moves {
-        println!("{:?}", node);
+        //println!("{:?}", node);
         println!("sfen: {:?}", node.sfen);
         println!("---------------------------------------------------------------------------------");
     }

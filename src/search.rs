@@ -9,6 +9,26 @@ use std::collections::HashSet;
 use std::collections::VecDeque;
 
 
+#[derive(Debug)]
+pub struct GameTree {
+    pub sfen: String,
+    pub game_move: Option<Move>, // Optional field to store the move that led to this state
+    pub children: Vec<GameTree>,
+}
+
+
+impl GameTree {
+    pub fn new(sfen: String, game_move: Option<Move>) -> Self {
+        GameTree {
+            sfen,
+            game_move,
+            children: vec![],
+        }
+    }
+}
+
+
+
 pub struct DepthFirstIter<'a> {
     stack: VecDeque<&'a GameTree>,
 }
@@ -44,25 +64,6 @@ impl<'a> IntoIterator for &'a GameTree {
 
     fn into_iter(self) -> Self::IntoIter {
         DepthFirstIter::new(self)
-    }
-}
-
-
-#[derive(Debug)]
-pub struct GameTree {
-    pub sfen: String,
-    pub game_move: Option<Move>, // Optional field to store the move that led to this state
-    pub children: Vec<GameTree>,
-}
-
-
-impl GameTree {
-    pub fn new(sfen: String, game_move: Option<Move>) -> Self {
-        GameTree {
-            sfen,
-            game_move,
-            children: vec![],
-        }
     }
 }
 
