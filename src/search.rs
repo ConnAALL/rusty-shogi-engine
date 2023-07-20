@@ -126,7 +126,7 @@ pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<
 //                                  MINIMAX W/NO EVAL
 use random_number::random;
 // essentially just a random eval function
-pub fn randomize(sfen: &str) -> (f32, f32) {
+fn randomize() -> (f32, f32) {
     let mut white_fitness: f32 = random!(1.0..20.0);
     let mut black_fitness: f32 = random!(1.0..20.0);
     return(white_fitness, black_fitness);
@@ -136,7 +136,7 @@ pub fn randomize(sfen: &str) -> (f32, f32) {
 pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
 
     if depth == 0 || tree.children.is_empty() {
-        return (randomize(&tree.sfen), tree.game_move.clone()); // Modify your evaluate function to fit your needs
+        return (randomize(), tree.game_move.clone()); // Modify your evaluate function to fit your needs
     }
 
     if is_maximizing_player { // Assuming this is the white player
