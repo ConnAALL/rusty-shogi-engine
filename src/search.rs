@@ -34,7 +34,10 @@ pub struct GameTree {
 }
 
 
+// A constructor method for GameTree
 impl GameTree {
+    // This function takes an SFEN string and an optional Move and returns a new 
+    // GameTree object with those values and an empty Vec for its children.
     pub fn new(sfen: String, game_move: Option<Move>) -> Self {
         GameTree {
             sfen,
@@ -44,13 +47,16 @@ impl GameTree {
     }
 }
 
-
+// DepthFirstIter is a struct that allows for depth-first traversal of the GameTree.
 pub struct DepthFirstIter<'a> {
+    // uses a VecDeque to store references to GameTree nodes in the order they are to be visited.
     stack: VecDeque<&'a GameTree>,
 }
 
 
 impl<'a> DepthFirstIter<'a> {
+    // The constructor function takes a reference to the root of the GameTree 
+    // and returns a DepthFirstIter with the root as the first node to visit.
     pub fn new(root: &'a GameTree) -> Self {
         let mut stack = VecDeque::new();
         stack.push_back(root);
@@ -61,7 +67,8 @@ impl<'a> DepthFirstIter<'a> {
 
 impl<'a> Iterator for DepthFirstIter<'a> {
     type Item = &'a GameTree;
-
+    // This function is the core of the depth-first traversal. It takes the last node 
+    // added to the stack, adds all its children to the stack, and then returns the node.
     fn next(&mut self) -> Option<Self::Item> {
         let node = self.stack.pop_back();
         if let Some(node) = node {
@@ -73,7 +80,7 @@ impl<'a> Iterator for DepthFirstIter<'a> {
     }
 }
 
-
+// This implementation allows a GameTree to be iterated over directly with a for loop.
 impl<'a> IntoIterator for &'a GameTree {
     type Item = &'a GameTree;
     type IntoIter = DepthFirstIter<'a>;
@@ -83,18 +90,23 @@ impl<'a> IntoIterator for &'a GameTree {
     }
 }
 
-
+// The treesearch function builds a GameTree by recursively exploring 
+// all possible game states up to a specified depth.
 pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<Move>) -> GameTree {
     
+    // Parse the SFEN string and generate a PartialPosition from it
     let positions = sfen::sfen_parse(sfen);
     let mut pos = sfen::generate_pos(positions); 
     pos.side_to_move_set(sfen::get_color(sfen));
 
+    // Create a new GameTree node with the current SFEN and move
     let mut game_tree = GameTree::new(sfen.to_string(), game_move);
 
+    // If we haven't reached the maximum depth, generate all legal moves from the current position
     if current_depth < depth {
         let next_moves = all_legal_moves_partial(&pos);
 
+        // For each legal move, create a new game state and add it as a child to the current node
         for move_item in next_moves {
             let mut temp_pos = pos.clone();
             temp_pos.make_move(move_item.clone());
@@ -105,8 +117,17 @@ pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<
         }
     }
 
+    // Return the root of the constructed GameTree
     game_tree
 }
+
+
+// ##########################################################################################
+
+
+
+
+// ##########################################################################################
 
 
 pub fn single_search(sfen: &str) -> (Vec<String>, Vec<Move>) {
