@@ -326,9 +326,16 @@ pub fn test_tree_search() {
 
 pub fn minimax_playground() {
 
-    let (tst1, tst2) = search::randomize();
-    println!("1: {:?}", tst1);
-    println!("1: {:?}", tst2);
+
+    let root_sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    let dep = 1; // Change this according to your needs
+    let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node with your initial game state
+
+    let ((score_for_white, score_for_black), best_move) = search::just_mini(&root, dep, true); // true or false here depends on whether the next player to move is maximizing or not.
+
+    println!("Best move: {:?}", best_move);
+    println!("Score for white: {}", score_for_white);
+    println!("Score for black: {}", score_for_black);
 
 
 
