@@ -328,13 +328,20 @@ pub fn minimax_playground() {
 
 
     let root_sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let dep = 1; // Change this according to your needs
-    let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node with your initial game state
+    println!("Root Sfen: {:?}", root_sfen);
+    
+    let dep = 1;
+    
+    let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
 
-    let ((score_for_white, score_for_black), best_move) = search::just_mini(&root, dep, true); // true or false here depends on whether the next player to move is maximizing or not.
+    let ((score_for_white, score_for_black), best_move) = search::just_mini(&root, dep, true); 
+                                                                            //whether the next player to move is maximizing or not.
 
+    
     println!("Best move: {:?}", best_move);
+    
     println!("Score for white: {}", score_for_white);
+    
     println!("Score for black: {}", score_for_black);
 
 
