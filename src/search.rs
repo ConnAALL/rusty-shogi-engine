@@ -136,16 +136,25 @@ pub fn randomize() -> (f32, f32) {
 
 pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
 
+    println!("\nENTERED JUST_MINI----------------------------------------------------------------------------------------------------------------------");
+    println!("depth as passed in: {:?}", depth);
+    println!("is maximizing? : {:?}", is_maximizing_player);
+    println!("sfen as passed in{:?}" ,tree.sfen);
+    view::display_sfen(&tree.sfen);
+
     if depth == 0 || tree.children.is_empty() {
-        return (randomize(), tree.game_move.clone()); // Modify your evaluate function to fit your needs
+        println!("depth was zero and children vec was empty");
+
+        return (randomize(), tree.game_move.clone());
     }
 
     if is_maximizing_player { // Assuming this is the white player
         let mut max_eval = (f32::MIN, f32::MIN);
         let mut best_move = None;
         for child in &tree.children {
-            let (eval, move_) = minimax(child, depth - 1, false);
-            if eval.0 > max_eval.0 { // or use your own logic for comparing scores
+            let (eval, move_) = just_mini(child, depth - 1, false);
+            //let (eval, move_) = minimax(child, depth - 1, false);
+            if eval.0 > max_eval.0 {
                 max_eval = eval;
                 best_move = move_;
             }
@@ -156,8 +165,9 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
         let mut min_eval = (f32::MAX, f32::MAX);
         let mut best_move = None;
         for child in &tree.children {
-            let (eval, move_) = minimax(child, depth - 1, true);
-            if eval.1 < min_eval.1 { // or use your own logic for comparing scores
+            let (eval, move_) = just_mini(child, depth - 1, true);
+            //let (eval, move_) = minimax(child, depth - 1, true);
+            if eval.1 < min_eval.1 {
                 min_eval = eval;
                 best_move = move_;
             }
@@ -173,7 +183,7 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
 // SKELETON EXAMPLE: def doesnt work don evn try 
 pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
     if depth == 0 || tree.children.is_empty() {
-        return (eval::evaluate(&tree.sfen), tree.game_move.clone()); // Modify your evaluate function to fit your needs
+        return (eval::evaluate(&tree.sfen), tree.game_move.clone());
     }
 
     if is_maximizing_player { // Assuming this is the white player
@@ -181,7 +191,7 @@ pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32
         let mut best_move = None;
         for child in &tree.children {
             let (eval, move_) = minimax(child, depth - 1, false);
-            if eval.0 > max_eval.0 { // or use your own logic for comparing scores
+            if eval.0 > max_eval.0 {
                 max_eval = eval;
                 best_move = move_;
             }
@@ -192,7 +202,7 @@ pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32
         let mut best_move = None;
         for child in &tree.children {
             let (eval, move_) = minimax(child, depth - 1, true);
-            if eval.1 < min_eval.1 { // or use your own logic for comparing scores
+            if eval.1 < min_eval.1 {
                 min_eval = eval;
                 best_move = move_;
             }
