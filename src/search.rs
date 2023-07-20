@@ -6,7 +6,7 @@ use crate::tree::Tree;
 use shogi_core::Move;
 use shogi_legality_lite::all_legal_moves_partial;
 use std::collections::HashSet;
-
+use std::collections::VecDeque;
 
 pub fn search(sfen: &str, depth: u32, current_depth: u32) -> Vec<String> {
     let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
@@ -85,12 +85,52 @@ pub fn single_search(sfen: &str) -> (Vec<String>, Vec<Move>) {
 }
 
 
+pub struct DepthFirstIter<'a> {
+    stack: VecDeque<&'a GameTree>,
+}
+
+
+impl<'a> DepthFirstIter<'a> {
+    pub fn new(root: &'a GameTree) -> Self {
+        let mut stack = VecDeque::new();
+        stack.push_back(root);
+        DepthFirstIter { stack }
+    }
+}
+
+
+impl<'a> Iterator for DepthFirstIter<'a> {
+    type Item = &'a GameTree;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let node = self.stack.pop_back();
+        if let Some(node) = node {
+            for child in &node.children {
+                self.stack.push_back(child);
+            }
+        }
+        node
+    }
+}
+
+
+impl<'a> IntoIterator for &'a GameTree {
+    type Item = &'a GameTree;
+    type IntoIter = DepthFirstIter<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        DepthFirstIter::new(self)
+    }
+}
+
+
 #[derive(Debug)]
 pub struct GameTree {
     sfen: String,
     game_move: Option<String>, // Optional field to store the move that led to this state
     children: Vec<GameTree>,
 }
+
 
 impl GameTree {
     pub fn new(sfen: String, game_move: Option<String>) -> Self {
@@ -101,6 +141,7 @@ impl GameTree {
         }
     }
 }
+
 
 pub fn treesearch(sfen: &str, depth: u32, current_depth: u32) -> GameTree {
     let positions = sfen::sfen_parse(sfen);
