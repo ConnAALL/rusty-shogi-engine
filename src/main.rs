@@ -308,12 +308,11 @@ fn tree_test() {
 pub fn test_tree_search() {
     
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let depth = 2;
+    let depth = 1;
     let current_depth = 0;
 
     let moves = search::treesearch(&start, depth, current_depth, None);
    
-    println!("{:?}", moves.children.len());
     println!("{:?}", moves);
     
     //for node in &moves {

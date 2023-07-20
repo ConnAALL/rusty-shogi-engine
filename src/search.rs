@@ -11,9 +11,26 @@ use std::collections::VecDeque;
 
 #[derive(Debug)]
 pub struct GameTree {
+    
     pub sfen: String,
+/*    sfen: String - This field contains a string representation of a game state in the 
+ *    Shogi Forsyth-Edwards Notation (SFEN). The root of the tree represents the initial 
+ *    game state, and each child represents a game state that can be reached by making a 
+ *    legal move from the parent state.   */
+
     pub game_move: Option<Move>, // Optional field to store the move that led to this state
+/*    game_move: Option<Move> - This field represents the move that was made to reach the 
+ *    game state represented by this GameTree node from the parent node's game state. It 
+ *    is stored as an Option<Move> because the root of the tree does not have a parent 
+ *    and thus does not correspond to a move. In this case, game_move would be None. For all 
+ *    other nodes, it should be Some(Move), where Move is the move made to reach this game state.   */
+   
+
     pub children: Vec<GameTree>,
+/*    children: Vec<GameTree> - This field is a vector containing all child nodes of this node 
+ *    in the game tree. Each child represents a game state that can be reached by making one 
+ *    legal move from the current game state.   */
+
 }
 
 
@@ -26,7 +43,6 @@ impl GameTree {
         }
     }
 }
-
 
 
 pub struct DepthFirstIter<'a> {
