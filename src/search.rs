@@ -50,14 +50,14 @@ impl<'a> IntoIterator for &'a GameTree {
 
 #[derive(Debug)]
 pub struct GameTree {
-    sfen: String,
-    game_move: Option<String>, // Optional field to store the move that led to this state
-    children: Vec<GameTree>,
+    pub sfen: String,
+    pub game_move: Option<Move>, // Optional field to store the move that led to this state
+    pub children: Vec<GameTree>,
 }
 
 
 impl GameTree {
-    pub fn new(sfen: String, game_move: Option<String>) -> Self {
+    pub fn new(sfen: String, game_move: Option<Move>) -> Self {
         GameTree {
             sfen,
             game_move,
@@ -67,12 +67,13 @@ impl GameTree {
 }
 
 
-pub fn treesearch(sfen: &str, depth: u32, current_depth: u32) -> GameTree {
+pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<Move>) -> GameTree {
+    
     let positions = sfen::sfen_parse(sfen);
     let mut pos = sfen::generate_pos(positions); 
     pos.side_to_move_set(sfen::get_color(sfen));
 
-    let mut game_tree = GameTree::new(sfen.to_string(), None);
+    let mut game_tree = GameTree::new(sfen.to_string(), game_move);
 
     if current_depth < depth {
         let next_moves = all_legal_moves_partial(&pos);
@@ -82,7 +83,7 @@ pub fn treesearch(sfen: &str, depth: u32, current_depth: u32) -> GameTree {
             temp_pos.make_move(move_item.clone());
             let sfen = temp_pos.to_sfen_owned();
 
-            let child_tree = treesearch(&sfen, depth, current_depth + 1);
+            let child_tree = treesearch(&sfen, depth, current_depth + 1, Some(move_item));
             game_tree.children.push(child_tree);
         }
     }
