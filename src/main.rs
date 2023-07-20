@@ -324,12 +324,15 @@ pub fn test_tree_search() {
 }
 
 
-//pub fn minimax_playground(); {
+pub fn minimax_playground() {
+
+    let (tst1, tst2) = search::randomize();
+    println!("1: {:?}", tst1);
+    println!("1: {:?}", tst2);
 
 
 
-
-//}
+}
 
 
 fn main() {
@@ -367,8 +370,8 @@ fn main() {
     //coord_test();
     //mobility_tests();
     //hand_test();
-    test_tree_search();
-    //minimax_playground();
+    //test_tree_search();
+    minimax_playground();
 }
 
 
