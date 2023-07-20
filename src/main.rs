@@ -313,13 +313,14 @@ pub fn test_tree_search() {
 
     let moves = search::treesearch(&start, depth, current_depth, None);
    
-    //println!("{:?}", moves);
+    println!("{:?}", moves.children.len());
+    println!("{:?}", moves);
     
-    for node in &moves {
-        //println!("{:?}", node);
-        println!("sfen: {:?}", node.sfen);
-        println!("---------------------------------------------------------------------------------");
-    }
+    //for node in &moves {
+    //    println!("{:?}", node);
+        //println!("sfen: {:?}", node.sfen);
+        //println!("---------------------------------------------------------------------------------");
+    //}
 
 }
 
