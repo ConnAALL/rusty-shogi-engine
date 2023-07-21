@@ -136,7 +136,7 @@ pub fn randomize() -> (f32, f32) {
 
 pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
 
-    println!("\nENTERED JUST_MINI----------------------------------------------------------------------------------------------------------------------");
+    println!("\nENTERED JUST_MINI-----------------------------------------------------------------------------------");
     println!("depth as passed in: {:?}", depth);
     println!("is maximizing? : {:?}", is_maximizing_player);
     println!("sfen as passed in{:?}" ,tree.sfen);

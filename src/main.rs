@@ -14,7 +14,7 @@ use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 fn search_test() {
     
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let depth = 3;
+    let depth = 2;
     let current_depth = 0;
 
     let moves = search::search(&start, depth, current_depth);
@@ -326,7 +326,6 @@ pub fn test_tree_search() {
 
 pub fn minimax_playground() {
 
-
     let root_sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     view::display_sfen(&root_sfen);
     println!("Root Sfen: {:?}", root_sfen);
@@ -340,7 +339,7 @@ pub fn minimax_playground() {
 
     println!("\nCalculating bst move/scores (entering just_mini)\n");
     let ((white_score, black_score), best_move) = search::just_mini(&root, dep, true); 
-                                                                            //whether the next player to move is maximizing or not.
+                                                    //whether the next player to move is maximizing or not.
     
     println!("Best move: {:?}", best_move);
     
