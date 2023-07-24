@@ -142,8 +142,11 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
     println!("sfen as passed in{:?}" ,tree.sfen);
     view::display_sfen(&tree.sfen);
 
-    if depth == 0 || tree.children.is_empty() {
+    //if depth == 0 || tree.children.is_empty() {
+    if depth == 0 && tree.children.is_empty() {
         println!("depth was zero and children vec was empty");
+
+        println!("gamemove: {:?}", tree.game_move.clone());
 
         return (randomize(), tree.game_move.clone());
     }
