@@ -199,31 +199,57 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
 
 // SKELETON EXAMPLE: def doesnt work don evn try 
 pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
-    if depth == 0 || tree.children.is_empty() {
+
+    println!("\nENTERED JUST_MINI-----------------------------------------------------------------------------------");
+    println!("depth as passed in: {:?}", depth);
+    println!("sfen as passed in{:?}" ,tree.sfen);
+    println!("is maximizing? : {:?}", is_maximizing_player);
+    //view::display_sfen(&tree.sfen);
+
+    //if depth == 0 || tree.children.is_empty() {
+    if depth == 0 && tree.children.is_empty() {
+        println!("depth was zero and children vec was empty");
         return (eval::evaluate(&tree.sfen), tree.game_move.clone());
     }
 
-    if is_maximizing_player { // Assuming this is the white player
+    if is_maximizing_player {
+        println!("MAXIMIZING");
         let mut max_eval = (f32::MIN, f32::MIN);
+        println!("max_eval: {:?}", max_eval);
         let mut best_move = None;
+        println!("Then loops through children nodes and calls just_mini() again");
+        
         for child in &tree.children {
+            // recursively CALL the func for each child
             let (eval, move_) = minimax(child, depth - 1, false);
+            
+            // If the eval of the child is higher than the curr max...
+            // Update the max eval and the corresponding move
             if eval.0 > max_eval.0 {
                 max_eval = eval;
                 best_move = move_;
             }
         }
+
+        println!("returning max eval and best move ...");
         return (max_eval, best_move);
-    } else { // Assuming this is the black player
+    
+    } else {
+        println!("MINIMIZING");
         let mut min_eval = (f32::MAX, f32::MAX);
+        println!("min_eval: {:?}", min_eval);
         let mut best_move = None;
-        for child in &tree.children {
+        println!("Then loops through children nodes and calls just_mini() again");
+        
+        for child in &tree.children {    
             let (eval, move_) = minimax(child, depth - 1, true);
+            // if eval is lower than curr min then update min and corresponding move
             if eval.1 < min_eval.1 {
                 min_eval = eval;
                 best_move = move_;
             }
         }
+        println!("returning min eval and best move (worst)...");
         return (min_eval, best_move);
     }
 }
