@@ -308,7 +308,7 @@ fn tree_test() {
 pub fn test_tree_search() {
     
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let depth = 1;
+    let depth = 3;
     let current_depth = 0;
 
     let moves = search::treesearch(&start, depth, current_depth, None);
@@ -330,28 +330,24 @@ pub fn minimax_playground() {
     let root_sfen = "lnsgkgsnl/7b1/ppppppppp/4r4/9/9/PPPP1PPPP/1B5R1/LNSGKGSNL b - 1";
     view::display_sfen(&root_sfen);
     println!("Root Sfen: {:?}", root_sfen);
+    let dep = 4;
+    let color = sfen::get_color(&root_sfen);
+    println!("color: {:?}", color);
     
-    let dep = 2;
-    println!("search depth: {:?}", dep);
-
     println!("\nEntering treesearch()!");
     let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
-    println!("Resulting GameTree: {:?}", root);
+    //println!("Resulting GameTree: {:?}", root);
 
-    //println!("\nCalculating bst move/scores (entering just_mini)\n");
-    //let ((white_score, black_score), best_move) = search::just_mini(&root, dep, true); 
-                                                    //whether the next player to move is maximizing or not.
-    println!("\nCalculating bst move/scores (entering minimax)\n");
-    let ((white_score, black_score), best_move) = search::minimax(&root, dep, true); 
+    //println!("\nCalculating bst move/scores (entering minimax)\n");
+    //let ((white_score, black_score), best_move) = search::minimax(&root, dep, true); 
 
+    println!("\nCalculating best move/scores (entering get_best_move)\n");
+    let ((white_score, black_score), best_move) = search::get_best_move(&root, dep, color); 
+    
     println!("#####################################################################################");
     println!("Best move: {:?}", best_move);
-    
     println!("Score for white: {}", white_score);
-    
     println!("Score for black: {}", black_score);
-
-
 
 }
 

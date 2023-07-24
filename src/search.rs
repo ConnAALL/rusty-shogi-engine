@@ -3,7 +3,7 @@ use crate::eval;
 use crate::view;
 use crate::sfen;
 use crate::tree::Tree;
-use shogi_core::Move;
+use shogi_core::{Move, Color};
 use shogi_legality_lite::all_legal_moves_partial;
 use std::collections::HashSet;
 use std::collections::VecDeque;
@@ -197,27 +197,26 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
 // ##########################################################################################
 //                          `           MINIMAX
 
-// SKELETON EXAMPLE: def doesnt work don evn try 
-pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32, f32), Option<Move>) {
+pub fn minimax(tree: &GameTree, depth: u32, maximizing: bool) -> ((f32, f32), Option<Move>) {
 
-    println!("\nENTERED JUST_MINI-----------------------------------------------------------------------------------");
+    println!("\nENTERED MINIMAX-----------------------------------------------------------------------------------");
     println!("depth as passed in: {:?}", depth);
     println!("sfen as passed in{:?}" ,tree.sfen);
-    println!("is maximizing? : {:?}", is_maximizing_player);
     //view::display_sfen(&tree.sfen);
+    let curr_color = sfen::get_color(&tree.sfen);
 
     //if depth == 0 || tree.children.is_empty() {
-    if depth == 0 && tree.children.is_empty() {
+    if depth == 0 || tree.children.is_empty() {
         println!("depth was zero and children vec was empty");
         return (eval::evaluate(&tree.sfen), tree.game_move.clone());
     }
 
-    if is_maximizing_player {
+    if maximizing {
         println!("MAXIMIZING");
         let mut max_eval = (f32::MIN, f32::MIN);
         println!("max_eval: {:?}", max_eval);
         let mut best_move = None;
-        println!("Then loops through children nodes and calls just_mini() again");
+        println!("Then loops through children nodes and calls minimax() again");
         
         for child in &tree.children {
             // recursively CALL the func for each child
@@ -225,9 +224,16 @@ pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32
             
             // If the eval of the child is higher than the curr max...
             // Update the max eval and the corresponding move
-            if eval.0 > max_eval.0 {
-                max_eval = eval;
-                best_move = move_;
+            if curr_color == Color::White {
+                if eval.0 > max_eval.0 {
+                    max_eval = eval;
+                    best_move = move_;
+                }
+            } else {
+                if eval.1 > max_eval.1 {
+                    max_eval = eval;
+                    best_move = move_;
+                }
             }
         }
 
@@ -239,20 +245,102 @@ pub fn minimax(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f32
         let mut min_eval = (f32::MAX, f32::MAX);
         println!("min_eval: {:?}", min_eval);
         let mut best_move = None;
-        println!("Then loops through children nodes and calls just_mini() again");
+        println!("Then loops through children nodes and calls minimax() again");
         
         for child in &tree.children {    
             let (eval, move_) = minimax(child, depth - 1, true);
             // if eval is lower than curr min then update min and corresponding move
-            if eval.1 < min_eval.1 {
-                min_eval = eval;
-                best_move = move_;
-            }
+            if curr_color == Color::White {
+                if eval.1 < min_eval.1 {
+                    min_eval = eval;
+                    best_move = move_;
+                }
+            } else {
+                if eval.0 < min_eval.0 {
+                    min_eval = eval;
+                    best_move = move_;
+                }
+            }           
         }
         println!("returning min eval and best move (worst)...");
         return (min_eval, best_move);
     }
 }
+
+
+// CALC EVAL
+pub fn minimax2(tree: &GameTree, depth: u32, maximizing_player: Color) -> (f32, f32) {
+    let curr_color = sfen::get_color(&tree.sfen);
+
+    if depth == 0 || tree.children.is_empty() {
+        return eval::evaluate(&tree.sfen);
+    }
+
+    if curr_color == maximizing_player {
+        let mut max_eval = (f32::MIN, f32::MIN);
+        
+        for child in &tree.children {
+            let eval = minimax2(child, depth - 1, maximizing_player);
+            
+            if maximizing_player == Color::White {
+                if eval.0 > max_eval.0 {
+                    max_eval = eval;
+                }
+            } else {
+                if eval.1 > max_eval.1 {
+                    max_eval = eval;
+                }
+            }
+        }
+
+        return max_eval;
+    
+    } else {
+        let mut min_eval = (f32::MAX, f32::MAX);
+        
+        for child in &tree.children {    
+            let eval = minimax2(child, depth - 1, maximizing_player);
+            
+            if maximizing_player == Color::White {
+                if eval.1 < min_eval.1 {
+                    min_eval = eval;
+                }
+            } else {
+                if eval.0 < min_eval.0 {
+                    min_eval = eval;
+                }
+            }
+        }
+
+        return min_eval;
+    }
+}
+
+
+//CALC BEST MOVE
+pub fn get_best_move(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Option<Move>) {
+    let mut best_eval = (f32::MIN, f32::MIN);
+    let mut best_move = None;
+
+    for child in &tree.children {
+        let eval = minimax2(child, depth, maximizing_player);
+
+        if maximizing_player == Color::White {
+            if eval.0 > best_eval.0 {
+                best_eval = eval;
+                best_move = child.game_move.clone();
+            }
+        } else {
+            if eval.1 > best_eval.1 {
+                best_eval = eval;
+                best_move = child.game_move.clone();
+            }
+        }
+    }
+
+    return (best_eval, best_move);
+}
+
 
 
 // ##########################################################################################
