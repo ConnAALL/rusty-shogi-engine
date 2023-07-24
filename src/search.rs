@@ -157,15 +157,20 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
         println!("max_eval: {:?}", max_eval);
         let mut best_move = None;
         println!("Then loops through children nodes and calls just_mini() again");
+        
         for child in &tree.children {
+            // recursively CALL the func for each child
             let (eval, move_) = just_mini(child, depth - 1, false);
-            //let (eval, move_) = minimax(child, depth - 1, false);
+            
+            // If the eval of the child is higher than the curr max...
+            // Update the max eval and the corresponding move
             if eval.0 > max_eval.0 {
                 max_eval = eval;
                 best_move = move_;
             }
         }
-        println!("returning...");
+
+        println!("returning max eval and best move ...");
         return (max_eval, best_move);
     
     } else { // Assuming this is the black player
@@ -174,15 +179,16 @@ pub fn just_mini(tree: &GameTree, depth: u32, is_maximizing_player: bool) -> ((f
         println!("min_eval: {:?}", min_eval);
         let mut best_move = None;
         println!("Then loops through children nodes and calls just_mini() again");
-        for child in &tree.children {
+        
+        for child in &tree.children {    
             let (eval, move_) = just_mini(child, depth - 1, true);
-            //let (eval, move_) = minimax(child, depth - 1, true);
+            // if eval is lower than curr min then update min and corresponding move
             if eval.1 < min_eval.1 {
                 min_eval = eval;
                 best_move = move_;
             }
         }
-        println!("returning...");
+        println!("returning min eval and best move (worst)...");
         return (min_eval, best_move);
     }
 }
