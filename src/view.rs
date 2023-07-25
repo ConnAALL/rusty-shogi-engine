@@ -4,7 +4,6 @@ pub fn display_sfen(sfen: &str) {
     let parts: Vec<&str> = sfen.split(' ').collect();
     let board_layout = parts[0];
 
-    //println!("+---------+---------+---------+---------+---------+---------+---------+---------+---------+");
     println!("----------------------------------------------");
 
     for row in board_layout.split('/') {

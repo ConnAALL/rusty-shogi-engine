@@ -11,14 +11,16 @@ use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
 pub struct UsiHandler {
     
-    game: Game, // Your game state
+    game: PartialPosition, // Your game state
 
 }
 
 
 impl UsiHandler {
     pub fn position(&mut self, sfen: &str) {
-        self.game.set_position(sfen);
+        let positions = sfen::sfen_parse(sfen);
+        let mut pos = sfen::generate_pos(positions.clone());
+        pos.side_to_move_set(sfen::get_color(sfen));
     }
 }
 

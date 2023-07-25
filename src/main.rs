@@ -6,6 +6,7 @@ mod eval;
 mod search;
 mod pv_search;
 mod tree;
+mod usi;
 
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
@@ -327,27 +328,31 @@ pub fn test_tree_search() {
 pub fn minimax_playground() {
 
     //let root_sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let root_sfen = "lnsgkgsnl/7b1/ppppppppp/4r4/9/9/PPPP1PPPP/1B5R1/LNSGKGSNL b - 1";
-    view::display_sfen(&root_sfen);
-    println!("Root Sfen: {:?}", root_sfen);
-    let dep = 4;
-    let color = sfen::get_color(&root_sfen);
-    println!("color: {:?}", color);
+    //let root_sfen = "lnsgkgsnl/7b1/ppppppppp/4r4/9/9/PPPP1PPPP/1B5R1/LNSGKGSNL b - 1";
+    let root_sfen = "lnsgkgsnl/4r2b1/ppppppppp/9/9/9/PPPP1PPPP/3B3R1/LNSGKGSNL b - 1";
     
-    println!("\nEntering treesearch()!");
+    println!();
+    view::display_sfen(&root_sfen);
+    println!();
+    let dep = 2;
+    let color = sfen::get_color(&root_sfen);
+    println!("Root Sfen: {:?}", root_sfen);
+    println!("color: {:?}", color);
+    println!("search depth: {:?}", dep);
+    
     let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
     //println!("Resulting GameTree: {:?}", root);
 
-    //println!("\nCalculating bst move/scores (entering minimax)\n");
     //let ((white_score, black_score), best_move) = search::minimax(&root, dep, true); 
-
-    println!("\nCalculating best move/scores (entering get_best_move)\n");
     let ((white_score, black_score), best_move) = search::get_best_move(&root, dep, color); 
-    
+
+    println!();
     println!("#####################################################################################");
+    println!();
+
     println!("Best move: {:?}", best_move);
-    println!("Score for white: {}", white_score);
-    println!("Score for black: {}", black_score);
+    println!("Best score for white: {}", white_score);
+    println!("Best score for black: {}", black_score);
 
 }
 
