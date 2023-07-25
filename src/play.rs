@@ -10,8 +10,7 @@ use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
 
 fn validate_user_move(user_input: &str) -> bool {
-    // add validation logic
-    // check that the input is formatted to represent a valid move in accordance with shogi_core.
+    // check that user input is the correct number of characters.
     if user_input.len() == 10 {
         true
     } else {
@@ -66,19 +65,23 @@ pub fn play() {
     }
 
     let moves: Vec<&str> = input.split(" to ").collect();
-    
-    let (from_sqr, to_sqr) = (moves[0], moves[1]);
-
+    let (mut from_sqr, mut to_sqr) = (moves[0], moves[1]);
+    println!(" | ");
     println!(" | moving piece from square {} to square {}", from_sqr, to_sqr);
+    println!(" | ");
 
-    println!("from_sqr: {:?}", from_sqr);
-    println!("to_sqr: {:?}", to_sqr);
+    let from_sqr: Vec<&str> = from_sqr.split(",").collect();
+    let (mut from_rank, mut from_file) = (from_sqr[0], from_sqr[1]);
+    println!(" | from_rank: {}", from_rank);
+    println!(" | from_file: {}", from_file);
+    println!(" | ");
     
-    //println!(" | {:?}", input);
-    //let shii = input.split(",");
-    //for chr in shii {
-    //    println!(" | {:?}", chr);
+    let to_sqr: Vec<&str> = to_sqr.split(",").collect();
+    let (mut to_rank, mut to_file) = (to_sqr[0], to_sqr[1]);
+    println!(" | to_rank: {}", to_rank);
+    println!(" | to_file: {}", to_file);
+    println!(" | ");
 
-    //}
-}
+
+   }
 
