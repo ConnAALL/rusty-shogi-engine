@@ -9,6 +9,20 @@ use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_leg
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
 
+pub struct UsiHandler {
+    
+    game: Game, // Your game state
+
+}
+
+
+impl UsiHandler {
+    pub fn position(&mut self, sfen: &str) {
+        self.game.set_position(sfen);
+    }
+}
+
+
 
 
 
