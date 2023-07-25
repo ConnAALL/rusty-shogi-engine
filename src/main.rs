@@ -4,9 +4,9 @@ mod view;
 mod sfen;
 mod eval;
 mod search;
-mod pv_search;
 mod tree;
 mod usi;
+mod play;
 
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
@@ -208,25 +208,6 @@ fn eval_test() {
     let (white_fitness, black_fitness) = eval::evaluate(&sfen);
     println!("white fitness: {:?}", white_fitness);
     println!("black fitness: {:?}", black_fitness);
-
-}
-
-
-fn test_pvs() {
-    
-    // Set up the initial game state
-    //let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let sfen = "8l/1l+R2P3/p2pBG1pp/kps1p4/Nn1P2G2/P1P1P2PP/1pS6/1KSG3+r1/LN2+p3L w Sbgn3p 124";
-    view::display_sfen(&sfen);
-    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
-    let mut pos = sfen::generate_pos(positions.clone()); // creates a "partial position" out of it
-    pos.side_to_move_set(sfen::get_color(sfen));
-
-    let (best_move, score) = pv_search::pvs(pos, 2, -1000000, 1000000);
-
-    // Print the results
-    println!("Best move: {:?}", best_move);
-    println!("Score: {}", score);
 
 }
 

@@ -4,10 +4,14 @@ pub fn display_sfen(sfen: &str) {
     let parts: Vec<&str> = sfen.split(' ').collect();
     let board_layout = parts[0];
 
-    println!("----------------------------------------------");
+    let ranks = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 
+    println!("     9    8    7    6    5    4    3    2    1  ");
+    println!("  ----------------------------------------------");
+
+    let mut i = 0;
     for row in board_layout.split('/') {
-        let mut row_string = "|".to_string();
+        let mut row_string = " |".to_string();
         let mut squares_count = 0;
         let mut chars = row.chars();
         while let Some(ch) = chars.next() {
@@ -35,8 +39,9 @@ pub fn display_sfen(sfen: &str) {
                 panic!("Invalid SFEN string: too many squares in a row");
             }
         }
-        println!("{}", row_string);
-        println!("----------------------------------------------");
+        println!("{}{}", ranks[i], row_string);
+        println!("  ----------------------------------------------");
+        i = i + 1;
     }
 }
 
