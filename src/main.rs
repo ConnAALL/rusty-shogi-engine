@@ -374,7 +374,8 @@ fn main() {
     //mobility_tests();
     //hand_test();
     //test_tree_search();
-    minimax_playground();
+    //minimax_playground();
+    play::play();
 }
 
 

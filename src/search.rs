@@ -1,8 +1,6 @@
 
 use crate::eval;
-use crate::view;
 use crate::sfen;
-use crate::tree::Tree;
 use shogi_core::{Move, Color};
 use shogi_legality_lite::all_legal_moves_partial;
 use std::collections::HashSet;
