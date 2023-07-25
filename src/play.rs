@@ -72,16 +72,25 @@ pub fn play() {
 
     let from_sqr: Vec<&str> = from_sqr.split(",").collect();
     let (mut from_rank, mut from_file) = (from_sqr[0], from_sqr[1]);
-    println!(" | from_rank: {}", from_rank);
-    println!(" | from_file: {}", from_file);
+    let from_rank: char = from_rank.chars().next().unwrap();
+    let from_file = from_file.parse::<u8>().unwrap();
+    println!(" | from_rank: {:?}", from_rank);
+    println!(" | from_file: {:?}", from_file);
     println!(" | ");
     
     let to_sqr: Vec<&str> = to_sqr.split(",").collect();
     let (mut to_rank, mut to_file) = (to_sqr[0], to_sqr[1]);
-    println!(" | to_rank: {}", to_rank);
-    println!(" | to_file: {}", to_file);
+    let to_rank: char = to_rank.chars().next().unwrap();
+    let to_file = to_file.parse::<u8>().unwrap();
+    println!(" | to_rank: {:?}", to_rank);
+    println!(" | to_file: {:?}", to_file);
     println!(" | ");
 
 
-   }
+    
+
+
+    println!(" |-------------------------------------------------------------------------|");
+   
+}
 
