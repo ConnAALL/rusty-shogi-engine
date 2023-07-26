@@ -4,6 +4,7 @@ use std::io;
 use crate::eval;
 use crate::view;
 use crate::sfen;
+use crate::search;
 use crate::tree::Tree;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
@@ -35,24 +36,7 @@ fn char_to_u8(input: char) -> Option<u8> {
 }
 
 
-pub fn play() {
-
-    println!("");
-    println!(" |---------------------------------WELCOME---------------------------------|");
-    println!(" | ");
-    println!(" | you are black and you are playing against the minimax algorithm");
-    println!(" | in this game, squares are represented by their rank and file (rank, file)");
-    println!(" | this means that your king would be in square: 'I,5'");
-    println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
-    println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
-    println!(" | ");
-    println!(" |-------------------------------------------------------------------------|");
-    println!(" | ");
-    
-    let mut board = PartialPosition::startpos();
-    let mut sfen = board.to_sfen_owned();
-    //println!("sfen: {:?}", sfen);
-    view::display_sfen(&sfen);
+fn human_move() -> Move {
 
     let mut input = String::new();
     loop {
@@ -111,11 +95,69 @@ pub fn play() {
     let user_move = Move::Normal {from: from_square, to: to_square, promote: false};
     println!(" | move object: {:?}", user_move);
 
-    board.make_move(user_move);
+    user_move
+
+    
+}
+
+
+fn computer_move(root_sfen: &str) -> Move {
+
+
+    let dep = 2;
+    let color = sfen::get_color(&root_sfen);
+    
+    let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
+
+    let ((white_score, black_score), best_move) = search::get_best_move(&root, dep, color); 
+
+    best_move.unwrap()
+
+}
+
+
+pub fn play() {
+
+    println!("");
+    println!(" |---------------------------------WELCOME---------------------------------|");
+    println!(" | ");
+    println!(" | you are black and you are playing against the minimax algorithm");
+    println!(" | in this game, squares are represented by their rank and file (rank, file)");
+    println!(" | this means that your king would be in square: 'I,5'");
+    println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
+    println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
+    println!(" | ");
+    println!(" |-------------------------------------------------------------------------|");
+    println!(" | ");
+    
+    let mut board = PartialPosition::startpos();
+    let mut sfen = board.to_sfen_owned();
+    //println!("sfen: {:?}", sfen);
+    view::display_sfen(&sfen);
+
+    let human_mv = human_move();
+    
+    board.make_move(human_mv);
     sfen = board.to_sfen_owned();
+    
     println!(" | ");
     println!(" |------------------------------CURRENT BOARD------------------------------|");
     view::display_sfen(&sfen);
+    
+    let computer_mv = computer_move(&sfen);
+    
+    println!(" | ");
+    println!(" |------------------------------COMPUTER MOVE------------------------------|");
+    println!(" | ");
+    println!(" | move: {:?}", computer_mv);
+    
+    board.make_move(computer_mv);
+    sfen = board.to_sfen_owned(); 
+
+    println!(" | ");
+    println!(" |------------------------------CURRENT BOARD------------------------------|");
+    view::display_sfen(&sfen);
+    
 
     println!(" |-------------------------------------------------------------------------|");
    
