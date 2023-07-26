@@ -3,11 +3,11 @@
 pub fn display_sfen(sfen: &str) {
     let parts: Vec<&str> = sfen.split(' ').collect();
     let board_layout = parts[0];
-    let ranks = ["              A", "              B", "              C", "              D", "              E", "              F", "              G", "              H", "              I"];
+    let ranks = [" |            A", " |            B", " |            C", " |            D", " |            E", " |            F", " |            G", " |            H", " |            I"];
     
-    println!();
-    println!("                   9    8    7    6    5    4    3    2    1  ");
-    println!("                ----------------------------------------------");
+    println!(" |");
+    println!(" |                 9    8    7    6    5    4    3    2    1  ");
+    println!(" |              ----------------------------------------------");
     let mut i = 0;
     for row in board_layout.split('/') {
         let mut row_string = " |".to_string();
@@ -39,10 +39,10 @@ pub fn display_sfen(sfen: &str) {
             }
         }
         println!("{}{}", ranks[i], row_string);
-        println!("                ----------------------------------------------");
+        println!(" |              ----------------------------------------------");
         i = i + 1;
     }
-    println!();
+    println!(" |");
 }
 
 //fn test() {
