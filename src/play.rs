@@ -6,8 +6,8 @@ use crate::view;
 use crate::sfen;
 use crate::search;
 use crate::tree::Tree;
-use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
-use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
+use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial, status_partial};
+use shogi_core::{PartialPosition, PositionStatus, Square, Piece, Color, Move, PieceKind};
 
 
 fn validate_user_move(user_input: &str) -> bool {
@@ -76,10 +76,10 @@ fn human_move() -> Move {
     let from_rank: u8 = char_to_u8(from_rank).unwrap();
     let from_file = from_file.parse::<u8>().unwrap();
     let from_square: Square = Square::new(from_file, from_rank).unwrap();
-    println!(" | from_rank as u8: {:?}", from_rank);
-    println!(" | from_file (u8): {:?}", from_file);
-    println!(" | from_square: {:?}", from_square);
-    println!(" | ");
+    //println!(" | from_rank as u8: {:?}", from_rank);
+    //println!(" | from_file (u8): {:?}", from_file);
+    //println!(" | from_square: {:?}", from_square);
+    //println!(" | ");
 
     let to_sqr: Vec<&str> = to_sqr.split(",").collect();
     let (mut to_rank, mut to_file) = (to_sqr[0], to_sqr[1]);
@@ -87,13 +87,13 @@ fn human_move() -> Move {
     let to_rank: u8 = char_to_u8(to_rank).unwrap();
     let to_file = to_file.parse::<u8>().unwrap();
     let to_square: Square = Square::new(to_file, to_rank).unwrap();
-    println!(" | to_rank as u8: {:?}", to_rank);
-    println!(" | to_file (u8): {:?}", to_file);
-    println!(" | to_square: {:?}", to_square);
-    println!(" | ");
+    //println!(" | to_rank as u8: {:?}", to_rank);
+    //println!(" | to_file (u8): {:?}", to_file);
+    //println!(" | to_square: {:?}", to_square);
+    //println!(" | ");
 
     let user_move = Move::Normal {from: from_square, to: to_square, promote: false};
-    println!(" | move object: {:?}", user_move);
+    //println!(" | move object: {:?}", user_move);
 
     user_move
 
@@ -103,8 +103,7 @@ fn human_move() -> Move {
 
 fn computer_move(root_sfen: &str) -> Move {
 
-
-    let dep = 2;
+    let dep = 3;
     let color = sfen::get_color(&root_sfen);
     
     let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
@@ -117,6 +116,77 @@ fn computer_move(root_sfen: &str) -> Move {
 
 
 pub fn play() {
+
+    println!("");
+    println!(" |---------------------------------WELCOME---------------------------------|");
+    println!(" | ");
+    println!(" | you are black and you are playing against the minimax algorithm");
+    println!(" | in this game, squares are represented by their rank and file (rank, file)");
+    println!(" | this means that your king would be in square: 'I,5'");
+    println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
+    println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
+    println!(" | ");
+    println!(" |-------------------------------------------------------------------------|");
+    println!(" | ");
+
+    let mut board = PartialPosition::startpos();
+    let mut sfen = board.to_sfen_owned();
+    //println!("sfen: {:?}", sfen);
+    view::display_sfen(&sfen);
+
+    // main game loop
+    loop {
+        let human_mv = human_move();
+        
+        if shogi_legality_lite::is_legal_partial_lite(&board, human_mv) { // check if the human move is legal
+            board.make_move(human_mv);
+            sfen = board.to_sfen_owned();
+            
+            println!(" | ");
+            println!(" |------------------------------CURRENT BOARD------------------------------|");
+            view::display_sfen(&sfen);
+
+            // game end condition
+            if shogi_legality_lite::status_partial(&board) == PositionStatus::BlackWins { // check if it's checkmate
+                println!("Congratulations! You won.");
+                break;
+            } else if shogi_legality_lite::status_partial(&board) == PositionStatus::Draw { // check if it's stalemate
+                println!("Game is a draw.");
+                break;
+            }
+
+            println!(" | thinking...");
+            let computer_mv = computer_move(&sfen);
+
+            println!(" | ");
+            println!(" |------------------------------COMPUTER MOVE------------------------------|");
+            println!(" | ");
+            println!(" | move: {:?}", computer_mv);
+            
+            board.make_move(computer_mv);
+            sfen = board.to_sfen_owned(); 
+
+            println!(" | ");
+            println!(" |------------------------------CURRENT BOARD------------------------------|");
+            view::display_sfen(&sfen);
+
+            // game end condition
+            if shogi_legality_lite::status_partial(&board) == PositionStatus::WhiteWins {
+                println!("Congratulations! You won.");
+                break;
+            } else if shogi_legality_lite::status_partial(&board) == PositionStatus::Draw {
+                println!("Game is a draw.");
+                break;
+            }
+
+        } else {
+            println!("Illegal move, please try again.");
+        }
+    }
+}
+
+
+pub fn play_one_move() {
 
     println!("");
     println!(" |---------------------------------WELCOME---------------------------------|");
@@ -157,7 +227,6 @@ pub fn play() {
     println!(" | ");
     println!(" |------------------------------CURRENT BOARD------------------------------|");
     view::display_sfen(&sfen);
-    
 
     println!(" |-------------------------------------------------------------------------|");
    
