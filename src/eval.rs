@@ -28,11 +28,11 @@ const ROOK_HAND: u32 = 18;
 const BISHOP_HAND: u32 = 2;
 
 // CONST WEIGHTS FOR EVAL FEATURE VARIATES
-const LANCE_MOBIL: u32 = 17;
-const ROOK_MOBIL: u32 = 16;
-const BISHOP_MOBIL: u32 = 17;
+const LANCE_MOBIL: u32 = 17 / 4;
+const ROOK_MOBIL: u32 = 16 / 4;
+const BISHOP_MOBIL: u32 = 17 / 4;
 const PROMOTED_PIECES: u32 = 27;
-const KING_VULN: u32 = 22;
+const KING_VULN: u32 = 22 * 10;
 
 
 /*
@@ -786,24 +786,31 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 // ---------------------------------PROMOTED PIECES---------------------------------
 
     let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
+    
+    println!(" | ");
+    println!("white PromPiece value: {:?} black PromPiece value: {:?}", white_pp, black_pp);
+
     white_fitness += white_pp * PROMOTED_PIECES;
     black_fitness += black_pp * PROMOTED_PIECES;
-    
+   
+
 // ---------------------------------PIECE SQUARE TABLES---------------------------------
 
     let white_pst = evaluate_piece_table(&sfen, "white");
     let black_pst = evaluate_piece_table(&sfen, "black");
 
+    println!("white PST value: {:?} black PST value: {:?}", white_pst, black_pst);
+    
     white_fitness += white_pst as u32;
     black_fitness += black_pst as u32;
+
 
 // ---------------------------------KING VULN---------------------------------
 
     let white_king_vln = enemy_king_vuln(&sfen, Color::White);
     let black_king_vln = enemy_king_vuln(&sfen, Color::Black);
 
-    //println!("white_king_vln: {:?}", white_king_vln);
-    //println!("black_king_vln: {:?}", black_king_vln);
+    println!("white_king_vln: {:?} black_king_vln: {:?}", white_king_vln, black_king_vln);
     
     white_fitness += white_king_vln as u32 * KING_VULN;
     black_fitness += black_king_vln as u32 * KING_VULN;
@@ -812,8 +819,7 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
 
-    //println!("white_rook_mobil: {:?}", white_rook_mobil);
-    //println!("black_rook_mobil: {:?}", black_rook_mobil);
+    println!("white rook_mobil value: {:?} black rook_mobil value: {:?}", white_rook_mobil, black_rook_mobil);
     
     white_fitness += white_rook_mobil * ROOK_MOBIL;
     black_fitness += black_rook_mobil * ROOK_MOBIL;
@@ -822,8 +828,7 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
     
-    //println!("white_lance_mobil: {:?}", white_lance_mobil);
-    //println!("black_lance_mobil: {:?}", black_lance_mobil);
+    println!("white lance_mobil value: {:?} black lance_mobil value: {:?}", white_lance_mobil, black_lance_mobil);
     
     white_fitness += white_lance_mobil * LANCE_MOBIL;
     black_fitness += black_lance_mobil * LANCE_MOBIL;
@@ -832,8 +837,7 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
     
     let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
     
-    //println!("white_bish_mobil: {:?}", white_bish_mobil);
-    //println!("black_bish_mobil: {:?}", black_bish_mobil);
+    println!("white bish_mobil value: {:?} black bish_mobil value: {:?}", white_bish_mobil, black_bish_mobil);
     
     white_fitness += white_bish_mobil * BISHOP_MOBIL;
     black_fitness += black_bish_mobil * BISHOP_MOBIL;
@@ -842,15 +846,108 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 
     let (white_hand, black_hand) = eval_hand(&sfen);
     
+    println!("white hand value: {:?} black hand value: {:?}", white_hand, black_hand);
+    println!(" | ");
+    
     white_fitness += white_hand;
     black_fitness += black_hand;
-    
-    //println!("white hand: {:?}", white_hand);
-    //println!("black hand: {:?}", black_hand);
 
 // ---------------------------------RETURN BOTH FITNESSES
-    
     return(white_fitness as f32, black_fitness as f32);
+
+}
+
+
+// make it so it returns the fitnesses as well as the feature_vec
+pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
+
+    let mut white_fitness = 0;
+    let mut black_fitness = 0;
+    let mut feature_vec = Vec::new(); 
+
+// ---------------------------------PROMOTED PIECES---------------------------------
+
+    let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
+    
+    //println!(" | ");
+    //println!("white PromPiece value: {:?} black PromPiece value: {:?}", white_pp, black_pp);
+
+    feature_vec.push((white_pp, black_pp));
+    
+    white_fitness += white_pp * PROMOTED_PIECES;
+    black_fitness += black_pp * PROMOTED_PIECES;
+   
+
+// ---------------------------------PIECE SQUARE TABLES---------------------------------
+
+    let white_pst = evaluate_piece_table(&sfen, "white");
+    let black_pst = evaluate_piece_table(&sfen, "black");
+
+    //println!("white PST value: {:?} black PST value: {:?}", white_pst, black_pst);
+    
+    feature_vec.push((white_pst.try_into().unwrap(), black_pst.try_into().unwrap()));
+    
+    white_fitness += white_pst as u32;
+    black_fitness += black_pst as u32;
+
+
+// ---------------------------------KING VULN---------------------------------
+
+    let white_king_vln = enemy_king_vuln(&sfen, Color::White);
+    let black_king_vln = enemy_king_vuln(&sfen, Color::Black);
+
+    feature_vec.push((white_king_vln.try_into().unwrap(), black_king_vln.try_into().unwrap()));   
+    
+    white_fitness += white_king_vln as u32 * KING_VULN;
+    black_fitness += black_king_vln as u32 * KING_VULN;
+
+// ---------------------------------ROOK MOBIL---------------------------------
+
+    let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
+
+    //println!("white rook_mobil value: {:?} black rook_mobil value: {:?}", white_rook_mobil, black_rook_mobil);
+    
+    feature_vec.push((white_rook_mobil, black_rook_mobil));   
+    
+    white_fitness += white_rook_mobil * ROOK_MOBIL;
+    black_fitness += black_rook_mobil * ROOK_MOBIL;
+
+// ---------------------------------LANCE MOBIL---------------------------------
+
+    let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
+    
+    //println!("white lance_mobil value: {:?} black lance_mobil value: {:?}", white_lance_mobil, black_lance_mobil);
+    
+    feature_vec.push((white_lance_mobil, black_lance_mobil));   
+    
+    white_fitness += white_lance_mobil * LANCE_MOBIL;
+    black_fitness += black_lance_mobil * LANCE_MOBIL;
+
+// ---------------------------------BISHOP MOBIL---------------------------------
+    
+    let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
+    
+    //println!("white bish_mobil value: {:?} black bish_mobil value: {:?}", white_bish_mobil, black_bish_mobil);
+    
+    feature_vec.push((white_bish_mobil, black_bish_mobil));   
+    
+    white_fitness += white_bish_mobil * BISHOP_MOBIL;
+    black_fitness += black_bish_mobil * BISHOP_MOBIL;
+
+// ---------------------------------PIECES IN HAND---------------------------------
+
+    let (white_hand, black_hand) = eval_hand(&sfen);
+    
+    //println!("white hand value: {:?} black hand value: {:?}", white_hand, black_hand);
+    //println!(" | ");
+    
+    feature_vec.push((white_hand, black_hand));
+    white_fitness += white_hand;
+    black_fitness += black_hand;
+
+// ---------------------------------RETURN BOTH FITNESSES
+    // also return the feature_vec 
+    return((white_fitness as f32, black_fitness as f32), feature_vec);
 
 }
 

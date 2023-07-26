@@ -12,7 +12,7 @@ use shogi_core::{PartialPosition, PositionStatus, Square, Piece, Color, Move, Pi
 
 fn validate_user_move(user_input: &str) -> bool {
     // check that user input is the correct number of characters.
-    if user_input.len() == 10 {
+    if user_input.len() == 10 || user_input.len() == 15 {
         true
     } else {
         false
@@ -65,9 +65,18 @@ fn human_move() -> Move {
     }
 
     let moves: Vec<&str> = input.split(" to ").collect();
+    //println!(" | INPUT: {:?}", moves);
     let (mut from_sqr, mut to_sqr) = (moves[0], moves[1]);
+    let mut promote = false;
+    if moves.len() == 3 {
+        if moves[2] == "P" {
+            promote = true;
+        }
+    }
+
     println!(" | ");
     println!(" | moving piece from square {} to square {}", from_sqr, to_sqr);
+    println!(" | promote? {:?}", promote);
     println!(" | ");
 
     let from_sqr: Vec<&str> = from_sqr.split(",").collect();
@@ -92,24 +101,35 @@ fn human_move() -> Move {
     //println!(" | to_square: {:?}", to_square);
     //println!(" | ");
 
-    let user_move = Move::Normal {from: from_square, to: to_square, promote: false};
-    //println!(" | move object: {:?}", user_move);
+    let mut user_move: Move = Move::Normal {from: from_square, to: to_square, promote: false};
+    if promote {
+        user_move = Move::Normal {from: from_square, to: to_square, promote: true};
+    } else {
+        user_move = Move::Normal {from: from_square, to: to_square, promote: false};
+    }
 
+    //println!(" | move object: {:?}", user_move);
+    
     user_move
 
-    
 }
 
 
 fn computer_move(root_sfen: &str) -> Move {
 
-    let dep = 3;
+    let dep = 2;
     let color = sfen::get_color(&root_sfen);
     
     let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
 
-    let ((white_score, black_score), best_move) = search::get_best_move(&root, dep, color); 
+    let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
 
+    println!(" | 'best move': {:?}", best_move);
+    println!(" | white_score: {:?}", white_score);
+    println!(" | black_score: {:?}", black_score);
+    println!(" | best features: {:?}", best_features);
+    println!(" | ");
+    
     best_move.unwrap()
 
 }
@@ -125,6 +145,7 @@ pub fn play() {
     println!(" | this means that your king would be in square: 'I,5'");
     println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
     println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
+    println!(" | to promote a piece, format your input like this -> 'D,4 to C,4 to P'");
     println!(" | ");
     println!(" |-------------------------------------------------------------------------|");
     println!(" | ");
@@ -196,6 +217,7 @@ pub fn play_one_move() {
     println!(" | this means that your king would be in square: 'I,5'");
     println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
     println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
+    println!(" | to promote a piece, format your input like this -> 'D,4 to C,4 to P'");
     println!(" | ");
     println!(" |-------------------------------------------------------------------------|");
     println!(" | ");
@@ -214,19 +236,19 @@ pub fn play_one_move() {
     println!(" |------------------------------CURRENT BOARD------------------------------|");
     view::display_sfen(&sfen);
     
-    let computer_mv = computer_move(&sfen);
+    //let computer_mv = computer_move(&sfen);
     
-    println!(" | ");
-    println!(" |------------------------------COMPUTER MOVE------------------------------|");
-    println!(" | ");
-    println!(" | move: {:?}", computer_mv);
+    //println!(" | ");
+    //println!(" |------------------------------COMPUTER MOVE------------------------------|");
+    //println!(" | ");
+    //println!(" | move: {:?}", computer_mv);
     
-    board.make_move(computer_mv);
-    sfen = board.to_sfen_owned(); 
+    //board.make_move(computer_mv);
+    //sfen = board.to_sfen_owned(); 
 
-    println!(" | ");
-    println!(" |------------------------------CURRENT BOARD------------------------------|");
-    view::display_sfen(&sfen);
+    //println!(" | ");
+    //println!(" |------------------------------CURRENT BOARD------------------------------|");
+    //view::display_sfen(&sfen);
 
     println!(" |-------------------------------------------------------------------------|");
    

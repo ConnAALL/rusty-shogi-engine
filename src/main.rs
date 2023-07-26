@@ -325,7 +325,7 @@ pub fn minimax_playground() {
     //println!("Resulting GameTree: {:?}", root);
 
     //let ((white_score, black_score), best_move) = search::minimax(&root, dep, true); 
-    let ((white_score, black_score), best_move) = search::get_best_move(&root, dep, color); 
+    let ((white_score, black_score), best_move, feature_vec) = search::get_best_move(&root, dep, color); 
 
     println!();
     println!("#####################################################################################");
@@ -376,6 +376,7 @@ fn main() {
     //test_tree_search();
     //minimax_playground();
     play::play();
+    //play::play_one_move();
 }
 
 
