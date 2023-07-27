@@ -411,7 +411,7 @@ fn main() {
     //-----------------------------EVAL_TEST-----------------------------
     //test_pvs();
 
-    eval2_test()
+    //eval2_test()
     
     //coord_test();
     //mobility_tests();
@@ -419,7 +419,7 @@ fn main() {
     //test_tree_search();
     //minimax_playground();
     
-    //play::play();
+    play::play();
     //play::play_one_move();
 
 }
