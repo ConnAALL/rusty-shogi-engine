@@ -117,7 +117,7 @@ fn human_move() -> Move {
 
 fn computer_move(root_sfen: &str) -> Move {
 
-    let dep = 2;
+    let dep = 3;
     let color = sfen::get_color(&root_sfen);
     
     let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node

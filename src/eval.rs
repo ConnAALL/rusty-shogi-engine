@@ -872,7 +872,7 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
     //println!(" | ");
     //println!("white PromPiece value: {:?} black PromPiece value: {:?}", white_pp, black_pp);
 
-    feature_vec.push((white_pp, black_pp));
+    feature_vec.push((white_pp * PROMOTED_PIECES, black_pp * PROMOTED_PIECES));
     
     white_fitness += white_pp * PROMOTED_PIECES;
     black_fitness += black_pp * PROMOTED_PIECES;
@@ -896,8 +896,8 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
     let white_king_vln = enemy_king_vuln(&sfen, Color::White);
     let black_king_vln = enemy_king_vuln(&sfen, Color::Black);
 
-    feature_vec.push((white_king_vln.try_into().unwrap(), black_king_vln.try_into().unwrap()));   
-    
+    feature_vec.push(((white_king_vln as u32 * KING_VULN).try_into().unwrap(), (black_king_vln as u32 * KING_VULN).try_into().unwrap()));   
+
     white_fitness += white_king_vln as u32 * KING_VULN;
     black_fitness += black_king_vln as u32 * KING_VULN;
 
@@ -907,7 +907,7 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 
     //println!("white rook_mobil value: {:?} black rook_mobil value: {:?}", white_rook_mobil, black_rook_mobil);
     
-    feature_vec.push((white_rook_mobil, black_rook_mobil));   
+    feature_vec.push((white_rook_mobil * ROOK_MOBIL, black_rook_mobil * ROOK_MOBIL));   
     
     white_fitness += white_rook_mobil * ROOK_MOBIL;
     black_fitness += black_rook_mobil * ROOK_MOBIL;
@@ -918,7 +918,7 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
     
     //println!("white lance_mobil value: {:?} black lance_mobil value: {:?}", white_lance_mobil, black_lance_mobil);
     
-    feature_vec.push((white_lance_mobil, black_lance_mobil));   
+    feature_vec.push((white_lance_mobil * LANCE_MOBIL, black_lance_mobil * LANCE_MOBIL));   
     
     white_fitness += white_lance_mobil * LANCE_MOBIL;
     black_fitness += black_lance_mobil * LANCE_MOBIL;
@@ -929,7 +929,7 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
     
     //println!("white bish_mobil value: {:?} black bish_mobil value: {:?}", white_bish_mobil, black_bish_mobil);
     
-    feature_vec.push((white_bish_mobil, black_bish_mobil));   
+    feature_vec.push((white_bish_mobil * BISHOP_MOBIL, black_bish_mobil * BISHOP_MOBIL));   
     
     white_fitness += white_bish_mobil * BISHOP_MOBIL;
     black_fitness += black_bish_mobil * BISHOP_MOBIL;

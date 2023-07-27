@@ -197,7 +197,7 @@ pub fn minimax(tree: &GameTree, depth: u32, maximizing: bool) -> ((f32, f32), Op
 // CALC EVAL
 pub fn minimax2(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Vec<(u32, u32)>) {
     let curr_color = sfen::get_color(&tree.sfen);
-    let temp: Vec<(u32, u32)> = Vec::new();
+    let mut best_features: Vec<(u32, u32)> = Vec::new();
 
     if depth == 0 || tree.children.is_empty() {
         //return eval::evaluate(&tree.sfen);
@@ -208,39 +208,48 @@ pub fn minimax2(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32,
         let mut max_eval = (f32::MIN, f32::MIN);
         
         for child in &tree.children {
-            let eval = minimax2(child, depth - 1, maximizing_player);
+            let (eval, features) = minimax2(child, depth - 1, maximizing_player);
             
             if maximizing_player == Color::White {
-                if eval.0.0 > max_eval.0 {
-                    max_eval = eval.0;
+                if eval.0 > max_eval.0 {
+                    max_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
                 }
             } else {
-                if eval.0.1 > max_eval.1 {
-                    max_eval = eval.0;
+                if eval.1 > max_eval.1 {
+                    max_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
                 }
             }
         }
 
-        return (max_eval, temp);
+        return (max_eval, best_features);
     
     } else {
         let mut min_eval = (f32::MAX, f32::MAX);
         
         for child in &tree.children {    
-            let eval = minimax2(child, depth - 1, maximizing_player);
+            let (eval, features) = minimax2(child, depth - 1, maximizing_player);
             
             if maximizing_player == Color::White {
-                if eval.0.1 < min_eval.1 {
-                    min_eval = eval.0;
+                if eval.1 < min_eval.1 {
+                    min_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
+
                 }
             } else {
-                if eval.0.0 < min_eval.0 {
-                    min_eval = eval.0;
+                if eval.0 < min_eval.0 {
+                    min_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
                 }
             }
         }
 
-        return (min_eval, temp);
+        return (min_eval, best_features);
     }
 }
 
@@ -258,7 +267,7 @@ pub fn get_best_move(tree: &GameTree, depth: u32, maximizing_player: Color) -> (
             if eval.0 > best_eval.0 {
                 best_eval = eval;
                 best_move = child.game_move.clone();
-                //best_features.clear();
+                best_features.clear();
                 best_features.extend(feature_vec);
                 //best_features = feature_vec;
             }
@@ -266,7 +275,7 @@ pub fn get_best_move(tree: &GameTree, depth: u32, maximizing_player: Color) -> (
             if eval.1 > best_eval.1 {
                 best_eval = eval;
                 best_move = child.game_move.clone();
-                //best_features.clear();
+                best_features.clear();
                 best_features.extend(feature_vec);
                 //best_features = feature_vec;
             }
