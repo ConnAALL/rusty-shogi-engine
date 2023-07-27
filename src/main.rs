@@ -212,6 +212,48 @@ fn eval_test() {
 }
 
 
+fn eval2_test() {
+
+    let sfen = "lnsgkgsnl/1r5b1/pppppp1pp/6p2/9/2P6/PP1PPPPPP/1B5R1/LNSGKGSNL b - 3";
+    println!("sfen: {:?}", sfen);
+    view::display_sfen(&sfen);
+    
+    let ((white_fitness, black_fitness), best_features) = eval::evaluate2(&sfen);
+    
+    println!("white fitness: {:?}", white_fitness);
+    println!("black fitness: {:?}", black_fitness);
+    
+    let (white_promoted_pieces, black_promoted_pieces) = best_features[0];
+    let (white_pst, black_pst) = best_features[1];
+    let (white_king_vln, black_king_vln) = best_features[2];
+    let (white_rook_mobil, black_rook_mobil) = best_features[3];
+    let (white_lance_mobil, black_lance_mobil) = best_features[4];
+    let (white_bish_mobil, black_bish_mobil) = best_features[5];
+    let (white_hand, black_hand) = best_features[6];
+
+    println!(" | feature variate values: ");
+    println!(" |    |WHITE|");
+    println!(" | white_promoted_pieces: {:?}", white_promoted_pieces);
+    println!(" | white_pst: {:?}", white_pst);
+    println!(" | white_king_vln: {:?}", white_king_vln);
+    println!(" | white_rook_mobil: {:?}", white_rook_mobil);
+    println!(" | white_lance_mobil: {:?}", white_lance_mobil);
+    println!(" | white_bish_mobil: {:?}", white_bish_mobil);
+    println!(" | white_hand: {:?}", white_hand);
+    println!(" | ");
+    println!(" |    |BLACK|");
+    println!(" | black_promoted_pieces: {:?}", black_promoted_pieces);
+    println!(" | black_pst: {:?}", black_pst);
+    println!(" | black_king_vln: {:?}", black_king_vln);
+    println!(" | black_rook_mobil: {:?}", black_rook_mobil);
+    println!(" | black_lance_mobil: {:?}", black_lance_mobil);
+    println!(" | black_bish_mobil: {:?}", black_bish_mobil);
+    println!(" | black_hand: {:?}", black_hand);
+    println!(" | ");
+
+}
+
+
 fn tree_test() {
     
     // Set up the initial game state
@@ -369,14 +411,17 @@ fn main() {
     //-----------------------------EVAL_TEST-----------------------------
     //test_pvs();
 
-
+    eval2_test()
+    
     //coord_test();
     //mobility_tests();
     //hand_test();
     //test_tree_search();
     //minimax_playground();
-    play::play();
+    
+    //play::play();
     //play::play_one_move();
+
 }
 
 

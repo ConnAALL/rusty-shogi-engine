@@ -124,7 +124,7 @@ fn pst() -> HashMap<&'static str, [i32; 81]> {
 
         map.insert("W", [ 31, 30, 22, 4,  0,  2,  24, 21, 31,
                           30, 22, 5,  2,  8,  4,  1,  18, 3,
-    6,  30, 19, 2,  16, 28, 19, 24, 3,
+                          6,  30, 19, 2,  16, 28, 19, 24, 3,
                           23, 22, 22, 7,  3,  17, 7,  26, 1,
                           7,  23, 24, 29, 21, 30, 16, 2,  28,
                           21, 27, 8,  30, 17, 15, 30, 20, 5,
@@ -271,7 +271,7 @@ pub fn evaluate_piece_table(mut sfen: &str, color: &str) -> i32 {
                 white_score += value;
             }
 
-} else if i == 'z' /* PR pawn */ {
+        } else if i == 'z' /* PR pawn */ {
             let value = pst_map["G"][index];
             if color == "black" {
                 black_score += value

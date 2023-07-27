@@ -124,12 +124,37 @@ fn computer_move(root_sfen: &str) -> Move {
 
     let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
 
+    let (white_promoted_pieces, black_promoted_pieces) = best_features[0];
+    let (white_pst, black_pst) = best_features[1];
+    let (white_king_vln, black_king_vln) = best_features[2];
+    let (white_rook_mobil, black_rook_mobil) = best_features[3];
+    let (white_lance_mobil, black_lance_mobil) = best_features[4];
+    let (white_bish_mobil, black_bish_mobil) = best_features[5];
+    let (white_hand, black_hand) = best_features[6];
+
     println!(" | 'best move': {:?}", best_move);
     println!(" | white_score: {:?}", white_score);
     println!(" | black_score: {:?}", black_score);
-    println!(" | best features: {:?}", best_features);
+    println!(" | feature variate values: ");
+    println!(" |    |WHITE|");
+    println!(" | white_promoted_pieces: {:?}", white_promoted_pieces);
+    println!(" | white_pst: {:?}", white_pst);
+    println!(" | white_king_vln: {:?}", white_king_vln);
+    println!(" | white_rook_mobil: {:?}", white_rook_mobil);
+    println!(" | white_lance_mobil: {:?}", white_lance_mobil);
+    println!(" | white_bish_mobil: {:?}", white_bish_mobil);
+    println!(" | white_hand: {:?}", white_hand);
     println!(" | ");
-    
+    println!(" |    |BLACK|");
+    println!(" | black_promoted_pieces: {:?}", black_promoted_pieces);
+    println!(" | black_pst: {:?}", black_pst);
+    println!(" | black_king_vln: {:?}", black_king_vln);
+    println!(" | black_rook_mobil: {:?}", black_rook_mobil);
+    println!(" | black_lance_mobil: {:?}", black_lance_mobil);
+    println!(" | black_bish_mobil: {:?}", black_bish_mobil);
+    println!(" | black_hand: {:?}", black_hand);
+    println!(" | ");
+
     best_move.unwrap()
 
 }
@@ -162,9 +187,7 @@ pub fn play() {
         if shogi_legality_lite::is_legal_partial_lite(&board, human_mv) { // check if the human move is legal
             board.make_move(human_mv);
             sfen = board.to_sfen_owned();
-            
             println!(" | ");
-            println!(" |------------------------------CURRENT BOARD------------------------------|");
             view::display_sfen(&sfen);
 
             // game end condition
@@ -176,20 +199,17 @@ pub fn play() {
                 break;
             }
 
-            println!(" | thinking...");
-            let computer_mv = computer_move(&sfen);
-
             println!(" | ");
             println!(" |------------------------------COMPUTER MOVE------------------------------|");
             println!(" | ");
-            println!(" | move: {:?}", computer_mv);
+            println!(" | thinking...");
+            println!(" | ");
             
+            let computer_mv = computer_move(&sfen);
             board.make_move(computer_mv);
             sfen = board.to_sfen_owned(); 
-
-            println!(" | ");
-            println!(" |------------------------------CURRENT BOARD------------------------------|");
             view::display_sfen(&sfen);
+            println!("{:?}", sfen);
 
             // game end condition
             if shogi_legality_lite::status_partial(&board) == PositionStatus::WhiteWins {
