@@ -869,9 +869,6 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 
     let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
     
-    //println!(" | ");
-    //println!("white PromPiece value: {:?} black PromPiece value: {:?}", white_pp, black_pp);
-
     feature_vec.push((white_pp * PROMOTED_PIECES, black_pp * PROMOTED_PIECES));
     
     white_fitness += white_pp * PROMOTED_PIECES;
@@ -883,8 +880,6 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
     let white_pst = evaluate_piece_table(&sfen, "white");
     let black_pst = evaluate_piece_table(&sfen, "black");
 
-    //println!("white PST value: {:?} black PST value: {:?}", white_pst, black_pst);
-    
     feature_vec.push((white_pst.try_into().unwrap(), black_pst.try_into().unwrap()));
     
     white_fitness += white_pst as u32;
@@ -905,8 +900,6 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 
     let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
 
-    //println!("white rook_mobil value: {:?} black rook_mobil value: {:?}", white_rook_mobil, black_rook_mobil);
-    
     feature_vec.push((white_rook_mobil * ROOK_MOBIL, black_rook_mobil * ROOK_MOBIL));   
     
     white_fitness += white_rook_mobil * ROOK_MOBIL;
@@ -915,8 +908,6 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 // ---------------------------------LANCE MOBIL---------------------------------
 
     let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
-    
-    //println!("white lance_mobil value: {:?} black lance_mobil value: {:?}", white_lance_mobil, black_lance_mobil);
     
     feature_vec.push((white_lance_mobil * LANCE_MOBIL, black_lance_mobil * LANCE_MOBIL));   
     
@@ -927,8 +918,6 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
     
     let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
     
-    //println!("white bish_mobil value: {:?} black bish_mobil value: {:?}", white_bish_mobil, black_bish_mobil);
-    
     feature_vec.push((white_bish_mobil * BISHOP_MOBIL, black_bish_mobil * BISHOP_MOBIL));   
     
     white_fitness += white_bish_mobil * BISHOP_MOBIL;
@@ -938,15 +927,13 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 
     let (white_hand, black_hand) = eval_hand(&sfen);
     
-    //println!("white hand value: {:?} black hand value: {:?}", white_hand, black_hand);
-    //println!(" | ");
-    
     feature_vec.push((white_hand, black_hand));
+    
     white_fitness += white_hand;
     black_fitness += black_hand;
 
 // ---------------------------------RETURN BOTH FITNESSES
-    // also return the feature_vec 
+    
     return((white_fitness as f32, black_fitness as f32), feature_vec);
 
 }

@@ -295,6 +295,34 @@ pub fn get_best_move(tree: &GameTree, depth: u32, maximizing_player: Color) -> (
 }
 
 
+pub fn minimax3(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Option<Move>, Vec<(u32, u32)>) {
+    let curr_color = sfen::get_color(&tree.sfen);
+    let mut best_move = None;
+    let mut best_features: Vec<(u32, u32)> = Vec::new();
+
+    if depth == 0 || tree.children.is_empty() {
+        let eval = eval::evaluate2(&tree.sfen);
+        return (eval.0, best_move, eval.1);
+    }
+
+    let mut best_eval = if curr_color == maximizing_player { (f32::MIN, f32::MIN) } else { (f32::MAX, f32::MAX) };
+
+    for child in &tree.children {
+        let (eval, _, features) = minimax3(child, depth - 1, maximizing_player);
+
+        if (maximizing_player == Color::White && curr_color == maximizing_player && eval.0 > best_eval.0) ||
+           (maximizing_player == Color::Black && curr_color == maximizing_player && eval.1 > best_eval.1) ||
+           (maximizing_player == Color::White && curr_color != maximizing_player && eval.1 < best_eval.1) ||
+           (maximizing_player == Color::Black && curr_color != maximizing_player && eval.0 < best_eval.0) {
+            best_eval = eval;
+            best_move = child.game_move.clone();
+            best_features.clear();
+            best_features.extend(features);
+        }
+    }
+
+    return (best_eval, best_move, best_features);
+}
 
 
 
