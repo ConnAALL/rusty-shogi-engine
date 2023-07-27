@@ -215,6 +215,7 @@ fn eval_test() {
 fn eval2_test() {
 
     let sfen = "lnsgkgsnl/1r5b1/pppppp1pp/6p2/9/2P6/PP1PPPPPP/1B5R1/LNSGKGSNL b - 3";
+    //let sfen = "lnsgkgsnl/1r5b1/pppppp1pp/6p2/9/6P2/PPPPPP1PP/1B5R1/LNSGKGSNL b - 3";
     println!("sfen: {:?}", sfen);
     view::display_sfen(&sfen);
     
@@ -411,7 +412,7 @@ fn main() {
     //-----------------------------EVAL_TEST-----------------------------
     //test_pvs();
 
-    //eval2_test()
+    eval2_test();
     
     //coord_test();
     //mobility_tests();

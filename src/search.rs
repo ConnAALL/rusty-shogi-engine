@@ -295,17 +295,18 @@ pub fn get_best_move(tree: &GameTree, depth: u32, maximizing_player: Color) -> (
 }
 
 
-pub fn minimax3(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Option<Move>, Vec<(u32, u32)>) {
+pub fn minimax3(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Option<Move>, Vec<(u32, u32)>, &str) {
     
     let curr_color = sfen::get_color(&tree.sfen);
+    let mut best_sfen: &str = &"";
     let mut best_move = None;
     let mut best_features: Vec<(u32, u32)> = Vec::new();
 
     // BASE CASE if reaches max depth or if current node in game tree has no children (it's a terminal node) 
     // then evaluate current game state and return white/black scores
     if depth == 0 || tree.children.is_empty() {
-        let eval = eval::evaluate2(&tree.sfen);
-        return (eval.0, best_move, eval.1);
+        let eval = eval::evaluate3(&tree.sfen);
+        return (eval.0, best_move, eval.1, eval.2);
     }
 
     // initialize best_eval, to store best evaluation value found so far. 
@@ -319,16 +320,17 @@ pub fn minimax3(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32,
         // for each child, recursively call minimax3 to evaluate that child node. 
         // returns the pair of evaluation values, best move, and best features vector for the child node 
         // but here we are only interested in the evaluation and features, so we ignore the best move with _
-        let (eval, _, features) = minimax3(child, depth - 1, maximizing_player);
+        let (eval, _, features, sfen) = minimax3(child, depth - 1, maximizing_player);
 
         // apply the maximization/minimization logic depending on whose turn it is. 
         // if current player is maximizing and current child's eval score is higher than the current best
         // or if current player is minimizing and current child's eval score is lower than the current best 
         // then update best evaluation, best move, and best features with the child's eval score, move, and features.
-        if (maximizing_player == Color::White && curr_color == maximizing_player && eval.0 > best_eval.0) ||
+        if (maximizing_player == Color::Black && curr_color != maximizing_player && eval.0 < best_eval.0) ||
+           (maximizing_player == Color::White && curr_color == maximizing_player && eval.0 > best_eval.0) ||
            (maximizing_player == Color::Black && curr_color == maximizing_player && eval.1 > best_eval.1) ||
-           (maximizing_player == Color::White && curr_color != maximizing_player && eval.1 < best_eval.1) ||
-           (maximizing_player == Color::Black && curr_color != maximizing_player && eval.0 < best_eval.0) {
+           (maximizing_player == Color::White && curr_color != maximizing_player && eval.1 < best_eval.1) {
+            best_sfen = sfen;
             best_eval = eval;
             best_move = child.game_move.clone();
             best_features.clear();
@@ -337,7 +339,7 @@ pub fn minimax3(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32,
     }
 
     // after considering all the child nodes, return best evaluation, move, and features that were found
-    return (best_eval, best_move, best_features);
+    return (best_eval, best_move, best_features, best_sfen);
 
 }
 

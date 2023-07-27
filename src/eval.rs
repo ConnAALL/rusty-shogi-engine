@@ -858,7 +858,6 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 }
 
 
-// make it so it returns the fitnesses as well as the feature_vec
 pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 
     let mut white_fitness = 0;
@@ -891,7 +890,7 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
     let white_king_vln = enemy_king_vuln(&sfen, Color::White);
     let black_king_vln = enemy_king_vuln(&sfen, Color::Black);
 
-    feature_vec.push(((white_king_vln as u32 * KING_VULN).try_into().unwrap(), (black_king_vln as u32 * KING_VULN).try_into().unwrap()));   
+    feature_vec.push(((white_king_vln as u32 * KING_VULN), (black_king_vln as u32 * KING_VULN)));   
 
     white_fitness += white_king_vln as u32 * KING_VULN;
     black_fitness += black_king_vln as u32 * KING_VULN;
@@ -935,6 +934,86 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 // ---------------------------------RETURN BOTH FITNESSES
     
     return((white_fitness as f32, black_fitness as f32), feature_vec);
+
+}
+
+
+pub fn evaluate3(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>, &str) {
+
+    let mut white_fitness = 0;
+    let mut black_fitness = 0;
+    let mut feature_vec = Vec::new(); 
+
+// ---------------------------------PROMOTED PIECES---------------------------------
+
+    let (mut white_pp, mut black_pp) = promoted_pieces(sfen);
+    
+    feature_vec.push((white_pp * PROMOTED_PIECES, black_pp * PROMOTED_PIECES));
+    
+    white_fitness += white_pp * PROMOTED_PIECES;
+    black_fitness += black_pp * PROMOTED_PIECES;
+   
+
+// ---------------------------------PIECE SQUARE TABLES---------------------------------
+
+    let white_pst = evaluate_piece_table(&sfen, "white");
+    let black_pst = evaluate_piece_table(&sfen, "black");
+
+    feature_vec.push((white_pst.try_into().unwrap(), black_pst.try_into().unwrap()));
+    
+    white_fitness += white_pst as u32;
+    black_fitness += black_pst as u32;
+
+
+// ---------------------------------KING VULN---------------------------------
+
+    let white_king_vln = enemy_king_vuln(&sfen, Color::White);
+    let black_king_vln = enemy_king_vuln(&sfen, Color::Black);
+
+    feature_vec.push(((white_king_vln as u32 * KING_VULN), (black_king_vln as u32 * KING_VULN)));   
+
+    white_fitness += white_king_vln as u32 * KING_VULN;
+    black_fitness += black_king_vln as u32 * KING_VULN;
+
+// ---------------------------------ROOK MOBIL---------------------------------
+
+    let (white_rook_mobil, black_rook_mobil) = rook_mobility(&sfen);
+
+    feature_vec.push((white_rook_mobil * ROOK_MOBIL, black_rook_mobil * ROOK_MOBIL));   
+    
+    white_fitness += white_rook_mobil * ROOK_MOBIL;
+    black_fitness += black_rook_mobil * ROOK_MOBIL;
+
+// ---------------------------------LANCE MOBIL---------------------------------
+
+    let (white_lance_mobil, black_lance_mobil) = lance_mobility(&sfen);
+    
+    feature_vec.push((white_lance_mobil * LANCE_MOBIL, black_lance_mobil * LANCE_MOBIL));   
+    
+    white_fitness += white_lance_mobil * LANCE_MOBIL;
+    black_fitness += black_lance_mobil * LANCE_MOBIL;
+
+// ---------------------------------BISHOP MOBIL---------------------------------
+    
+    let (white_bish_mobil, black_bish_mobil) = bishop_mobility(&sfen);
+    
+    feature_vec.push((white_bish_mobil * BISHOP_MOBIL, black_bish_mobil * BISHOP_MOBIL));   
+    
+    white_fitness += white_bish_mobil * BISHOP_MOBIL;
+    black_fitness += black_bish_mobil * BISHOP_MOBIL;
+
+// ---------------------------------PIECES IN HAND---------------------------------
+
+    let (white_hand, black_hand) = eval_hand(&sfen);
+    
+    feature_vec.push((white_hand, black_hand));
+    
+    white_fitness += white_hand;
+    black_fitness += black_hand;
+
+// ---------------------------------RETURN BOTH FITNESSES
+    
+    return((white_fitness as f32, black_fitness as f32), feature_vec, sfen);
 
 }
 

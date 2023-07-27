@@ -117,13 +117,13 @@ fn human_move() -> Move {
 
 fn computer_move(root_sfen: &str) -> Move {
 
-    let dep = 3;
+    let dep = 1;
     let color = sfen::get_color(&root_sfen);
     
     let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
 
     //let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
-    let ((white_score, black_score), best_move, best_features) = search::minimax3(&root, dep, color);
+    let ((white_score, black_score), best_move, best_features, best_sfen) = search::minimax3(&root, dep, color);
 
     let (white_promoted_pieces, black_promoted_pieces) = best_features[0];
     let (white_pst, black_pst) = best_features[1];
@@ -133,7 +133,11 @@ fn computer_move(root_sfen: &str) -> Move {
     let (white_bish_mobil, black_bish_mobil) = best_features[5];
     let (white_hand, black_hand) = best_features[6];
 
-    println!(" | 'best move': {:?}", best_move);
+    println!(" | best move: {:?}", best_move);
+    println!(" | ");
+    println!(" | best sfen: {:?}", best_sfen);
+    view::display_sfen(best_sfen);
+    println!(" | ");
     println!(" | white_score: {:?}", white_score);
     println!(" | black_score: {:?}", black_score);
     println!(" | feature variate values: ");
