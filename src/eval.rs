@@ -858,6 +858,9 @@ pub fn evaluate(sfen: &str) -> (f32, f32) {
 }
 
 
+// #############################################################################################
+
+// additionally returns vector containing all the individual feature values
 pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 
     let mut white_fitness = 0;
@@ -938,6 +941,9 @@ pub fn evaluate2(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>) {
 }
 
 
+// #############################################################################################
+
+// additionally returns the sfen thats being evaluated
 pub fn evaluate3(sfen: &str) -> ((f32, f32), Vec<(u32, u32)>, &str) {
 
     let mut white_fitness = 0;
