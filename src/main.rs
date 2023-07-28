@@ -1,11 +1,13 @@
 // Russell Kosovsky
 
+// TODO: - put tests where they belong and clean up main.rs
+//       - oh also we need to make everything account for drops (search.rs and play.rs)
+
 mod view;
 mod sfen;
 mod eval;
 mod search;
 mod tree;
-mod usi;
 mod play;
 
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
@@ -412,7 +414,7 @@ fn main() {
     //-----------------------------EVAL_TEST-----------------------------
     //test_pvs();
 
-    eval2_test();
+    //eval2_test();
     
     //coord_test();
     //mobility_tests();
