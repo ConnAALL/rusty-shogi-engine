@@ -389,7 +389,6 @@ fn main() {
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
     
-    //search_test();
     
     //--------------------------PIECE_SQR_TBL_TEST--------------------------
     //println!("SFEN: {:?}", sfen);
@@ -416,7 +415,7 @@ fn main() {
     //test_pvs();
 
     //eval2_test();
-    
+    //search_test();
     //coord_test();
     //mobility_tests();
     //hand_test();
