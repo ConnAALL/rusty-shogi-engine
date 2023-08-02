@@ -22,7 +22,6 @@ pub struct GameTree {
  *    is stored as an Option<Move> because the root of the tree does not have a parent 
  *    and thus does not correspond to a move. In this case, game_move would be None. For all 
  *    other nodes, it should be Some(Move), where Move is the move made to reach this game state.   */
-   
 
     pub children: Vec<GameTree>,
 /*    children: Vec<GameTree> - This field is a vector containing all child nodes of this node 

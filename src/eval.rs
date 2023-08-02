@@ -19,7 +19,7 @@ use shogi_core::{Color, Square, PartialPosition, Piece, PieceKind, Move};
 
 
 // CONST WEIGHTS FOR PIECES IN HAND 
-const PAWN_HAND: u32 = 0;
+const PAWN_HAND: u32 = 1;
 const LANCE_HAND: u32 = 18;
 const KNIGHT_HAND: u32 = 9;
 const SILVER_HAND: u32 = 15;
