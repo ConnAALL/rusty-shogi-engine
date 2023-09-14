@@ -120,7 +120,7 @@ fn computer_move(root_sfen: &str) -> Move {
     let dep = 3;
     let color = sfen::get_color(&root_sfen);
     
-    let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
+    let root = search::treesearch(&root_sfen, dep, 1, None); // Create the root GameTree node
 
     //let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
     let ((white_score, black_score), best_move, best_features, best_sfen) = search::minimax3(&root, dep, color);

@@ -384,11 +384,39 @@ pub fn minimax_playground() {
 }
 
 
+pub fn debug(sfen: &str) {
+    
+    println!("SFEN: {:?}", sfen);
+    view::display_sfen(sfen);
+
+    // Parse the SFEN string and generate a PartialPosition from it
+    let positions = sfen::sfen_parse(sfen);
+    let mut pos = sfen::generate_pos(positions); 
+    pos.side_to_move_set(sfen::get_color(sfen));
+
+
+    let next_moves = all_legal_moves_partial(&pos);
+
+    // For each legal move, create a new game state and add it as a child to the current node
+    for move_item in next_moves {
+        let mut temp_pos = pos.clone();
+        temp_pos.make_move(move_item.clone());
+        let sfen = temp_pos.to_sfen_owned();
+
+        view::display_sfen(&sfen);
+        println!("{:?}" , &move_item);
+        println!("-----------------");
+    }
+
+}
+
 fn main() {
     
     let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
+    let sfen2 = "9/9/ppppppppp/9/9/9/9/7R1/9 b - 1";
     
+    //debug(&sfen2);
     
     //--------------------------PIECE_SQR_TBL_TEST--------------------------
     //println!("SFEN: {:?}", sfen);
@@ -423,6 +451,7 @@ fn main() {
     //minimax_playground();
     
     play::play();
+    
     //play::play_one_move();
 
 }
