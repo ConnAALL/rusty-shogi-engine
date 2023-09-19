@@ -119,137 +119,6 @@ pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<
 }
 
 
-// ##########################################################################################
-//                          `           MINIMAX
-
-pub fn minimax(tree: &GameTree, depth: u32, maximizing: bool) -> ((f32, f32), Option<Move>) {
-
-    println!("\nENTERED MINIMAX-----------------------------------------------------------------------------------");
-    println!("depth as passed in: {:?}", depth);
-    println!("sfen as passed in{:?}" ,tree.sfen);
-    //view::display_sfen(&tree.sfen);
-    let curr_color = sfen::get_color(&tree.sfen);
-
-    //if depth == 0 || tree.children.is_empty() {
-    if depth == 0 || tree.children.is_empty() {
-        println!("depth was zero and children vec was empty");
-        return (eval::evaluate(&tree.sfen), tree.game_move.clone());
-    }
-
-    if maximizing {
-        println!("MAXIMIZING");
-        let mut max_eval = (f32::MIN, f32::MIN);
-        println!("max_eval: {:?}", max_eval);
-        let mut best_move = None;
-        println!("Then loops through children nodes and calls minimax() again");
-        
-        for child in &tree.children {
-            // recursively CALL the func for each child
-            let (eval, move_) = minimax(child, depth - 1, false);
-            
-            // If the eval of the child is higher than the curr max...
-            // Update the max eval and the corresponding move
-            if curr_color == Color::White {
-                if eval.0 > max_eval.0 {
-                    max_eval = eval;
-                    best_move = move_;
-                }
-            } else {
-                if eval.1 > max_eval.1 {
-                    max_eval = eval;
-                    best_move = move_;
-                }
-            }
-        }
-
-        println!("returning max eval and best move ...");
-        return (max_eval, best_move);
-    
-    } else {
-        println!("MINIMIZING");
-        let mut min_eval = (f32::MAX, f32::MAX);
-        println!("min_eval: {:?}", min_eval);
-        let mut best_move = None;
-        println!("Then loops through children nodes and calls minimax() again");
-        
-        for child in &tree.children {    
-            let (eval, move_) = minimax(child, depth - 1, true);
-            // if eval is lower than curr min then update min and corresponding move
-            if curr_color == Color::White {
-                if eval.1 < min_eval.1 {
-                    min_eval = eval;
-                    best_move = move_;
-                }
-            } else {
-                if eval.0 < min_eval.0 {
-                    min_eval = eval;
-                    best_move = move_;
-                }
-            }           
-        }
-        println!("returning min eval and best move (worst)...");
-        return (min_eval, best_move);
-    }
-}
-
-
-// CALC EVAL
-pub fn minimax2(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Vec<(u32, u32)>) {
-    let curr_color = sfen::get_color(&tree.sfen);
-    let mut best_features: Vec<(u32, u32)> = Vec::new();
-
-    if depth == 0 || tree.children.is_empty() {
-        return eval::evaluate2(&tree.sfen);
-    }
-
-    if curr_color == maximizing_player {
-        let mut max_eval = (f32::MIN, f32::MIN);
-        
-        for child in &tree.children {
-            let (eval, features) = minimax2(child, depth - 1, maximizing_player);
-            
-            if maximizing_player == Color::White {
-                if eval.0 > max_eval.0 {
-                    max_eval = eval;
-                    best_features.clear();
-                    best_features.extend(features);
-                }
-            } else {
-                if eval.1 > max_eval.1 {
-                    max_eval = eval;
-                    best_features.clear();
-                    best_features.extend(features);
-                }
-            }
-        }
-
-        return (max_eval, best_features);
-    
-    } else {
-        let mut min_eval = (f32::MAX, f32::MAX);
-        
-        for child in &tree.children {    
-            let (eval, features) = minimax2(child, depth - 1, maximizing_player);
-            
-            if maximizing_player == Color::White {
-                if eval.1 < min_eval.1 {
-                    min_eval = eval;
-                    best_features.clear();
-                    best_features.extend(features);
-
-                }
-            } else {
-                if eval.0 < min_eval.0 {
-                    min_eval = eval;
-                    best_features.clear();
-                    best_features.extend(features);
-                }
-            }
-        }
-
-        return (min_eval, best_features);
-    }
-}
 
 
 //CALC BEST MOVE
@@ -423,6 +292,64 @@ pub fn perft(sfen: &str, depth: u32) -> u64 {
     node_count // Return the total node count
 }
 
+
+// CALC EVAL
+pub fn minimax2(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Vec<(u32, u32)>) {
+    let curr_color = sfen::get_color(&tree.sfen);
+    let mut best_features: Vec<(u32, u32)> = Vec::new();
+
+    if depth == 0 || tree.children.is_empty() {
+        return eval::evaluate2(&tree.sfen);
+    }
+
+    if curr_color == maximizing_player {
+        let mut max_eval = (f32::MIN, f32::MIN);
+        
+        for child in &tree.children {
+            let (eval, features) = minimax2(child, depth - 1, maximizing_player);
+            
+            if maximizing_player == Color::White {
+                if eval.0 > max_eval.0 {
+                    max_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
+                }
+            } else {
+                if eval.1 > max_eval.1 {
+                    max_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
+                }
+            }
+        }
+
+        return (max_eval, best_features);
+    
+    } else {
+        let mut min_eval = (f32::MAX, f32::MAX);
+        
+        for child in &tree.children {    
+            let (eval, features) = minimax2(child, depth - 1, maximizing_player);
+            
+            if maximizing_player == Color::White {
+                if eval.1 < min_eval.1 {
+                    min_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
+
+                }
+            } else {
+                if eval.0 < min_eval.0 {
+                    min_eval = eval;
+                    best_features.clear();
+                    best_features.extend(features);
+                }
+            }
+        }
+
+        return (min_eval, best_features);
+    }
+}
 
 
 
