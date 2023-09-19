@@ -25,7 +25,7 @@ const KNIGHT_HAND: u32 = 9;
 const SILVER_HAND: u32 = 15;
 const GOLD_HAND: u32 = 22;
 const ROOK_HAND: u32 = 18;
-const BISHOP_HAND: u32 = 2;
+const BISHOP_HAND: u32 = 16;
 
 // CONST WEIGHTS FOR EVAL FEATURE VARIATES
 const LANCE_MOBIL: u32 = 17 / 4;

@@ -303,7 +303,7 @@ pub fn minimax3(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32,
 
     // BASE CASE if reaches max depth or if current node in game tree has no children (it's a terminal node) 
     // then evaluate current game state and return white/black scores
-    if depth == 0 || tree.children.is_empty() {
+    if depth == 1 || tree.children.is_empty() {
         let eval = eval::evaluate3(&tree.sfen);
         return (eval.0, best_move, eval.1, eval.2);
     }
