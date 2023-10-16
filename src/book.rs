@@ -4,37 +4,11 @@
 
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
-
-
-
-/*
- * BVerifyMove(s, mv, moveno)
- *
- * Compare the string 's' to the list of legal moves available for the
- * opponent. If a match is found, make the move on the board.
- */
-
-pub fn BVerifyMove(s: &str, mv: Move, moveno: Move) {
-
-}
-
-
-/*
- * RESET()
- *
- * Reset the board and other variables to start a new game.
- *
- */
-
-pub fn RESET() {
-
-}
-
+use std::fs::File;
+use std::io::{self, BufRead, BufReader};
 
 /*
  * GetOpenings()
- *
- * CHECKME: is this still valid esp. wrt gnushogi.book?
  *
  * Read in the Opening Book file and parse the algebraic notation for a move
  * into an unsigned integer format indicating the from and to square. Create
@@ -53,7 +27,7 @@ pub fn GetOpenings() {
 
 
 /*
- * OpeningBook(hint, side)
+ * OpeningBook
  *
  * Go through each of the opening lines of play and check for a match with
  * the current game listing. If a match occurs, generate a random
@@ -66,5 +40,27 @@ pub fn GetOpenings() {
 
 pub fn OpeningBook() {
 
+}
+
+
+
+// function that opens a file and prints it to console line by line 
+pub fn test(filepath: &str) {
+    let file = match File::open(filepath) {
+        Ok(f) => f,
+        Err(e) => {
+            println!("Error opening file {}: {}", filepath, e);
+            return;
+        }
+    };
+
+    let reader = BufReader::new(file);
+
+    for line in reader.lines() {
+        match line {
+            Ok(content) => println!("{}", content),
+            Err(e) => println!("Error reading line: {}", e),
+        }
+    }
 }
 
