@@ -451,10 +451,10 @@ fn main() {
     //test_tree_search();
     //minimax_playground();
     
-    //play::play();
+    play::play();
     //play::play_one_move();
     
-    book::test("src/gnushogi.tbk");    
+    //book::test("src/gnushogi.tbk");    
 
 }
 

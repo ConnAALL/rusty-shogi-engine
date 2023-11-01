@@ -7,7 +7,6 @@ use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
-
 fn square_index(coord: &str) -> Option<Square> {
     match coord {
         "1a" => Square::from_u8(1),
@@ -104,38 +103,38 @@ fn square_index(coord: &str) -> Option<Square> {
     }
 }
 
-pub fn sqr_test() {
-    let coordinate = "5A";
-    if let Some(index) = square_index(coordinate) {
-        println!("The square index for {} is {}", coordinate, index);
-    } else {
-        println!("Invalid coordinate: {}", coordinate);
-    }
-}
+//pub fn sqr_test() {
+//    let coordinate = "5A";
+//    if let Some(index) = square_index(coordinate) {
+//        println!("The square index for {} is {}", coordinate, index);
+//    } else {
+//        println!("Invalid coordinate: {}", coordinate);
+//    }
+//}
 
-fn parse_move(s: &str) -> Move {
+//fn parse_move(s: &str) -> Move {
     // If it contains '*', it's a drop
-    if s.contains('*') {
-        let parts: Vec<&str> = s.split('*').collect();
-        let piece = Piece::from_str(parts[0]).unwrap(); // Assuming a function to convert str to Piece
-        let to = Square::from_str(parts[1]).unwrap(); // Assuming a function to convert str to Square
-        Move::Drop { piece, to }
-    } else {
-        let piece_initial = &s[0..1];
-        let from = Square::from_str(&s[1..3]).unwrap();
-        let to = Square::from_str(&s[3..5]).unwrap();
-        let promote = s.ends_with('+');
-        Move::Normal { from, to, promote }
-    }
-}
+//    if s.contains('*') {
+//        let parts: Vec<&str> = s.split('*').collect();
+//        let piece = Piece::from_str(parts[0]).unwrap(); // Assuming a function to convert str to Piece
+//        let to = Square::from_str(parts[1]).unwrap(); // Assuming a function to convert str to Square
+//        Move::Drop { piece, to }
+//    } else {
+//        let piece_initial = &s[0..1];
+//        let from = Square::from_str(&s[1..3]).unwrap();
+//        let to = Square::from_str(&s[3..5]).unwrap();
+//        let promote = s.ends_with('+');
+//        Move::Normal { from, to, promote }
+//    }
+//}
 
-pub fn parse_move_test() {
+//pub fn parse_move_test() {
     
-    let input = "P7f P8d S6h P3d S7g S6b"; // truncated for brevity
-    let moves: Vec<&str> = input.split_whitespace().collect();
-    let parsed_moves: Vec<Move> = moves.iter().map(|&m| parse_move(m)).collect();
+//    let input = "P7f P8d S6h P3d S7g S6b"; // truncated for brevity
+//    let moves: Vec<&str> = input.split_whitespace().collect();
+//    let parsed_moves: Vec<Move> = moves.iter().map(|&m| parse_move(m)).collect();
     // Now, parsed_moves contains the list of shogi_core::Move objects.
-}
+//}
 
 
 
