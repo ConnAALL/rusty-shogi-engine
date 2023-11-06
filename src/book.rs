@@ -5,6 +5,7 @@
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 use std::fs::File;
+use std::path::Path;
 use std::io::{self, BufRead, BufReader};
 
 fn square_index(coord: &str) -> Option<Square> {
@@ -103,38 +104,93 @@ fn square_index(coord: &str) -> Option<Square> {
     }
 }
 
-//pub fn sqr_test() {
-//    let coordinate = "5A";
-//    if let Some(index) = square_index(coordinate) {
-//        println!("The square index for {} is {}", coordinate, index);
-//    } else {
-//        println!("Invalid coordinate: {}", coordinate);
-//    }
-//}
 
-//fn parse_move(s: &str) -> Move {
-    // If it contains '*', it's a drop
-//    if s.contains('*') {
-//        let parts: Vec<&str> = s.split('*').collect();
-//        let piece = Piece::from_str(parts[0]).unwrap(); // Assuming a function to convert str to Piece
-//        let to = Square::from_str(parts[1]).unwrap(); // Assuming a function to convert str to Square
-//        Move::Drop { piece, to }
-//    } else {
-//        let piece_initial = &s[0..1];
-//        let from = Square::from_str(&s[1..3]).unwrap();
-//        let to = Square::from_str(&s[3..5]).unwrap();
-//        let promote = s.ends_with('+');
-//        Move::Normal { from, to, promote }
-//    }
-//}
+// A helper function to convert piece shorthand into the `Piece` enum.
+fn shorthand_to_piece(color: char, shorthand: char) -> Option<Piece> {
+    match (color, shorthand) {
+        ('B', 'P') => Some(Piece::B_P),
+        ('B', 'L') => Some(Piece::B_L),
+        ('B', 'N') => Some(Piece::B_N),
+        ('B', 'S') => Some(Piece::B_S),
+        ('B', 'G') => Some(Piece::B_G),
+        ('B', 'B') => Some(Piece::B_B),
+        ('B', 'R') => Some(Piece::B_R),
+        ('W', 'P') => Some(Piece::W_P),
+        ('W', 'L') => Some(Piece::W_L),
+        ('W', 'N') => Some(Piece::W_N),
+        ('W', 'S') => Some(Piece::W_S),
+        ('W', 'G') => Some(Piece::W_G),
+        ('W', 'B') => Some(Piece::W_B),
+        ('W', 'R') => Some(Piece::W_R),
+        _ => None,
+    }
+}
 
-//pub fn parse_move_test() {
-    
-//    let input = "P7f P8d S6h P3d S7g S6b"; // truncated for brevity
-//    let moves: Vec<&str> = input.split_whitespace().collect();
-//    let parsed_moves: Vec<Move> = moves.iter().map(|&m| parse_move(m)).collect();
-    // Now, parsed_moves contains the list of shogi_core::Move objects.
-//}
+fn parse_bool(value: &str) -> Option<bool> { // A helper function to convert string "false"/"true" to boolean.
+    match value {
+        "true" => Some(true),
+        "false" => Some(false),
+        _ => None,
+    }
+}
+fn parse_move(move_str: &str) -> Option<Move> { // This function converts a string representation of a move into a `Move` object.
+    let parts: Vec<&str> = move_str.split(',').collect();
+    match parts.as_slice() {
+        [color, from, to, promote, "false"] => {
+            let from_value = from.parse::<u8>().ok()?;
+            let to_value = to.parse::<u8>().ok()?;
+            let from_square = Square::from_u8(from_value.checked_sub(1)?);
+            let to_square = Square::from_u8(to_value.checked_sub(1)?);
+            let promote = parse_bool(promote)?;
+            Some(Move::Normal {
+                from: from_square?,
+                to: to_square?,
+                promote,
+            })
+        },
+        [color, piece_char, to, _, "true"] => {
+            let piece = shorthand_to_piece(color.chars().next()?, piece_char.chars().next()?)?;
+            let to_value = to.parse::<u8>().ok()?;
+            let to_square = Square::from_u8(to_value.checked_sub(1)?);
+            Some(Move::Drop {
+                piece,
+                to: to_square?,
+            })
+        },
+        _ => None,
+    }
+}
+
+// This function reads a file and converts each line into a vector of `Move` objects.
+fn read_openings<P: AsRef<Path>>(filename: P) -> io::Result<Vec<Vec<Move>>> {
+    let file = File::open(filename)?;
+    let reader = io::BufReader::new(file);
+
+    reader.lines().map(|line| {
+        let line = line?;
+        let moves_str = line.split(' ');
+        let moves = moves_str.filter_map(parse_move).collect();
+        Ok(moves)
+    }).collect()
+}
+
+pub fn booktest() -> io::Result<()> {
+    let openings = read_openings("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")?;
+
+    for opening in openings {
+        // Now you can use the opening which is a Vec<Move>
+        println!("{:?}", opening);
+    }
+
+    Ok(())
+}
+
+/*
+This function assumes that the file contains valid moves and that the shogi_core crate provides 
+from_usi method to parse strings into Piece instances. The Piece::from_usi is a placeholder and 
+should be replaced with the appropriate method from the shogi_core crate for converting a string to a Piece.
+
+*/
 
 
 

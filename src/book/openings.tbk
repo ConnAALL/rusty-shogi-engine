@@ -413,7 +413,7 @@ P2f P8d P2e P8e G7h G3b P2d P2d R2d P*2c R2f S6b P1f P1d S3h P6d P7f P8f P8f R8f
 #
 1.P-7f P-8d 2.S-6h P-3d 3.S-7g S-6b 4.S-4h S-4b 5.P-5f P-5d 6.G-7h G6a-5b 7.K-6i P-4d 8.P-3f G-4c 9.G-5h S-3c 10.P-6f B-3a 11.B-7i P-8e 12.S-3g G-3b 13.P-3e Px3e 14.Bx3e B-6d 15.P-6e B-4b 16.G5h-6g S-5c 17.K-7i K-4a 18.K-8h P-6d 19.Px6d Sx6d 20.S-3f P-5e
 #
-1.P-2f P-8d 2.P-2e P-8e  3.G-7h G-3b 4.P-2d Px2d 5.Rx2d P*2c 6.R-2f S-6b 7.P-9f P-1d 8.S-3h P-6d 9.P-7f P-3d 10.P-7e S-6c 11.K-4h K-4a 12.K-3i P-4d 13.S-6h S-4b 14.R-7f K-3a 15.P-6f B-3c 16.S-6g G-7b 17.B-9g K-2b 18.N-7g P-4e 19.K-2h R-8d 20.S-5h P-9d
+1.P-2f P-8d 2.P-2e P-8e 3.G-7h G-3b 4.P-2d Px2d 5.Rx2d P*2c 6.R-2f S-6b 7.P-9f P-1d 8.S-3h P-6d 9.P-7f P-3d 10.P-7e S-6c 11.K-4h K-4a 12.K-3i P-4d 13.S-6h S-4b 14.R-7f K-3a 15.P-6f B-3c 16.S-6g G-7b 17.B-9g K-2b 18.N-7g P-4e 19.K-2h R-8d 20.S-5h P-9d
 #
 1.P-2f P-8d 2.P-2e P-8e 3.G-7h G-3b 4.P-2d Px2d 5.Rx2d P*2c 6.R-2f S-6b 7.P-1f P-3d 8.S-3h P-6d 9.P-7f P-8f 10.Px8f Rx8f 11.P*8g R-8b 12.P-1e S-6c 13.P-3f S-5d 14.N-3g G-5b 15.P*2d Px2d 16.Rx2d P*2c 17.Rx3d Bx8h+ 18.Sx8h G-3c 19.R-3e B*2d 20.P*2b Sx2b
 #
@@ -504,6 +504,9 @@ P2f P8d P2e P8e G7h G3b P2d P2d R2d P*2c R2f S6b P1f P1d S3h P6d P7f P8f P8f R8f
 1.P-7f P-8d 2.S-7h P-3d 3.S-7g S-6b 4.S-4h S-4b 5.P-2f S-3c 6.G-7h G-3b 7.G-5h G-5b 8.P-5f P-5d 9.P-3f P-7d 10.B-7i B-3a 11.K-6i K-4a 12.P-6f P-4d 13.P-1f P-8e 14.P-1e S-7c 15.G5h-6g G5b-4c 16.N-3g S-6d 17.B-5g P-7e 18.Px7e? Sx7e 19.P*7f P-8f 20.Px8f Sx8f 21.Sx8f Bx8f 22.P*8g B-4b
 #
 1.P-7f P-8d 2.S-7h P-3d 3.S-7g S-6b 4.S-4h S-4b 5.P-2f S-3c 6.G-7h G-3b 7.G-5h G-5b 8.P-5f P-5d 9.P-3f P-7d 10.B-7i B-3a 11.K-6i K-4a 12.P-6f P-4d 13.P-1f P-8e 14.P-1e S-7c 15.G5h-6g G5b-4c 16.N-3g P-7e? 17.Px7e Bx7e 18.P-6e B-4b 19.B-4f P*7d 20.S-6f
+
+
+
 #
 1.P7g-7f P3c-3d 2.P6g-6f P3d-3e 3.S7i-6h R8b-3b 4.S6h-6g P3e-3f 5.P3gx3f R3bx3f 6.P*3g R3f-3d 7.B8h-7g S3a-4b 8.R2h-8h K5a-6b 9.G4i-4h K6b-7b 10.K5i-4i G4a-5b 11.K4i-3h G6a-6b 12.P8g-8f P1c-1d 
 #
