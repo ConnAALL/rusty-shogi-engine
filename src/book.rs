@@ -63,7 +63,7 @@ fn square_index(coord: &str) -> Option<Square> {
         "2f" => Square::from_u8(15),
         "3f" => Square::from_u8(24),
         "4f" => Square::from_u8(33),
-        "5" => Square::from_u8(42),
+        "5f" => Square::from_u8(42),
         "6f" => Square::from_u8(51),
         "7f" => Square::from_u8(60),
         "8f" => Square::from_u8(69),
