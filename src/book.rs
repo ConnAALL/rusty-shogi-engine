@@ -1,6 +1,5 @@
 
 // module for processing the opening book from the .tbk and .pat files
-// 
 
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
@@ -8,6 +7,132 @@ use std::fs::File;
 use std::path::Path;
 use std::io::{self, BufRead, BufReader};
 
+
+// A helper function to convert piece shorthand into the `Piece` enum.
+fn shorthand_to_piece(color: char, shorthand: char) -> Option<Piece> {
+    match (color, shorthand) {
+        ('B', 'P') => Some(Piece::B_P),
+        ('B', 'L') => Some(Piece::B_L),
+        ('B', 'N') => Some(Piece::B_N),
+        ('B', 'S') => Some(Piece::B_S),
+        ('B', 'G') => Some(Piece::B_G),
+        ('B', 'B') => Some(Piece::B_B),
+        ('B', 'R') => Some(Piece::B_R),
+        ('W', 'P') => Some(Piece::W_P),
+        ('W', 'L') => Some(Piece::W_L),
+        ('W', 'N') => Some(Piece::W_N),
+        ('W', 'S') => Some(Piece::W_S),
+        ('W', 'G') => Some(Piece::W_G),
+        ('W', 'B') => Some(Piece::W_B),
+        ('W', 'R') => Some(Piece::W_R),
+        _ => None,
+    }
+}
+
+
+// A helper function to convert string "false"/"true" to boolean.
+fn parse_bool(value: &str) -> Option<bool> { 
+    match value {
+        "true" => Some(true),
+        "false" => Some(false),
+        _ => None,
+    }
+}
+
+
+// This function converts a string representation of a move into a `Move` object.
+fn parse_move(move_str: &str) -> Option<Move> { 
+    let parts: Vec<&str> = move_str.split(',').collect();
+    match parts.as_slice() {
+        [color, from, to, promote, "false"] => {
+            let from_value = from.parse::<u8>().ok()?;
+            let to_value = to.parse::<u8>().ok()?;
+            let from_square = Square::from_u8(from_value.checked_sub(1)?);
+            let to_square = Square::from_u8(to_value.checked_sub(1)?);
+            let promote = parse_bool(promote)?;
+            Some(Move::Normal {
+                from: from_square?,
+                to: to_square?,
+                promote,
+            })
+        },
+        [color, piece_char, to, _, "true"] => {
+            let piece = shorthand_to_piece(color.chars().next()?, piece_char.chars().next()?)?;
+            let to_value = to.parse::<u8>().ok()?;
+            let to_square = Square::from_u8(to_value.checked_sub(1)?);
+            Some(Move::Drop {
+                piece,
+                to: to_square?,
+            })
+        },
+        _ => None,
+    }
+}
+
+// This function reads a file and converts each line into a vector of `Move` objects.
+fn read_openings<P: AsRef<Path>>(filename: P) -> io::Result<Vec<Vec<Move>>> {
+    let file = File::open(filename)?;
+    let reader = io::BufReader::new(file);
+
+    reader.lines().map(|line| {
+        let line = line?;
+        let moves_str = line.split(' ');
+        let moves = moves_str.filter_map(parse_move).collect();
+        Ok(moves)
+    }).collect()
+}
+
+
+// function that tests the type conversions for openings from a file 
+pub fn booktest() -> io::Result<()> {
+    let openings = read_openings("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")?;
+
+    for opening in openings {
+        // Now you can use the opening which is a Vec<Move>
+        println!("{:?}", opening);
+    }
+
+    Ok(())
+}
+
+
+/*
+ * GetOpenings()
+ *
+ * Create a linked list of opening lines of play, with entry->next pointing to the
+ * next line and entry->move pointing to a chunk of memory containing the
+ * moves. More Opening lines of up to 100 half moves may be added to
+ * gnushogi.book. But now it's a hashed table by position which yields a move
+ * or moves for each position. It no longer knows about openings per se only
+ * positions and recommended moves in those positions.
+ *
+ */
+
+
+// function that opens a file and prints it to console line by line 
+pub fn read_file_test(filepath: &str) {
+    let file = match File::open(filepath) {
+        Ok(f) => f,
+        Err(e) => {
+            println!("Error opening file {}: {}", filepath, e);
+            return;
+        }
+    };
+
+    let reader = BufReader::new(file);
+
+    for line in reader.lines() {
+        match line {
+            Ok(content) => println!("{}", content),
+            Err(e) => println!("Error reading line: {}", e),
+        }
+    }
+}
+
+
+
+//not used but could be helpful elsewhere
+//
 fn square_index(coord: &str) -> Option<Square> {
     match coord {
         "1a" => Square::from_u8(1),
@@ -101,153 +226,6 @@ fn square_index(coord: &str) -> Option<Square> {
         "9i" => Square::from_u8(81),
 
         _ => None, // or you can provide a more meaningful default or error message
-    }
-}
-
-
-// A helper function to convert piece shorthand into the `Piece` enum.
-fn shorthand_to_piece(color: char, shorthand: char) -> Option<Piece> {
-    match (color, shorthand) {
-        ('B', 'P') => Some(Piece::B_P),
-        ('B', 'L') => Some(Piece::B_L),
-        ('B', 'N') => Some(Piece::B_N),
-        ('B', 'S') => Some(Piece::B_S),
-        ('B', 'G') => Some(Piece::B_G),
-        ('B', 'B') => Some(Piece::B_B),
-        ('B', 'R') => Some(Piece::B_R),
-        ('W', 'P') => Some(Piece::W_P),
-        ('W', 'L') => Some(Piece::W_L),
-        ('W', 'N') => Some(Piece::W_N),
-        ('W', 'S') => Some(Piece::W_S),
-        ('W', 'G') => Some(Piece::W_G),
-        ('W', 'B') => Some(Piece::W_B),
-        ('W', 'R') => Some(Piece::W_R),
-        _ => None,
-    }
-}
-
-fn parse_bool(value: &str) -> Option<bool> { // A helper function to convert string "false"/"true" to boolean.
-    match value {
-        "true" => Some(true),
-        "false" => Some(false),
-        _ => None,
-    }
-}
-fn parse_move(move_str: &str) -> Option<Move> { // This function converts a string representation of a move into a `Move` object.
-    let parts: Vec<&str> = move_str.split(',').collect();
-    match parts.as_slice() {
-        [color, from, to, promote, "false"] => {
-            let from_value = from.parse::<u8>().ok()?;
-            let to_value = to.parse::<u8>().ok()?;
-            let from_square = Square::from_u8(from_value.checked_sub(1)?);
-            let to_square = Square::from_u8(to_value.checked_sub(1)?);
-            let promote = parse_bool(promote)?;
-            Some(Move::Normal {
-                from: from_square?,
-                to: to_square?,
-                promote,
-            })
-        },
-        [color, piece_char, to, _, "true"] => {
-            let piece = shorthand_to_piece(color.chars().next()?, piece_char.chars().next()?)?;
-            let to_value = to.parse::<u8>().ok()?;
-            let to_square = Square::from_u8(to_value.checked_sub(1)?);
-            Some(Move::Drop {
-                piece,
-                to: to_square?,
-            })
-        },
-        _ => None,
-    }
-}
-
-// This function reads a file and converts each line into a vector of `Move` objects.
-fn read_openings<P: AsRef<Path>>(filename: P) -> io::Result<Vec<Vec<Move>>> {
-    let file = File::open(filename)?;
-    let reader = io::BufReader::new(file);
-
-    reader.lines().map(|line| {
-        let line = line?;
-        let moves_str = line.split(' ');
-        let moves = moves_str.filter_map(parse_move).collect();
-        Ok(moves)
-    }).collect()
-}
-
-pub fn booktest() -> io::Result<()> {
-    let openings = read_openings("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")?;
-
-    for opening in openings {
-        // Now you can use the opening which is a Vec<Move>
-        println!("{:?}", opening);
-    }
-
-    Ok(())
-}
-
-/*
-This function assumes that the file contains valid moves and that the shogi_core crate provides 
-from_usi method to parse strings into Piece instances. The Piece::from_usi is a placeholder and 
-should be replaced with the appropriate method from the shogi_core crate for converting a string to a Piece.
-
-*/
-
-
-
-/*
- * GetOpenings()
- *
- * Read in the Opening Book file and parse the algebraic notation for a move
- * into an unsigned integer format indicating the from and to square. Create
- * a linked list of opening lines of play, with entry->next pointing to the
- * next line and entry->move pointing to a chunk of memory containing the
- * moves. More Opening lines of up to 100 half moves may be added to
- * gnushogi.book. But now it's a hashed table by position which yields a move
- * or moves for each position. It no longer knows about openings per se only
- * positions and recommended moves in those positions.
- *
- */
-
-pub fn GetOpenings() {
-
-}
-
-
-/*
- * OpeningBook
- *
- * Go through each of the opening lines of play and check for a match with
- * the current game listing. If a match occurs, generate a random
- * number. If this number is the largest generated so far then the next
- * move in this line becomes the current "candidate".  After all lines are
- * checked, the candidate move is put at the top of the Tree[] array and
- * will be played by the program.  Note that the program does not handle
- * book transpositions.
- */
-
-pub fn OpeningBook() {
-
-}
-
-
-
-// function that opens a file and prints it to console line by line 
-pub fn test(filepath: &str) {
-    let file = match File::open(filepath) {
-        Ok(f) => f,
-        Err(e) => {
-            println!("Error opening file {}: {}", filepath, e);
-            return;
-        }
-    };
-
-    let reader = BufReader::new(file);
-
-    for line in reader.lines() {
-        match line {
-            Ok(content) => println!("{}", content),
-            Err(e) => println!("Error reading line: {}", e),
-        }
     }
 }
 
