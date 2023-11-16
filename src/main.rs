@@ -353,36 +353,36 @@ pub fn test_tree_search() {
 }
 
 
-pub fn minimax_playground() {
+//pub fn minimax_playground() {
 
     //let root_sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
     //let root_sfen = "lnsgkgsnl/7b1/ppppppppp/4r4/9/9/PPPP1PPPP/1B5R1/LNSGKGSNL b - 1";
-    let root_sfen = "lnsgkgsnl/4r2b1/ppppppppp/9/9/9/PPPP1PPPP/3B3R1/LNSGKGSNL b - 1";
+    //let root_sfen = "lnsgkgsnl/4r2b1/ppppppppp/9/9/9/PPPP1PPPP/3B3R1/LNSGKGSNL b - 1";
     
-    println!();
-    view::display_sfen(&root_sfen);
-    println!();
-    let dep = 2;
-    let color = sfen::get_color(&root_sfen);
-    println!("Root Sfen: {:?}", root_sfen);
-    println!("color: {:?}", color);
-    println!("search depth: {:?}", dep);
+    //println!();
+    //view::display_sfen(&root_sfen);
+    //println!();
+    //let dep = 2;
+    //let color = sfen::get_color(&root_sfen);
+    //println!("Root Sfen: {:?}", root_sfen);
+    //println!("color: {:?}", color);
+    //println!("search depth: {:?}", dep);
     
-    let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
+    //let root = search::treesearch(&root_sfen, dep, 0, None); // Create the root GameTree node
     //println!("Resulting GameTree: {:?}", root);
 
     //let ((white_score, black_score), best_move) = search::minimax(&root, dep, true); 
-    let ((white_score, black_score), best_move, feature_vec) = search::get_best_move(&root, dep, color); 
+    //let ((white_score, black_score), best_move, feature_vec) = search::get_best_move(&root, dep, color); 
 
-    println!();
-    println!("#####################################################################################");
-    println!();
+    //println!();
+    //println!("#####################################################################################");
+    //println!();
 
-    println!("Best move: {:?}", best_move);
-    println!("Best score for white: {}", white_score);
-    println!("Best score for black: {}", black_score);
+    //println!("Best move: {:?}", best_move);
+    //println!("Best score for white: {}", white_score);
+    //println!("Best score for black: {}", black_score);
 
-}
+//}
 
 
 pub fn debug(sfen: &str) {
@@ -451,10 +451,10 @@ fn main() {
     //test_tree_search();
     //minimax_playground();
     
-    //play::play();
+    play::play();
     //play::play_one_move();
     
-    book::booktest();    
+    //book::booktest();    
 
 }
 
