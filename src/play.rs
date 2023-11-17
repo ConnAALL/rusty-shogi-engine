@@ -1,4 +1,4 @@
-
+// Russell Kosovsky
 
 use std::io;
 use crate::eval;
@@ -170,10 +170,16 @@ fn computer_move(root_sfen: &str) -> Move {
 fn book_move(root_sfen: &str) -> Move {
 
     let color = sfen::get_color(&root_sfen);
-    
-    let root = search::treesearch(&root_sfen, dep, 1, None); // Create the root GameTree node
 
-    let (book_move) = search::get_book_move(&root, color);
+    let dep = 2;
+
+    let root = search::treesearch(&root_sfen, dep, 1, None);
+    
+    // need to somehow get the previous moves from the root node
+    // will prob need to get this passed in from elsewhere
+    let moves: Vec<(Option<Move>)> = ; // vector of previous moves
+
+    let (book_move) = search::get_book_move(&root, moves);
 
     book_move.unwrap()
 

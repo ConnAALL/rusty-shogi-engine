@@ -130,7 +130,6 @@ pub fn read_file_test(filepath: &str) {
 }
 
 
-
 //not used but could be helpful elsewhere
 //
 fn square_index(coord: &str) -> Option<Square> {

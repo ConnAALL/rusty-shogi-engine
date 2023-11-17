@@ -1,8 +1,5 @@
 // Russell Kosovsky
 
-// TODO: - put tests where they belong and clean up main.rs
-//       - oh also we need to make everything account for drops (search.rs and play.rs)
-//       - 
 
 mod view;
 mod sfen;
