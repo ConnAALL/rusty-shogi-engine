@@ -165,6 +165,21 @@ fn computer_move(root_sfen: &str) -> Move {
 }
 
 
+
+//function that calls get_book_move to return the next best move from one of the opening books 
+fn book_move(root_sfen: &str) -> Move {
+
+    let color = sfen::get_color(&root_sfen);
+    
+    let root = search::treesearch(&root_sfen, dep, 1, None); // Create the root GameTree node
+
+    let (book_move) = search::get_book_move(&root, color);
+
+    book_move.unwrap()
+
+}
+
+
 pub fn play() {
 
     println!("");
