@@ -164,7 +164,7 @@ fn computer_move(root_sfen: &str) -> Move {
 
 }
 
-
+/*
 
 //function that calls get_book_move to return the next best move from one of the opening books 
 fn book_move(root_sfen: &str) -> Move {
@@ -177,14 +177,14 @@ fn book_move(root_sfen: &str) -> Move {
     
     // need to somehow get the previous moves from the root node
     // will prob need to get this passed in from elsewhere
-    let moves: Vec<(Option<Move>)> = ; // vector of previous moves
+    //let moves: Vec<(Option<Move>)> = ; // vector of previous moves
 
-    let (book_move) = search::get_book_move(&root, moves);
+    let book_move = search::get_book_move(&root, moves);
 
     book_move.unwrap()
 
 }
-
+*/
 
 pub fn play() {
 
@@ -198,6 +198,7 @@ pub fn play() {
     println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
     println!(" | to promote a piece, format your input like this -> 'D,4 to C,4 to P'");
     println!(" | ");
+
     println!(" |-------------------------------------------------------------------------|");
     println!(" | ");
 

@@ -177,7 +177,7 @@ pub fn get_book_move(tree: &GameTree, prev_moves: Vec<(Option<Move>)>) -> Option
     let curr_color = Color::Black;
     let mut best_move = None;
 
-    return (best_move);
+    return best_move;
 
 }
 
