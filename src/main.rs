@@ -13,6 +13,54 @@ use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_leg
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
 
+fn main() {
+    
+    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
+    let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
+    let sfen2 = "9/9/ppppppppp/9/9/9/9/7R1/9 b - 1";
+    
+    //debug(&sfen2);
+    
+    //--------------------------PIECE_SQR_TBL_TEST--------------------------
+    //println!("SFEN: {:?}", sfen);
+    //view::display_sfen(sfen);
+    //let eval_pst = eval::evaluate_piece_table(sfen, "black");
+    //println!("{:?}", eval_pst);
+
+    //--------------------------PROM_PIECES_TEST--------------------------
+    //let (black_pieces, white_pieces) = eval::promoted_pieces(prom_sfen);
+    //println!("Number blacks promoted pieces: {:?}", black_pieces);
+    //println!("Number whites promoted pieces: {:?}", white_pieces);
+
+    //---------------------------MOBILITY_TEST---------------------------
+    //test_rook_mobility();
+
+    //---------------------------KING_VULN_TEST---------------------------
+    //king_vuln_test();
+    //king_attackers_test();
+
+    //-----------------------------EVAL_TEST-----------------------------
+    //eval_test();
+
+    //-----------------------------EVAL_TEST-----------------------------
+    //test_pvs();
+
+    //eval2_test();
+    //search_test();
+    //coord_test();
+    //mobility_tests();
+    //hand_test();
+    //test_tree_search();
+    //minimax_playground();
+    
+    play::play();
+    //play::play_one_move();
+    
+    //book::booktest();    
+
+}
+
+
 fn search_test() {
     
     let start = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
@@ -405,53 +453,6 @@ pub fn debug(sfen: &str) {
         println!("{:?}" , &move_item);
         println!("-----------------");
     }
-
-}
-
-fn main() {
-    
-    let sfen = "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1";
-    let prom_sfen = "lnsgkgs+nl/1+r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R+L/L+N+SGKGSN1 w - 1";
-    let sfen2 = "9/9/ppppppppp/9/9/9/9/7R1/9 b - 1";
-    
-    //debug(&sfen2);
-    
-    //--------------------------PIECE_SQR_TBL_TEST--------------------------
-    //println!("SFEN: {:?}", sfen);
-    //view::display_sfen(sfen);
-    //let eval_pst = eval::evaluate_piece_table(sfen, "black");
-    //println!("{:?}", eval_pst);
-
-    //--------------------------PROM_PIECES_TEST--------------------------
-    //let (black_pieces, white_pieces) = eval::promoted_pieces(prom_sfen);
-    //println!("Number blacks promoted pieces: {:?}", black_pieces);
-    //println!("Number whites promoted pieces: {:?}", white_pieces);
-
-    //---------------------------MOBILITY_TEST---------------------------
-    //test_rook_mobility();
-
-    //---------------------------KING_VULN_TEST---------------------------
-    //king_vuln_test();
-    //king_attackers_test();
-
-    //-----------------------------EVAL_TEST-----------------------------
-    //eval_test();
-
-    //-----------------------------EVAL_TEST-----------------------------
-    //test_pvs();
-
-    //eval2_test();
-    //search_test();
-    //coord_test();
-    //mobility_tests();
-    //hand_test();
-    //test_tree_search();
-    //minimax_playground();
-    
-    play::play();
-    //play::play_one_move();
-    
-    //book::booktest();    
 
 }
 
