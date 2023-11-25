@@ -12,28 +12,36 @@ use std::collections::VecDeque;
 pub struct GameTree {
     
     pub sfen: String,
-/*    sfen: String - This field contains a string representation of a game state in the 
- *    Shogi Forsyth-Edwards Notation (SFEN). The root of the tree represents the initial 
- *    game state, and each child represents a game state that can be reached by making a 
- *    legal move from the parent state.   */
+/*    sfen: String - This field contains a string representation of 
+ *    a game state in the Shogi Forsyth-Edwards Notation (SFEN). 
+ *
+ *    The root of the tree represents the initial game state
+ *
+ *    child represents a game state that can be reached by making 
+ *    a legal move from the parent state.    */
 
-    pub game_move: Option<Move>, // Optional field to store the move that led to this state
-/*    game_move: Option<Move> - This field represents the move that was made to reach the 
- *    game state represented by this GameTree node from the parent node's game state. It 
- *    is stored as an Option<Move> because the root of the tree does not have a parent 
- *    and thus does not correspond to a move. In this case, game_move would be None. For all 
- *    other nodes, it should be Some(Move), where Move is the move made to reach this game state.   */
+    pub game_move: Option<Move>, // Optional field to store the move that led to this states
+/*    game_move: Option<Move> - represents the move that was made to reach the 
+ *    game state represented by this GameTree node from the parent node's game state. 
+ *
+ *    It is stored as an Option<Move> because the root of the tree does not have a parent 
+ *    and thus does not correspond to a move. In this case, game_move would be None. 
+ *
+ *    For all other nodes, it should be Some(Move), where Move is the move made to 
+ *    reach this game state.   */
 
     pub children: Vec<GameTree>,
-/*    children: Vec<GameTree> - This field is a vector containing all child nodes of this node 
- *    in the game tree. Each child represents a game state that can be reached by making one 
+/*    children: Vec<GameTree> - This field is a vector containing all child 
+ *    nodes of this node in the game tree. 
+ *
+ *    Each child represents a game state that can be reached by making one 
  *    legal move from the current game state.   */
 
 }
 
 
-// A constructor method for GameTree
-impl GameTree {
+impl GameTree { // A constructor method for GameTree
+
     // This function takes an SFEN string and an optional Move and returns a new 
     // GameTree object with those values and an empty Vec for its children.
     pub fn new(sfen: String, game_move: Option<Move>) -> Self {
@@ -45,14 +53,15 @@ impl GameTree {
     }
 }
 
-// DepthFirstIter is a struct that allows for depth-first traversal of the GameTree.
-pub struct DepthFirstIter<'a> {
+pub struct DepthFirstIter<'a> { // struct that allows for depth-first traversal of the GameTree.
+
     // uses a VecDeque to store references to GameTree nodes in the order they are to be visited.
     stack: VecDeque<&'a GameTree>,
 }
 
 
 impl<'a> DepthFirstIter<'a> {
+
     // The constructor function takes a reference to the root of the GameTree 
     // and returns a DepthFirstIter with the root as the first node to visit.
     pub fn new(root: &'a GameTree) -> Self {

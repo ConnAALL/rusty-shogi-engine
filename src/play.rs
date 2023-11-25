@@ -213,6 +213,7 @@ pub fn play() {
         
         if shogi_legality_lite::is_legal_partial_lite(&board, human_mv) { // check if the human move is legal
             board.make_move(human_mv);
+            
             sfen = board.to_sfen_owned();
             println!(" | ");
             view::display_sfen(&sfen);
