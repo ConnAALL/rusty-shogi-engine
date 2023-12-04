@@ -56,7 +56,6 @@ fn main() {
     play::play();
     //play::play_one_move();
     
-    //book::booktest();    
 
 }
 

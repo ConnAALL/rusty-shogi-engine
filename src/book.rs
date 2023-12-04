@@ -83,17 +83,31 @@ fn read_openings<P: AsRef<Path>>(filename: P) -> io::Result<Vec<Vec<Move>>> {
 }
 
 
-// function that tests the type conversions for openings from a file 
-pub fn booktest() -> io::Result<()> {
-    let openings = read_openings("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")?;
 
-    for opening in openings {
+
+
+
+
+// function that tests the type conversions for openings from a file 
+pub fn get_book_vec() -> io::Result<Vec<Vec<Move>>> {
+    let openings = read_openings("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")?;
+    Ok(openings)
+}
+
+pub fn display_book(book_vec: io::Result<Vec<Vec<Move>>>) {
+    // display openings
+    for opening in book_vec.unwrap() {
         // Now you can use the opening which is a Vec<Move>
         println!("{:?}", opening);
     }
-
-    Ok(())
 }
+
+
+
+
+
+
+
 
 
 /*

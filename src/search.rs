@@ -2,6 +2,7 @@
 
 use crate::eval;
 use crate::sfen;
+use crate::book;
 use shogi_core::{Move, Color};
 use shogi_legality_lite::all_legal_moves_partial;
 use std::collections::HashSet;
@@ -181,12 +182,18 @@ pub fn minimax(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, 
 }
 
 
-pub fn get_book_move(tree: &GameTree, prev_moves: Vec<(Option<Move>)>) -> Option<Move> {
+pub fn get_book_move(tree: &GameTree, prev_moves: Vec<Move>) -> (Move, Vec<(u32, u32)>, &str) {
     
     let curr_color = Color::Black;
-    let mut best_move = None;
+    let mut book_sfen: &str = &"";
+    let mut book_move = None;
+    let mut book_features: Vec<(u32, u32)> = Vec::new();
 
-    return best_move;
+
+
+    //return book_move;
+    return (book_move.unwrap(), book_features, book_sfen);
+
 
 }
 

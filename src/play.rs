@@ -1,6 +1,7 @@
 // Russell Kosovsky
 
 use std::io;
+use crate::book;
 use crate::eval;
 use crate::view;
 use crate::sfen;
@@ -115,13 +116,20 @@ fn human_move() -> Move {
 }
 
 
-fn computer_move(root_sfen: &str) -> Move {
+fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: <Vec<Vec<Move>>>) -> Move {
 
     let dep = 3;
     let color = sfen::get_color(&root_sfen);
     
     let root = search::treesearch(&root_sfen, dep, 1, None); // Create the root GameTree node
+    
 
+    // check if past moves match one of the openings in the book
+
+    // get book move
+    let (best_move, best_features, best_sfen) = search::get_book_move(&root, past_mvs.clone());
+
+    // get minimax move
     //let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
     let ((white_score, black_score), best_move, best_features, best_sfen) = search::minimax(&root, dep, color);
 
@@ -207,9 +215,16 @@ pub fn play() {
     //println!("sfen: {:?}", sfen);
     view::display_sfen(&sfen);
 
+    let mut past_moves: Vec<Move> = Vec::new();
+
+    let book_vec = book::get_book_vec();
+    // book::display_book(book_vec);
+
+
     // main game loop
     loop {
         let human_mv = human_move();
+        past_moves.push(human_mv);
         
         if shogi_legality_lite::is_legal_partial_lite(&board, human_mv) { // check if the human move is legal
             board.make_move(human_mv);
@@ -233,11 +248,13 @@ pub fn play() {
             println!(" | thinking...");
             println!(" | ");
             
-            let computer_mv = computer_move(&sfen);
+            let computer_mv = computer_move(&sfen, past_moves.clone(), past_moves.clone());
             board.make_move(computer_mv);
             sfen = board.to_sfen_owned(); 
             view::display_sfen(&sfen);
             println!("{:?}", sfen);
+
+            past_moves.push(computer_mv);
 
             // game end condition
             if shogi_legality_lite::status_partial(&board) == PositionStatus::WhiteWins {
