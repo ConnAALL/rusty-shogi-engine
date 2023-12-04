@@ -116,7 +116,8 @@ fn human_move() -> Move {
 }
 
 
-fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: <Vec<Vec<Move>>>) -> Move {
+fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: Vec<Vec<Move>>) -> Move {
+
 
     let dep = 3;
     let color = sfen::get_color(&root_sfen);
@@ -172,27 +173,6 @@ fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: <Vec<Vec<Move>>
 
 }
 
-/*
-
-//function that calls get_book_move to return the next best move from one of the opening books 
-fn book_move(root_sfen: &str) -> Move {
-
-    let color = sfen::get_color(&root_sfen);
-
-    let dep = 2;
-
-    let root = search::treesearch(&root_sfen, dep, 1, None);
-    
-    // need to somehow get the previous moves from the root node
-    // will prob need to get this passed in from elsewhere
-    //let moves: Vec<(Option<Move>)> = ; // vector of previous moves
-
-    let book_move = search::get_book_move(&root, moves);
-
-    book_move.unwrap()
-
-}
-*/
 
 pub fn play() {
 
@@ -217,7 +197,12 @@ pub fn play() {
 
     let mut past_moves: Vec<Move> = Vec::new();
 
-    let book_vec = book::get_book_vec();
+    let mut book_vec = book::get_book_vec().unwrap_or_else(|e| {
+        println!(" | ");
+        println!(" | There was an error reading the opening book: {}. Please try again.", e);
+        println!(" | ");
+        Vec::new()
+    });
     // book::display_book(book_vec);
 
 
@@ -248,7 +233,9 @@ pub fn play() {
             println!(" | thinking...");
             println!(" | ");
             
-            let computer_mv = computer_move(&sfen, past_moves.clone(), past_moves.clone());
+            //let computer_mv = computer_move(&sfen, past_moves.clone(), Ok(book_vec.as_ref().expect("REASON").clone()));
+            let computer_mv = computer_move(&sfen, past_moves.clone(), book_vec.clone());
+
             board.make_move(computer_mv);
             sfen = board.to_sfen_owned(); 
             view::display_sfen(&sfen);

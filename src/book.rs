@@ -69,6 +69,7 @@ fn parse_move(move_str: &str) -> Option<Move> {
     }
 }
 
+
 // This function reads a file and converts each line into a vector of `Move` objects.
 fn read_openings<P: AsRef<Path>>(filename: P) -> io::Result<Vec<Vec<Move>>> {
     let file = File::open(filename)?;
@@ -83,14 +84,9 @@ fn read_openings<P: AsRef<Path>>(filename: P) -> io::Result<Vec<Vec<Move>>> {
 }
 
 
-
-
-
-
-
 // function that tests the type conversions for openings from a file 
 pub fn get_book_vec() -> io::Result<Vec<Vec<Move>>> {
-    let openings = read_openings("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")?;
+    let openings = read_openings("/research/rusty-shogi-engine/src/formatted_openings.txt")?;
     Ok(openings)
 }
 
