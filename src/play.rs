@@ -123,12 +123,31 @@ fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: Vec<Vec<Move>>)
     let color = sfen::get_color(&root_sfen);
     
     let root = search::treesearch(&root_sfen, dep, 1, None); // Create the root GameTree node
-    
 
-    // check if past moves match one of the openings in the book
+    let mut opening_match: Vec<Vec<Move>> = Vec::new();
+
+    for mv in past_mvs.iter() {
+        //println!("{:?}", mv);
+        for opening in openings.iter() {
+            for (i, opening_mv) in opening.iter().enumerate() {
+                if mv == opening_mv {
+                    opening_match.push(opening.clone());
+                }
+                break
+            }
+        }
+    }
+    
+    println!("opening match: {:?}", opening_match);
+    println!();
+    println!("{:?}", past_mvs.len());
+
+    let book_move = opening_match[0][past_mvs.len()].clone();
+
+    println!("book move: {:?}", book_move);
 
     // get book move
-    let (best_move, best_features, best_sfen) = search::get_book_move(&root, past_mvs.clone());
+    //let (best_move, best_features, best_sfen) = search::get_book_move(&root, past_mvs.clone());
 
     // get minimax move
     //let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
@@ -169,7 +188,8 @@ fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: Vec<Vec<Move>>)
     println!(" | black_hand: {:?}", black_hand);
     println!(" | ");
 
-    best_move.unwrap()
+    //best_move.unwrap()
+    book_move
 
 }
 
@@ -197,12 +217,8 @@ pub fn play() {
 
     let mut past_moves: Vec<Move> = Vec::new();
 
-    let mut book_vec = book::get_book_vec().unwrap_or_else(|e| {
-        println!(" | ");
-        println!(" | There was an error reading the opening book: {}. Please try again.", e);
-        println!(" | ");
-        Vec::new()
-    });
+    let book_vec = book::get_book_vec().unwrap();
+ 
     // book::display_book(book_vec);
 
 
@@ -233,7 +249,6 @@ pub fn play() {
             println!(" | thinking...");
             println!(" | ");
             
-            //let computer_mv = computer_move(&sfen, past_moves.clone(), Ok(book_vec.as_ref().expect("REASON").clone()));
             let computer_mv = computer_move(&sfen, past_moves.clone(), book_vec.clone());
 
             board.make_move(computer_mv);

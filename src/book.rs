@@ -45,8 +45,8 @@ fn parse_move(move_str: &str) -> Option<Move> {
     let parts: Vec<&str> = move_str.split(',').collect();
     match parts.as_slice() {
         [color, from, to, promote, "false"] => {
-            let from_value = from.parse::<u8>().ok()?;
-            let to_value = to.parse::<u8>().ok()?;
+            let from_value = from.parse::<u8>().ok()? + 1;
+            let to_value = to.parse::<u8>().ok()? + 1;
             let from_square = Square::from_u8(from_value.checked_sub(1)?);
             let to_square = Square::from_u8(to_value.checked_sub(1)?);
             let promote = parse_bool(promote)?;
@@ -86,7 +86,7 @@ fn read_openings<P: AsRef<Path>>(filename: P) -> io::Result<Vec<Vec<Move>>> {
 
 // function that tests the type conversions for openings from a file 
 pub fn get_book_vec() -> io::Result<Vec<Vec<Move>>> {
-    let openings = read_openings("/research/rusty-shogi-engine/src/formatted_openings.txt")?;
+    let openings = read_openings("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")?;
     Ok(openings)
 }
 
@@ -138,6 +138,8 @@ pub fn read_file_test(filepath: &str) {
         }
     }
 }
+
+
 
 
 //not used but could be helpful elsewhere

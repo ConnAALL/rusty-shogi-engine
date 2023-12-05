@@ -55,7 +55,7 @@ fn main() {
     
     play::play();
     //play::play_one_move();
-    
+    //book::read_file_test("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")
 
 }
 
