@@ -199,7 +199,7 @@ pub fn play() {
     println!("");
     println!(" |---------------------------------WELCOME---------------------------------|");
     println!(" | ");
-    println!(" | you are black and you are playing against the minimax algorithm");
+    println!(" | you are playing as white and you are playing against the minimax algorithm");
     println!(" | in this game, squares are represented by their rank and file (rank, file)");
     println!(" | this means that your king would be in square: 'I,5'");
     println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
