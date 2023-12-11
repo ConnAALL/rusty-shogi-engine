@@ -138,9 +138,9 @@ fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: Vec<Vec<Move>>)
         }
     }
     
-    println!("opening match: {:?}", opening_match);
-    println!();
-    println!("{:?}", past_mvs.len());
+    //println!("opening match: {:?}", opening_match);
+    //println!();
+    //println!("{:?}", past_mvs.len());
 
     let book_move = opening_match[0][past_mvs.len()].clone();
 
@@ -161,11 +161,11 @@ fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: Vec<Vec<Move>>)
     let (white_bish_mobil, black_bish_mobil) = best_features[5];
     let (white_hand, black_hand) = best_features[6];
 
-    println!(" | best move: {:?}", best_move);
-    println!(" | ");
-    println!(" | best sfen: {:?}", best_sfen);
+    //println!(" | best move: {:?}", best_move);
+    //println!(" | ");
+    //println!(" | best sfen: {:?}", best_sfen);
     view::display_sfen(best_sfen);
-    println!(" | ");
+    //println!(" | ");
     println!(" | white_score: {:?}", white_score);
     println!(" | black_score: {:?}", black_score);
     println!(" | feature variate values: ");
