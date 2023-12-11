@@ -4,6 +4,7 @@ use shogi_core::PartialPosition;
 
 // Define a generic Tree enum that can hold a value of any type that implements
 // the Ord, Display, and Default traits.
+
 pub enum Tree<T: Ord + std::fmt::Display + Default> {
     Empty,  // Represents an empty tree
     Node {  // Represents a node in the tree
@@ -16,7 +17,6 @@ pub enum Tree<T: Ord + std::fmt::Display + Default> {
 
 // Implement methods for the Tree enum
 impl<T: Ord + std::fmt::Display + Default + Clone + PartialEq> Tree<T> {
-
     // Create a new, empty tree
     pub fn new() -> Self {
         Tree::Empty

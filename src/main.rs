@@ -120,10 +120,12 @@ fn king_attackers_test() {
     let color = sfen::get_color(sfen);
     let enemy_color = sfen::get_enemy_color(sfen);
     
-    // Parse the SFEN string into a position
-    let positions = sfen::sfen_parse(sfen);// creates list of board squares and the pieces on them (if there are any)
-    let mut pos = sfen::generate_pos(positions); // creates a "partial position" out of it
-    pos.side_to_move_set(color); // finalize the partial position
+    // creates list of board squares and the pieces on them (if there are any)
+    let positions = sfen::sfen_parse(sfen);
+    // creates a "partial position" out of it
+    let mut pos = sfen::generate_pos(positions); 
+    // finalize the partial position
+    pos.side_to_move_set(color); 
     
     let enemy_king_sqr = pos.king_position(enemy_color);
 

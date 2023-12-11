@@ -41,10 +41,7 @@ pub struct GameTree {
 }
 
 
-impl GameTree { // A constructor method for GameTree
-
-    // This function takes an SFEN string and an optional Move and returns a new 
-    // GameTree object with those values and an empty Vec for its children.
+impl GameTree { // GameTree struct implementation
     pub fn new(sfen: String, game_move: Option<Move>) -> Self {
         GameTree {
             sfen,
@@ -101,6 +98,8 @@ impl<'a> IntoIterator for &'a GameTree {
 // The treesearch function builds a GameTree by recursively exploring 
 // all possible game states up to a specified depth.
 pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<Move>) -> GameTree {
+
+
     
     // Parse the SFEN string and generate a PartialPosition from it
     let positions = sfen::sfen_parse(sfen);
