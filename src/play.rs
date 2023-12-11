@@ -154,8 +154,12 @@ pub fn play_book() {
     println!(" | in this game, squares are represented by their rank and file (rank, file)");
     println!(" | this means that your king would be in square: 'I,5'");
     println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
+    println!(" | ");
     println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
+    println!(" | ");
     println!(" | to promote a piece, format your input like this -> 'D,4 to C,4 to P'");
+    println!(" | ");
+    println!(" | drop moves COMING SOON");
     println!(" | ");
 
     println!(" |-------------------------------------------------------------------------|");
