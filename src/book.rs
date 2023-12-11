@@ -1,6 +1,7 @@
 
 // module for processing the opening book from the .tbk and .pat files
 
+use shogi::piece;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 use std::fs::File;
@@ -44,6 +45,7 @@ fn parse_bool(value: &str) -> Option<bool> {
 fn parse_move(move_str: &str) -> Option<Move> { 
     let parts: Vec<&str> = move_str.split(',').collect();
     match parts.as_slice() {
+        //[color, from, to, promote, "false"] => {
         [color, from, to, promote, "false"] => {
             let from_value = from.parse::<u8>().ok()? + 1;
             let to_value = to.parse::<u8>().ok()? + 1;
@@ -57,9 +59,11 @@ fn parse_move(move_str: &str) -> Option<Move> {
             })
         },
         [color, piece_char, to, _, "true"] => {
-            let piece = shorthand_to_piece(color.chars().next()?, piece_char.chars().next()?)?;
-            let to_value = to.parse::<u8>().ok()?;
-            let to_square = Square::from_u8(to_value.checked_sub(1)?);
+            //let mut piece = shorthand_to_piece(color.chars().next()?, piece_char.chars().next()?)?;
+            //println!("{:?}", piece_char.chars().next()?);
+            let piece = Piece::W_P;
+            let to_value = to.parse::<u8>().ok()? + 1;
+            let to_square = Square::from_u8(to_value.checked_sub(1)? );
             Some(Move::Drop {
                 piece,
                 to: to_square?,

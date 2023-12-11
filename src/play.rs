@@ -116,14 +116,8 @@ fn human_move() -> Move {
 }
 
 
-fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: Vec<Vec<Move>>) -> Move {
-
-
-    let dep = 3;
-    let color = sfen::get_color(&root_sfen);
-    
-    let root = search::treesearch(&root_sfen, dep, 1, None); // Create the root GameTree node
-
+fn computer_book_move(past_mvs: Vec<Move>, openings: Vec<Vec<Move>>) -> Move {
+   
     let mut opening_match: Vec<Vec<Move>> = Vec::new();
 
     for mv in past_mvs.iter() {
@@ -144,57 +138,14 @@ fn computer_move(root_sfen: &str, past_mvs: Vec<Move>, openings: Vec<Vec<Move>>)
 
     let book_move = opening_match[0][past_mvs.len()].clone();
 
-    println!("book move: {:?}", book_move);
+    println!(" | book move: {:?}", book_move);
 
-    // get book move
-    //let (best_move, best_features, best_sfen) = search::get_book_move(&root, past_mvs.clone());
-
-    // get minimax move
-    //let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
-    let ((white_score, black_score), best_move, best_features, best_sfen) = search::minimax(&root, dep, color);
-
-    let (white_promoted_pieces, black_promoted_pieces) = best_features[0];
-    let (white_pst, black_pst) = best_features[1];
-    let (white_king_vln, black_king_vln) = best_features[2];
-    let (white_rook_mobil, black_rook_mobil) = best_features[3];
-    let (white_lance_mobil, black_lance_mobil) = best_features[4];
-    let (white_bish_mobil, black_bish_mobil) = best_features[5];
-    let (white_hand, black_hand) = best_features[6];
-
-    //println!(" | best move: {:?}", best_move);
-    //println!(" | ");
-    //println!(" | best sfen: {:?}", best_sfen);
-    view::display_sfen(best_sfen);
-    //println!(" | ");
-    println!(" | white_score: {:?}", white_score);
-    println!(" | black_score: {:?}", black_score);
-    println!(" | feature variate values: ");
-    println!(" |    |WHITE|");
-    println!(" | white_promoted_pieces: {:?}", white_promoted_pieces);
-    println!(" | white_pst: {:?}", white_pst);
-    println!(" | white_king_vln: {:?}", white_king_vln);
-    println!(" | white_rook_mobil: {:?}", white_rook_mobil);
-    println!(" | white_lance_mobil: {:?}", white_lance_mobil);
-    println!(" | white_bish_mobil: {:?}", white_bish_mobil);
-    println!(" | white_hand: {:?}", white_hand);
-    println!(" | ");
-    println!(" |    |BLACK|");
-    println!(" | black_promoted_pieces: {:?}", black_promoted_pieces);
-    println!(" | black_pst: {:?}", black_pst);
-    println!(" | black_king_vln: {:?}", black_king_vln);
-    println!(" | black_rook_mobil: {:?}", black_rook_mobil);
-    println!(" | black_lance_mobil: {:?}", black_lance_mobil);
-    println!(" | black_bish_mobil: {:?}", black_bish_mobil);
-    println!(" | black_hand: {:?}", black_hand);
-    println!(" | ");
-
-    //best_move.unwrap()
     book_move
 
 }
 
 
-pub fn play() {
+pub fn play_book() {
 
     println!("");
     println!(" |---------------------------------WELCOME---------------------------------|");
@@ -218,9 +169,6 @@ pub fn play() {
     let mut past_moves: Vec<Move> = Vec::new();
 
     let book_vec = book::get_book_vec().unwrap();
- 
-    // book::display_book(book_vec);
-
 
     // main game loop
     loop {
@@ -249,7 +197,7 @@ pub fn play() {
             println!(" | thinking...");
             println!(" | ");
             
-            let computer_mv = computer_move(&sfen, past_moves.clone(), book_vec.clone());
+            let computer_mv = computer_book_move(past_moves.clone(), book_vec.clone());
 
             board.make_move(computer_mv);
             sfen = board.to_sfen_owned(); 
@@ -272,6 +220,135 @@ pub fn play() {
         }
     }
 }
+
+
+
+
+/////////////////////////////////// OG PLAY FUNCTION /////////////////////////////////////////
+
+fn computer_move_OG(root_sfen: &str) -> Move {
+
+    let dep = 3;
+    let color = sfen::get_color(&root_sfen);
+    
+    let root = search::treesearch(&root_sfen, dep, 1, None); // Create the root GameTree node
+
+    //let ((white_score, black_score), best_move, best_features) = search::get_best_move(&root, dep, color);
+    let ((white_score, black_score), best_move, best_features, best_sfen) = search::minimax(&root, dep, color);
+
+    let (white_promoted_pieces, black_promoted_pieces) = best_features[0];
+    let (white_pst, black_pst) = best_features[1];
+    let (white_king_vln, black_king_vln) = best_features[2];
+    let (white_rook_mobil, black_rook_mobil) = best_features[3];
+    let (white_lance_mobil, black_lance_mobil) = best_features[4];
+    let (white_bish_mobil, black_bish_mobil) = best_features[5];
+    let (white_hand, black_hand) = best_features[6];
+
+    println!(" | best move: {:?}", best_move);
+    println!(" | ");
+    println!(" | best sfen: {:?}", best_sfen);
+    view::display_sfen(best_sfen);
+    println!(" | ");
+    println!(" | white_score: {:?}", white_score);
+    println!(" | black_score: {:?}", black_score);
+    println!(" | feature variate values: ");
+    println!(" |    |WHITE|");
+    println!(" | white_promoted_pieces: {:?}", white_promoted_pieces);
+    println!(" | white_pst: {:?}", white_pst);
+    println!(" | white_king_vln: {:?}", white_king_vln);
+    println!(" | white_rook_mobil: {:?}", white_rook_mobil);
+    println!(" | white_lance_mobil: {:?}", white_lance_mobil);
+    println!(" | white_bish_mobil: {:?}", white_bish_mobil);
+    println!(" | white_hand: {:?}", white_hand);
+    println!(" | ");
+    println!(" |    |BLACK|");
+    println!(" | black_promoted_pieces: {:?}", black_promoted_pieces);
+    println!(" | black_pst: {:?}", black_pst);
+    println!(" | black_king_vln: {:?}", black_king_vln);
+    println!(" | black_rook_mobil: {:?}", black_rook_mobil);
+    println!(" | black_lance_mobil: {:?}", black_lance_mobil);
+    println!(" | black_bish_mobil: {:?}", black_bish_mobil);
+    println!(" | black_hand: {:?}", black_hand);
+    println!(" | ");
+
+    best_move.unwrap()
+
+}
+
+
+pub fn play_OG() {
+
+    println!("");
+    println!(" |---------------------------------WELCOME---------------------------------|");
+    println!(" | ");
+    println!(" | you are black and you are playing against the minimax algorithm");
+    println!(" | in this game, squares are represented by their rank and file (rank, file)");
+    println!(" | this means that your king would be in square: 'I,5'");
+    println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
+    println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
+    println!(" | to promote a piece, format your input like this -> 'D,4 to C,4 to P'");
+    println!(" | ");
+
+    println!(" |-------------------------------------------------------------------------|");
+    println!(" | ");
+
+    let mut board = PartialPosition::startpos();
+    let mut sfen = board.to_sfen_owned();
+    //println!("sfen: {:?}", sfen);
+    view::display_sfen(&sfen);
+
+    // main game loop
+    loop {
+        let human_mv = human_move();
+        
+        if shogi_legality_lite::is_legal_partial_lite(&board, human_mv) { // check if the human move is legal
+            board.make_move(human_mv);
+            
+            sfen = board.to_sfen_owned();
+            println!(" | ");
+            view::display_sfen(&sfen);
+
+            // game end condition
+            if shogi_legality_lite::status_partial(&board) == PositionStatus::BlackWins { // check if it's checkmate
+                println!("Congratulations! You won.");
+                break;
+            } else if shogi_legality_lite::status_partial(&board) == PositionStatus::Draw { // check if it's stalemate
+                println!("Game is a draw.");
+                break;
+            }
+
+            println!(" | ");
+            println!(" |------------------------------COMPUTER MOVE------------------------------|");
+            println!(" | ");
+            println!(" | thinking...");
+            println!(" | ");
+            
+            let computer_mv = computer_move_OG(&sfen);
+            board.make_move(computer_mv);
+            sfen = board.to_sfen_owned(); 
+            view::display_sfen(&sfen);
+            println!("{:?}", sfen);
+
+            // game end condition
+            if shogi_legality_lite::status_partial(&board) == PositionStatus::WhiteWins {
+                println!("Congratulations! You won.");
+                break;
+            } else if shogi_legality_lite::status_partial(&board) == PositionStatus::Draw {
+                println!("Game is a draw.");
+                break;
+            }
+
+        } else {
+            println!("Illegal move, please try again.");
+        }
+    }
+}
+
+
+
+
+
+
 
 
 pub fn play_one_move() {
