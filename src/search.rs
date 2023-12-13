@@ -25,10 +25,9 @@ pub struct GameTree {
 /*    game_move: Option<Move> - represents the move that was made to reach the 
  *    game state represented by this GameTree node from the parent node's game state. 
  *
- *    It is stored as an Option<Move> because the root of the tree does not have a parent 
+ *  - It is stored as an Option<Move> because the root of the tree does not have a parent 
  *    and thus does not correspond to a move. In this case, game_move would be None. 
- *
- *    For all other nodes, it should be Some(Move), where Move is the move made to 
+ *  - For all other nodes, it should be Some(Move), where Move is the move made to 
  *    reach this game state.   */
 
     pub children: Vec<GameTree>,
@@ -37,7 +36,6 @@ pub struct GameTree {
  *
  *    Each child represents a game state that can be reached by making one 
  *    legal move from the current game state.   */
-
 }
 
 
@@ -129,9 +127,6 @@ pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<
 }
 
 
-
-
-
 pub fn minimax(tree: &GameTree, depth: u32, maximizing_player: Color) -> ((f32, f32), Option<Move>, Vec<(u32, u32)>, &str) {
     
     let curr_color = sfen::get_color(&tree.sfen);
@@ -189,7 +184,6 @@ pub fn get_book_move(tree: &GameTree, prev_moves: Vec<Move>) -> (Move, Vec<(u32,
     let mut book_features: Vec<(u32, u32)> = Vec::new();
 
 
-
     //return book_move;
     return (book_move.unwrap(), book_features, book_sfen);
 
@@ -241,7 +235,6 @@ pub fn get_book_move(tree: &GameTree, prev_moves: Vec<Move>) -> (Move, Vec<(u32,
 
     //return (best_eval, best_move, best_features);
 //}
-
 
 
 pub fn single_search(sfen: &str) -> (Vec<String>, Vec<Move>) {
@@ -319,5 +312,4 @@ pub fn perft(sfen: &str, depth: u32) -> u64 {
 
     node_count // Return the total node count
 }
-
 
