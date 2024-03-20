@@ -115,7 +115,9 @@ fn human_move() -> Move {
 
 }
 
+/*
 
+*/
 fn computer_book_move(past_mvs: Vec<Move>, openings: Vec<Vec<Move>>) -> Move {
    
     let mut opening_match: Vec<Vec<Move>> = Vec::new();
@@ -349,10 +351,55 @@ pub fn play_OG() {
 }
 
 
+/////////////////////////////////// computer vs. computer /////////////////////////////////////////
+
+pub fn play_bots() {
 
 
+    println!("");
+    println!(" |---------------------------------WELCOME---------------------------------|");
+    println!(" | ");
+    println!(" | you are black and you are playing against the minimax algorithm");
+    println!(" | in this game, squares are represented by their rank and file (rank, file)");
+    println!(" | this means that your king would be in square: 'I,5'");
+    println!(" | ranks are always a capital letter from A-I and files an integer from 1-9 ");
+    println!(" | please enter your moves in the exact format as follows: 'G,9 to F,9'");
+    println!(" | to promote a piece, format your input like this -> 'D,4 to C,4 to P'");
+    println!(" | ");
 
+    println!(" |-------------------------------------------------------------------------|");
+    println!(" | ");
 
+    let mut board = PartialPosition::startpos();
+    let mut sfen = board.to_sfen_owned();
+    //println!("sfen: {:?}", sfen);
+    view::display_sfen(&sfen);
+
+    // main game loop
+    loop {
+            println!(" | ");
+            println!(" |------------------------------COMPUTER MOVE------------------------------|");
+            println!(" | ");
+            println!(" | thinking...");
+            println!(" | ");
+            
+            let computer_mv = computer_move_OG(&sfen);
+            board.make_move(computer_mv);
+            sfen = board.to_sfen_owned(); 
+            view::display_sfen(&sfen);
+            println!("{:?}", sfen);
+
+            // game end condition
+            if shogi_legality_lite::status_partial(&board) == PositionStatus::WhiteWins {
+                println!("Congratulations! You won.");
+                break;
+            } else if shogi_legality_lite::status_partial(&board) == PositionStatus::Draw {
+                println!("Game is a draw.");
+                break;
+            }
+
+        }
+    }
 
 
 pub fn play_one_move() {

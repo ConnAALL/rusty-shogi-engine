@@ -4,7 +4,7 @@
 
 use shogi_core::PartialPosition;
 use shogi_core::{Square, Piece, Color, PieceKind};
-
+use colored::Colorize;
 
 pub fn flip(sfen: &str) -> String {
     

@@ -1,6 +1,5 @@
 // Russell Kosovsky
 
-
 mod view;
 mod sfen;
 mod eval;
@@ -53,8 +52,11 @@ fn main() {
     //test_tree_search();
     //minimax_playground();
     
-    play::play_book();
+    //play::play_book();
     //play::play_OG();
+    play::play_bots();
+
+
     //play::play_one_move();
     //book::read_file_test("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")
 
