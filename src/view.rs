@@ -1,4 +1,4 @@
-
+use colored::Colorize;
 
 pub fn display_sfen(sfen: &str) {
     let parts: Vec<&str> = sfen.split(' ').collect();
@@ -39,10 +39,28 @@ pub fn display_sfen(sfen: &str) {
                 panic!("Invalid SFEN string: too many squares in a row");
             }
         }
-        //println!("{}{}", ranks[i], row_string);
-        println!(" |             {}{}", row_string, ranks[i]);
-        println!(" |              ----------------------------------------------");
+        //println!(" |             {}{}", row_string, ranks[i]);
+        //println!(" |              ----------------------------------------------");        
+        //i = i + 1;
+
+        print!(" |           {}", ranks[i]);
+        for ch in row_string.chars() {
+            if ch == '|' {
+                print!("|");
+            } else {
+                if ch.is_uppercase() {
+                    print!("{}", ch.to_string());
+                } else if ch == '+' {
+                    print!("{}", ch.to_string());                    
+                }else {
+                    print!("{}", ch.to_string().blue());
+                }
+            }
+            
+        }
+        println!("\n |              ----------------------------------------------");
         i = i + 1;
+
     }
     println!(" |");
 }
