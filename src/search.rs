@@ -97,8 +97,6 @@ impl<'a> IntoIterator for &'a GameTree {
 // all possible game states up to a specified depth.
 pub fn treesearch(sfen: &str, depth: u32, current_depth: u32, game_move: Option<Move>) -> GameTree {
 
-
-    
     // Parse the SFEN string and generate a PartialPosition from it
     let positions = sfen::sfen_parse(sfen);
     let mut pos = sfen::generate_pos(positions); 
