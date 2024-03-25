@@ -53,7 +53,7 @@ pub fn display_sfen(sfen: &str) {
                 } else if ch == '+' {
                     print!("{}", ch.to_string());                    
                 }else {
-                    print!("{}", ch.to_string().blue());
+                    print!("{}", ch.to_string().red());
                 }
             }
             

@@ -12,7 +12,6 @@ use shogi::color;
 use shogi_legality_lite::{normal_from_candidates, is_legal_partial_lite, all_legal_moves_partial};
 use shogi_core::{PartialPosition, Square, Piece, Color, Move, PieceKind};
 
-use colored::Colorize;
 
 
 fn main() {
@@ -57,19 +56,11 @@ fn main() {
     
     //play::play_book();
     //play::play_OG();
-    
     play::play_bots();
-    //colored()
 
     //play::play_one_move();
     //book::read_file_test("/Users/russell/research/rusty-shogi-engine/src/formatted_openings.txt")
 
-}
-
-// test the example with `cargo run --example most_simple`
-fn colored() {
-    // TADAA!
-    println!("{} {} !", "it".green(), "works".blue());
 }
 
 
